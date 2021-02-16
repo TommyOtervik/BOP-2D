@@ -5,3 +5,4 @@ Bachelor Prosjekt
 Hey!
 
 Test2!
+Fra test
