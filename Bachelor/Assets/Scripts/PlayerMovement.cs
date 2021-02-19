@@ -8,32 +8,31 @@ public class PlayerMovement : MonoBehaviour
     public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
 
     private float speed = 4f;                //Player speed
-    // public float crouchSpeedDivisor = 3f;   //Speed reduction when crouching
     private float coyoteDuration = .05f;     //How long the player can jump after falling
     private float maxFallSpeed = -25f;       //Max speed player can fall
 
 
-
+    // Testing for bedre hopping
+    [Range(1, 10)]
+    public float jumpVelocity;
+    private float fallMultiplier = 2.5f;
+    private float lowJumpMultiplier = 2f;
+    // End hopping
 
     private float jumpForce = 2f;          //Initial force of jump
-    // public float crouchJumpBoost = 2.5f;    //Jump boost when crouching
-    // public float hangingJumpForce = 15f;    //Force of wall hanging jump
     private float jumpHoldForce = 1f;      //Incremental force when jump is held
     private float jumpHoldDuration = .1f;    //How long the jump key can be held
 
     [Header("Environment Check Properties")]
     public float footOffset = .32f;          //X Offset of feet raycast
     public float eyeHeight = 1.11f;          //Height of wall checks
-    public float reachOffset = .47f;         //X offset for wall grabbing
     public float headClearance = .25f;       //Space needed above the player's head
     public float groundDistance = .35f;      //Distance player is considered to be on the ground
     public float grabDistance = .4f;        //The reach distance for wall grabs
     public LayerMask groundLayer;           //Layer of the ground
 
-    private bool isOnGround = false;                 //Is the player on the ground?
+    private bool isOnGround = false;         //Is the player on the ground?
     private bool isJumping;                  //Is player jumping?
-    // public bool isHanging;                  //Is player hanging?
-    // public bool isCrouching;                //Is player crouching?
     private bool isHeadBlocked;
 
 
@@ -91,9 +90,6 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-
-        
-
         //Check the environment to determine status
         PhysicsCheck();
 
@@ -120,35 +116,25 @@ public class PlayerMovement : MonoBehaviour
             isOnGround = true;
             anim.SetBool("Grounded", isOnGround);
         }
-        else
+        else if (!leftCheck && !rightCheck)
         {
             isOnGround = false;
             anim.SetBool("Grounded", isOnGround);
         }
             
-
         //Cast the ray to check above the player's head
         RaycastHit2D headCheck = Raycast(new Vector2(0f, bodyCollider.size.y), Vector2.up, headClearance);
 
         //If that ray hits, the player's head is blocked
         if (headCheck)
             isHeadBlocked = true;
-
-
-        //Determine the direction of the wall grab attempt
-        // Vector2 grabDir = new Vector2(direction, 0f);
-
-        //Cast three rays to look for a wall grab
-       // RaycastHit2D blockedCheck = Raycast(new Vector2(footOffset * direction, playerHeight), grabDir, grabDistance);
-       // RaycastHit2D ledgeCheck = Raycast(new Vector2(reachOffset * direction, playerHeight), Vector2.down, grabDistance);
-       // RaycastHit2D wallCheck = Raycast(new Vector2(footOffset * direction, eyeHeight), grabDir, grabDistance);
     }
 
     void GroundMovement()
     {
         //Calculate the desired velocity based on inputs
         float inputX = Input.GetAxis("Horizontal");
-        float xVelocity = speed * input.horizontal;
+        float xVelocity = speed * inputX;
         //If the sign of the velocity and direction don't match, flip the character
         if (xVelocity * direction < 0f)
             FlipCharacterDirection();
@@ -163,8 +149,6 @@ public class PlayerMovement : MonoBehaviour
             coyoteTime = Time.time + coyoteDuration;
         }
             
-
-
         // Run
         if(Mathf.Abs(inputX) > Mathf.Epsilon)
         {
@@ -183,35 +167,71 @@ public class PlayerMovement : MonoBehaviour
 
 
     }
-
-    // FIXME: Ikke helt 100%, SetTrigger("Jump") registreres ikke i Animator.
     void MidAirMovement()
     {
+        // anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
+
+        //if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time))
+        //{
+
+        //    anim.SetTrigger("Jump");
+        //    isOnGround = false;
+        //    isJumping = true;
+
+        //    //anim.SetBool("Grounded", isOnGround);
+        //    //...record the time the player will stop being able to boost their jump...
+        //    jumpTime = Time.time + jumpHoldDuration;
+
+        //    //...add the jump force to the rigidbody...
+        //    // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+
+        //    rigidBody.velocity = Vector2.up * jumpVelocity;
+
+
+        //}
+        //else if (isJumping)
+        //{
+
+        //    //...and if jump time is past, set isJumping to false
+        //    if (jumpTime <= Time.time)
+        //        isJumping = false;
+        //}
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
 
-        if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time))
+        if (input.jumpHeld && !isJumping && (isOnGround || coyoteTime > Time.time))
         {
-            anim.SetTrigger("Jump");
             isOnGround = false;
+            anim.SetTrigger("Jump");
+            isJumping = true;
+        
+            //rigidBody.velocity = Vector2.up * jumpVelocity;
+
+            rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+
+        } else if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time))
+        {
+            isOnGround = false;
+            anim.SetTrigger("Jump");
             isJumping = true;
 
-            anim.SetBool("Grounded", isOnGround);
-            //...record the time the player will stop being able to boost their jump...
-            jumpTime = Time.time + jumpHoldDuration;
-
-            //...add the jump force to the rigidbody...
-            rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            //rigidBody.velocity = Vector2.up * jumpVelocity;
             
+            rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
         }
-        else if (isJumping)
+      
+        if (rigidBody.velocity.y < 0)
         {
-            //...and the jump button is held, apply an incremental force to the rigidbody...
-            if (input.jumpHeld)
-                rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+        else if (rigidBody.velocity.y > 0 && !input.jumpHeld)
+        {
+            rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        }
 
-            //...and if jump time is past, set isJumping to false
-            if (jumpTime <= Time.time)
-                isJumping = false;
+     
+        if (isOnGround)
+        {
+            isJumping = false;
         }
 
 
@@ -221,39 +241,41 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+   
+
     void MeleeAttack()
     {
         if(input.firePressed)
         {
             anim.SetTrigger("Attack");
         }
-        else if(input.altFirePressed)
-        {
-            anim.SetTrigger("SpecialAttack");
-        }
+        //else if(input.altFirePressed)
+        //{
+        //    anim.SetTrigger("SpecialAttack");
+        //}
     }
 
     void RangedAttack()
     {
-        if (input.rangedAttack)
-        {
-            anim.SetTrigger("Throw");
-            SpawnProjectile();
-        }
+        //if (input.rangedAttack)
+        //{
+        //    anim.SetTrigger("Throw");
+        //    SpawnProjectile();
+        //}
     }
 
 
     public void SpawnProjectile()
     {
-        if (projectile != null)
-        {
-            // Set correct arrow spawn position
-            Vector3 facingVector = new Vector3(direction, 1, 1);
-            Vector3 projectionSpawnPosition = transform.localPosition + Vector3.Scale(projectionSpawnOffset, facingVector);
-            GameObject bolt = Instantiate(projectile, projectionSpawnPosition, gameObject.transform.localRotation) as GameObject;
-            // Turn arrow in correct direction
-            bolt.transform.localScale = facingVector;
-        }
+        //if (projectile != null)
+        //{
+        //    // Set correct arrow spawn position
+        //    Vector3 facingVector = new Vector3(direction, 1, 1);
+        //    Vector3 projectionSpawnPosition = transform.localPosition + Vector3.Scale(projectionSpawnOffset, facingVector);
+        //    GameObject bolt = Instantiate(projectile, projectionSpawnPosition, gameObject.transform.localRotation) as GameObject;
+        //    // Turn arrow in correct direction
+        //    bolt.transform.localScale = facingVector;
+        //}
     }
 
 
