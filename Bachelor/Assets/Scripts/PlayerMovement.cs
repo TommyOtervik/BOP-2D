@@ -22,7 +22,8 @@ public class PlayerMovement : MonoBehaviour
     // Testing for angrep
     public Transform attackPoint;
     public LayerMask enemyLayers;
-    public float attackRange = .5f;
+    [SerializeField]
+    private float attackRange = 1f;
     private int attackDamage = 20;
     private float attackRate = 2f;
     private float nextAttackTime = 0f;
