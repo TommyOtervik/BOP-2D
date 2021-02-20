@@ -45,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isHeadBlocked;
 
 
-
     PlayerInput input;                      //The current inputs for the player
     BoxCollider2D bodyCollider;             //The collider component
     Rigidbody2D rigidBody;                  //The rigidbody component
@@ -56,8 +55,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject projectile;
     [SerializeField] Vector3 projectionSpawnOffset;
 
+
     float delayToIdle = 0.0f;
-    float jumpTime;                         //Variable to hold jump duration
     float coyoteTime;                       //Variable to hold coyote duration
     float playerHeight;                     //Height of the player
 
@@ -173,23 +172,28 @@ public class PlayerMovement : MonoBehaviour
             if (delayToIdle < 0)
                 anim.SetInteger("AnimState", 0);
         }
-
-
     }
+
     void MidAirMovement()
     {
 
-        anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
+       
 
         if ((input.jumpHeld || input.jumpPressed) && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
             isOnGround = false;
             anim.SetTrigger("Jump");
+
+            anim.SetBool("Grounded", isOnGround);
             isJumping = true;
 
             rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+
+            Invoke("ResetIsJumping", 1f);
+
         }
 
+        anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
 
         if (rigidBody.velocity.y < 0)
         {
@@ -201,9 +205,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (isOnGround)
-            isJumping = false;
 
+        //if (isOnGround)
+        //{
+        //    isJumping = false;
+        //}
 
 
         //If player is falling to fast, reduce the Y velocity to the max
@@ -226,7 +232,6 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-       
         if (input.altFirePressed)
         {
             AltMeleeAttack();
@@ -333,6 +338,11 @@ public class PlayerMovement : MonoBehaviour
 
         //Return the results of the raycast
         return hit;
+    }
+
+    private void ResetIsJumping()
+    {
+        isJumping = false;
     }
 
     // Update is called once per frame
