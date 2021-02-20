@@ -76,7 +76,7 @@ public class PlayerInput : MonoBehaviour
         crouchPressed = crouchPressed || Input.GetButtonDown("Crouch");
         crouchHeld = crouchHeld || Input.GetButton("Crouch");
 
-        firePressed = firePressed || Input.GetButton("Fire1");
+        firePressed = firePressed || Input.GetButtonDown("Fire1");
         altFirePressed = altFirePressed || Input.GetButton("Fire2");
         rangedAttack = rangedAttack || Input.GetButton("Fire3");
     }
