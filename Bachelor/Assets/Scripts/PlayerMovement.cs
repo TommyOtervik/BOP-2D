@@ -11,12 +11,17 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteDuration = .05f;     //How long the player can jump after falling
     private float maxFallSpeed = -25f;       //Max speed player can fall
 
-
+    // facing direction
+    private bool facingRight;
+    
+    
     // Testing for bedre hopping
     [Range(1, 10)]
     public float jumpVelocity;
     private float fallMultiplier = 2.5f;
     private float lowJumpMultiplier = 2f;
+    
+    
     // End Bedre hopp
 
     // Testing for angrep
@@ -32,7 +37,16 @@ public class PlayerMovement : MonoBehaviour
 
 
     [Header("Environment Check Properties")]
-    public float footOffset = .32f;          //X Offset of feet raycast
+    // Facing right
+    public float footOffsetLeftFacingRight = 0.95f;
+
+    public float footOffsetRightFacingRight = 0.75f;
+    // Facing left
+    public float footOffsetLeftFacingLeft = 0.75f;
+    public float footOffsetRightFacingLeft = 0.95f;
+    
+    
+    //public float footOffset = .32f;          //X Offset of feet raycast
     public float eyeHeight = 1.11f;          //Height of wall checks
     public float headClearance = .25f;       //Space needed above the player's head
     public float groundDistance = .35f;      //Distance player is considered to be on the ground
@@ -43,6 +57,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isOnGround = false;         //Is the player on the ground?
     private bool isJumping;                  //Is player jumping?
     private bool isHeadBlocked;
+
+   
 
 
 
@@ -87,6 +103,8 @@ public class PlayerMovement : MonoBehaviour
             Destroy(this);
         }
 
+        facingRight = true;
+        
         //Record the original x scale of the player
         originalXScale = transform.localScale.x;
 
@@ -97,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
         colliderStandSize = bodyCollider.size;
         colliderStandOffset = bodyCollider.offset;
     }
+    
 
     void FixedUpdate()
     {
@@ -116,8 +135,21 @@ public class PlayerMovement : MonoBehaviour
         isHeadBlocked = false;
 
         //Cast rays for the left and right foot
-        RaycastHit2D leftCheck = Raycast(new Vector2(-footOffset, .2f), Vector2.down, groundDistance);
-        RaycastHit2D rightCheck = Raycast(new Vector2(footOffset, .2f), Vector2.down, groundDistance);
+        RaycastHit2D leftCheck;
+        RaycastHit2D rightCheck;
+        
+        if (facingRight)
+        {
+            leftCheck = Raycast(new Vector2(-footOffsetLeftFacingRight, .2f), Vector2.down, groundDistance);
+            rightCheck = Raycast(new Vector2(footOffsetRightFacingRight, .2f), Vector2.down, groundDistance);
+        }
+        else
+        {
+            leftCheck = Raycast(new Vector2(-footOffsetLeftFacingLeft, .2f), Vector2.down, groundDistance);
+            rightCheck = Raycast(new Vector2(footOffsetRightFacingLeft, .2f), Vector2.down, groundDistance);
+        }
+
+
 
         //If either ray hit the ground, the player is on the ground
         if (leftCheck || rightCheck)
@@ -303,6 +335,15 @@ public class PlayerMovement : MonoBehaviour
 
         //Apply the new scale
         transform.localScale = scale;
+
+        if (facingRight)
+        {
+            facingRight = false;
+        }
+        else
+        {
+            facingRight = true;
+        }
     }
 
     //These two Raycast methods wrap the Physics2D.Raycast() and provide some extra
@@ -338,6 +379,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }

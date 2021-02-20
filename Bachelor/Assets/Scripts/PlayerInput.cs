@@ -18,6 +18,8 @@ public class PlayerInput : MonoBehaviour
     [HideInInspector] public bool firePressed;
     [HideInInspector] public bool altFirePressed;
     [HideInInspector] public bool rangedAttack;
+    
+    
 
 
 
@@ -27,14 +29,14 @@ public class PlayerInput : MonoBehaviour
     {
         //Clear out existing input values
         ClearInput();
-
+        
         //If the Game Manager says the game is over, exit
         //if (GameManager.IsGameOver())
             //return;
 
         //Process keyboard, mouse, gamepad (etc) inputs
         ProcessInputs();
-
+        
         //Clamp the horizontal input to be between -1 and 1
         horizontal = Mathf.Clamp(horizontal, -1f, 1f);
     }

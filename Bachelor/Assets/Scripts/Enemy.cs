@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
 
     public int maxHealth = 100;
     int currentHealth;
+    //private int attackValue = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,4 +42,11 @@ public class Enemy : MonoBehaviour
         
         this.enabled = false;
     }
+
+    /*
+    private void playerHit(int attackValue)
+    {
+        PlayerHealthBroker.CallPlayerTakesDamage(attackValue);
+    }
+    */
 }
