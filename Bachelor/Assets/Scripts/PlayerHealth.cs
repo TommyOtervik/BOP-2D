@@ -18,6 +18,7 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
         healthbar.SetMaxHealth(maxHealth);
+        //PlayerHealthBroker.PlayerTakesDamage += TakeDamage;
     }
 
     // Update is called once per frame
@@ -32,5 +33,10 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
 
         healthbar.SetHealth(currentHealth);
+    }
+
+    private void Die()
+    {
+        //PlayerHealthBroker.PlayerTakesDamage -= TakeDamage;
     }
 }
