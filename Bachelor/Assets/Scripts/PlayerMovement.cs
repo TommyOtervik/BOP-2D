@@ -209,9 +209,7 @@ public class PlayerMovement : MonoBehaviour
 
     void MidAirMovement()
     {
-
-        
-
+      
         if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
             isOnGround = false;
@@ -223,18 +221,28 @@ public class PlayerMovement : MonoBehaviour
             jumpTime = Time.time + jumpHoldDuration;
 
             // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, 4);
+            
         }
         else if (isJumping)
         {
+            Vector2 vel = rigidBody.velocity;
+            vel.y += 9.8f * Time.deltaTime;
 
             if (input.jumpHeld)
-                // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
-                rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+                rigidBody.velocity = vel;
+               // rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
+              
+          
+            // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+
+            
+  
 
 
             if (jumpTime <= Time.time)
                 isJumping = false;
+
         }
 
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
@@ -242,6 +250,7 @@ public class PlayerMovement : MonoBehaviour
         if (rigidBody.velocity.y < 0)
         {
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+
         }
         else if (rigidBody.velocity.y > 0 && !input.jumpHeld)
         {
@@ -249,11 +258,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
+  
+
 
         //If player is falling to fast, reduce the Y velocity to the max
         if (rigidBody.velocity.y < maxFallSpeed)
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, maxFallSpeed);
 
+        
     }
 
     void AttackManager()
