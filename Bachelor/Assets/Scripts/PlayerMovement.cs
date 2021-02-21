@@ -13,17 +13,18 @@ public class PlayerMovement : MonoBehaviour
 
     // facing direction
     private bool facingRight;
-    
-    
-    // Testing for bedre hopping
-    [Range(1, 10)]
-    public float jumpVelocity;
+
+    [Header("Jump Properties")]
+    public float jumpForce = 6.3f;          //Initial force of jump
+    public float jumpHoldForce = 1.9f;      //Incremental force when jump is held
+    public float jumpHoldDuration = .1f;    //How long the jump key can be held
+    float jumpTime;							//Variable to hold jump duration
+
     private float fallMultiplier = 2.5f;
     private float lowJumpMultiplier = 2f;
-    
-    
-    // End Bedre hopp
 
+
+    [Header("Attack Properties")]
     // Testing for angrep
     public Transform attackPoint;
     public LayerMask enemyLayers;
@@ -155,6 +156,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isOnGround = true;
             anim.SetBool("Grounded", isOnGround);
+           
         }
         else if (!leftCheck && !rightCheck)
         {
@@ -209,20 +211,32 @@ public class PlayerMovement : MonoBehaviour
     void MidAirMovement()
     {
 
-       
+        
 
-        if ((input.jumpHeld || input.jumpPressed) && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
+        if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
             isOnGround = false;
-            anim.SetTrigger("Jump");
-
-            anim.SetBool("Grounded", isOnGround);
             isJumping = true;
 
-            rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+            jumpTime = Time.time + jumpHoldDuration;
 
-            Invoke("ResetIsJumping", 1f);
+            anim.SetTrigger("Jump");
+            anim.SetBool("Grounded", isOnGround);
 
+            rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            Debug.Log(rigidBody.velocity.y);
+
+            
+        }
+        else if (isJumping)
+        {
+
+            if (input.jumpHeld)
+                rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+
+
+            if (jumpTime <= Time.time)
+                isJumping = false;
         }
 
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
@@ -236,12 +250,6 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
-
-
-        //if (isOnGround)
-        //{
-        //    isJumping = false;
-        //}
 
 
         //If player is falling to fast, reduce the Y velocity to the max
