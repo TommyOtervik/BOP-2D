@@ -19,9 +19,6 @@ public class PlayerInput : MonoBehaviour
     [HideInInspector] public bool altFirePressed;
     [HideInInspector] public bool rangedAttack;
     
-    
-
-
 
     bool readyToClear;								//Bool used to keep input in sync
     // Update is called once per frame

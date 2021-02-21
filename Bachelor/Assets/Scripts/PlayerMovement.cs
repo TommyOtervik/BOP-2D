@@ -7,9 +7,10 @@ public class PlayerMovement : MonoBehaviour
 
     public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
 
-    private float speed = 4f;                //Player speed
-    private float coyoteDuration = .05f;     //How long the player can jump after falling
-    private float maxFallSpeed = -25f;       //Max speed player can fall
+    [Header("Movement Properties")]
+    public float speed = 4f;                //Player speed
+    public float coyoteDuration = .05f;     //How long the player can jump after falling
+    float maxFallSpeed = -25f;       //Max speed player can fall
 
     // facing direction
     private bool facingRight;
@@ -19,9 +20,8 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHoldForce = 1.9f;      //Incremental force when jump is held
     public float jumpHoldDuration = .1f;    //How long the jump key can be held
     float jumpTime;							//Variable to hold jump duration
-
-    private float fallMultiplier = 2.5f;
-    private float lowJumpMultiplier = 2f;
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
 
 
     [Header("Attack Properties")]
@@ -55,12 +55,11 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;           //Layer of the ground
     
 
-    private bool isOnGround = false;         //Is the player on the ground?
-    private bool isJumping;                  //Is player jumping?
-    private bool isHeadBlocked;
 
-   
-
+    [Header("Status Flags")]
+    public bool isOnGround;                 //Is the player on the ground?
+    public bool isJumping;                  //Is player jumping?
+    public bool isHeadBlocked;
 
     PlayerInput input;                      //The current inputs for the player
     BoxCollider2D bodyCollider;             //The collider component
@@ -218,21 +217,20 @@ public class PlayerMovement : MonoBehaviour
             isOnGround = false;
             isJumping = true;
 
-            jumpTime = Time.time + jumpHoldDuration;
-
             anim.SetTrigger("Jump");
             anim.SetBool("Grounded", isOnGround);
 
-            rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            Debug.Log(rigidBody.velocity.y);
+            jumpTime = Time.time + jumpHoldDuration;
 
-            
+            // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
         }
         else if (isJumping)
         {
 
             if (input.jumpHeld)
-                rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
 
 
             if (jumpTime <= Time.time)
@@ -387,11 +385,6 @@ public class PlayerMovement : MonoBehaviour
 
         //Return the results of the raycast
         return hit;
-    }
-
-    private void ResetIsJumping()
-    {
-        isJumping = false;
     }
 
     // Update is called once per frame
