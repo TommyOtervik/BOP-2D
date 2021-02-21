@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
 
-    private float speed = 4f;                //Player speed
+    private float speed = 6f;                //Player speed
     private float coyoteDuration = .05f;     //How long the player can jump after falling
     private float maxFallSpeed = -25f;       //Max speed player can fall
 
@@ -20,8 +20,9 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHoldDuration = .1f;    //How long the jump key can be held
     float jumpTime;							//Variable to hold jump duration
 
-    private float fallMultiplier = 2.5f;
-    private float lowJumpMultiplier = 2f;
+    private float fallMultiplier = 10.0f;
+    private float lowJumpMultiplier = 6.0f;
+    
 
 
     [Header("Attack Properties")]
@@ -223,18 +224,21 @@ public class PlayerMovement : MonoBehaviour
             anim.SetTrigger("Jump");
             anim.SetBool("Grounded", isOnGround);
 
-            rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            //rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, 4);
             Debug.Log(rigidBody.velocity.y);
 
             
         }
+        
+        //Otherwise, if currently within the jump time window...
         else if (isJumping)
         {
-
+            //...and the jump button is held, apply an incremental force to the rigidbody...
             if (input.jumpHeld)
-                rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
-
-
+                //rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, 8);
+            //...and if jump time is past, set isJumping to false
             if (jumpTime <= Time.time)
                 isJumping = false;
         }
