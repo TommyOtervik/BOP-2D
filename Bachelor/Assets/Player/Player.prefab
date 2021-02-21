@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 229141043
-  m_SortingLayer: -1
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a815b2a66ab6d8e42a52433c0d18b97b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -166,9 +166,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawDebugRaycasts: 1
+  jumpVelocity: 10
+  attackPoint: {fileID: 0}
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  attackRange: 0.5
   footOffset: 0.32
   eyeHeight: 1.11
-  reachOffset: 0.47
   headClearance: 0.25
   groundDistance: 0.35
   grabDistance: 0.4

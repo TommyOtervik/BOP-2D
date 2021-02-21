@@ -13,17 +13,18 @@ public class PlayerMovement : MonoBehaviour
 
     // facing direction
     private bool facingRight;
-    
-    
-    // Testing for bedre hopping
-    [Range(1, 10)]
-    public float jumpVelocity;
+
+    [Header("Jump Properties")]
+    public float jumpForce = 6.3f;          //Initial force of jump
+    public float jumpHoldForce = 1.9f;      //Incremental force when jump is held
+    public float jumpHoldDuration = .1f;    //How long the jump key can be held
+    float jumpTime;							//Variable to hold jump duration
+
     private float fallMultiplier = 2.5f;
     private float lowJumpMultiplier = 2f;
-    
-    
-    // End Bedre hopp
 
+
+    [Header("Attack Properties")]
     // Testing for angrep
     public Transform attackPoint;
     public LayerMask enemyLayers;
@@ -61,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
    
 
 
-
     PlayerInput input;                      //The current inputs for the player
     BoxCollider2D bodyCollider;             //The collider component
     Rigidbody2D rigidBody;                  //The rigidbody component
@@ -72,8 +72,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject projectile;
     [SerializeField] Vector3 projectionSpawnOffset;
 
+
     float delayToIdle = 0.0f;
-    float jumpTime;                         //Variable to hold jump duration
     float coyoteTime;                       //Variable to hold coyote duration
     float playerHeight;                     //Height of the player
 
@@ -156,6 +156,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isOnGround = true;
             anim.SetBool("Grounded", isOnGround);
+           
         }
         else if (!leftCheck && !rightCheck)
         {
@@ -205,23 +206,40 @@ public class PlayerMovement : MonoBehaviour
             if (delayToIdle < 0)
                 anim.SetInteger("AnimState", 0);
         }
-
-
     }
+
     void MidAirMovement()
     {
 
-        anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
+        
 
-        if ((input.jumpHeld || input.jumpPressed) && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
+        if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
             isOnGround = false;
-            anim.SetTrigger("Jump");
             isJumping = true;
 
-            rigidBody.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
+            jumpTime = Time.time + jumpHoldDuration;
+
+            anim.SetTrigger("Jump");
+            anim.SetBool("Grounded", isOnGround);
+
+            rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            Debug.Log(rigidBody.velocity.y);
+
+            
+        }
+        else if (isJumping)
+        {
+
+            if (input.jumpHeld)
+                rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+
+
+            if (jumpTime <= Time.time)
+                isJumping = false;
         }
 
+        anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
 
         if (rigidBody.velocity.y < 0)
         {
@@ -231,10 +249,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
-
-
-        if (isOnGround)
-            isJumping = false;
 
 
 
@@ -258,7 +272,6 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-       
         if (input.altFirePressed)
         {
             AltMeleeAttack();
@@ -374,6 +387,11 @@ public class PlayerMovement : MonoBehaviour
 
         //Return the results of the raycast
         return hit;
+    }
+
+    private void ResetIsJumping()
+    {
+        isJumping = false;
     }
 
     // Update is called once per frame

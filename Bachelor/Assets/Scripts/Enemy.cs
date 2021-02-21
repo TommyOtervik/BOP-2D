@@ -7,15 +7,27 @@ public class Enemy : MonoBehaviour
     Animator anim;
     Rigidbody2D rb;
 
+    public Transform attackPoint;
+    public LayerMask playerLayer;
+    [SerializeField]
+    private float attackRange = 1f;
+    private int attackDamage = 20;
+
+
     public int maxHealth = 100;
     int currentHealth;
-    //private int attackValue = 10;
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
+    }
+
+    void Update()
+    {
+        Attack();
     }
 
     public void TakeDamage(int damage)
@@ -43,10 +55,20 @@ public class Enemy : MonoBehaviour
         this.enabled = false;
     }
 
-    /*
-    private void playerHit(int attackValue)
+    void Attack()
     {
-        PlayerHealthBroker.CallPlayerTakesDamage(attackValue);
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            anim.SetTrigger("Attack");
+        }
     }
-    */
+
+
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
 }
