@@ -19,9 +19,11 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 6.3f;          //Initial force of jump
     public float jumpHoldForce = 1.9f;      //Incremental force when jump is held
     public float jumpHoldDuration = .1f;    //How long the jump key can be held
-    float jumpTime;							//Variable to hold jump duration
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
+    private const float BONUS_GRAVITY = 9.8f;
+    private float jumpTime;							//Variable to hold jump duration
+
 
 
     [Header("Attack Properties")]
@@ -33,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
     private int attackDamage = 20;
     private float attackRate = 2f;
     private float nextAttackTime = 0f;
-    private bool isEnemy = false;
     // End Test Angrep
 
 
@@ -51,10 +52,8 @@ public class PlayerMovement : MonoBehaviour
     public float eyeHeight = 1.11f;          //Height of wall checks
     public float headClearance = .25f;       //Space needed above the player's head
     public float groundDistance = .35f;      //Distance player is considered to be on the ground
-    public float grabDistance = .4f;        //The reach distance for wall grabs
     public LayerMask groundLayer;           //Layer of the ground
     
-
 
     [Header("Status Flags")]
     public bool isOnGround;                 //Is the player on the ground?
@@ -110,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
         //Record the player's height from the collider
         playerHeight = bodyCollider.size.y;
 
+ 
         //Record initial collider size and offset
         colliderStandSize = bodyCollider.size;
         colliderStandOffset = bodyCollider.offset;
@@ -209,9 +209,10 @@ public class PlayerMovement : MonoBehaviour
 
     void MidAirMovement()
     {
-      
+
         if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
+
             isOnGround = false;
             isJumping = true;
 
@@ -222,28 +223,29 @@ public class PlayerMovement : MonoBehaviour
 
             // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 4);
-            
+
         }
         else if (isJumping)
         {
-            Vector2 vel = rigidBody.velocity;
-            vel.y += 9.8f * Time.deltaTime;
 
             if (input.jumpHeld)
-                rigidBody.velocity = vel;
-               // rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce);
-              
-          
-            // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce * jumpHoldForce);
+                // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
 
-            
-  
-
+                // Uniform acceleration, "Vanlig"
+                // rigidBody.velocity = new Vector2(rigidBody.velocity.x, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight)); 
 
             if (jumpTime <= Time.time)
                 isJumping = false;
-
         }
+
+        // Add extra fake gravity to the player
+        Vector2 vel = rigidBody.velocity;
+        vel.x = rigidBody.velocity.x;
+        vel.y -= BONUS_GRAVITY * Time.deltaTime;
+        rigidBody.velocity = vel;
+
+
 
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
 
@@ -259,8 +261,6 @@ public class PlayerMovement : MonoBehaviour
 
 
   
-
-
         //If player is falling to fast, reduce the Y velocity to the max
         if (rigidBody.velocity.y < maxFallSpeed)
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, maxFallSpeed);
