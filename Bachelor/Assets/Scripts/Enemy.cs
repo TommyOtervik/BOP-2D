@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class Enemy : MonoBehaviour
 {
     Animator anim;
     Rigidbody2D rb;
+
+    public AIPath aiPath;
 
     public Transform attackPoint;
     public LayerMask playerLayer;
@@ -28,6 +31,24 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         Attack();
+
+        if (aiPath.desiredVelocity.x >= 0.01f)
+        {
+            transform.localScale = new Vector3(-1.7f, rb.transform.localScale.y, 0);
+            // Bare Testing for å se animasjoner
+            anim.SetInteger("AnimState", 1);
+            anim.SetBool("Grounded", true);
+        }
+        else if (aiPath.desiredVelocity.x <= -0.01f)
+        {
+            transform.localScale = new Vector3(1.7f, rb.transform.localScale.y, 0);
+            // Bare Testing for å se animasjoner
+            anim.SetInteger("AnimState", 1);
+            anim.SetBool("Grounded", true);
+        }
+
+
+       
     }
 
     public void TakeDamage(int damage)
@@ -51,6 +72,7 @@ public class Enemy : MonoBehaviour
         // Disable the enemy
         GetComponent<Collider2D>().enabled = false;
         rb.bodyType = RigidbodyType2D.Static;
+        aiPath.canMove = false;
         
         this.enabled = false;
     }
