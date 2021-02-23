@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Environment Check Properties")]
     // Facing right
     public float footOffsetLeftFacingRight = 0.95f;
-
     public float footOffsetRightFacingRight = 0.75f;
     // Facing left
     public float footOffsetLeftFacingLeft = 0.75f;
@@ -81,7 +80,6 @@ public class PlayerMovement : MonoBehaviour
     Vector2 colliderStandSize;              //Size of the standing collider
     Vector2 colliderStandOffset;			//Offset of the standing collider
 
-    const float smallAmount = .05f;			//A small amount used for hanging position
 
     // Start is called before the first frame update
     void Start()
@@ -304,6 +302,7 @@ public class PlayerMovement : MonoBehaviour
         // Damage them
         foreach (Collider2D enemy in hitEnemies)
         {
+            Debug.Log("Hit");
             enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
         }
     }
