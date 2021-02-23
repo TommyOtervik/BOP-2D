@@ -296,15 +296,15 @@ public class PlayerMovement : MonoBehaviour
         // Attack animation
         anim.SetTrigger("Attack");
 
-        // Detect enemies in range of attack
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+        //// Detect enemies in range of attack
+        //Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-        // Damage them
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            Debug.Log("Hit");
-            enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-        }
+        //// Damage them
+        //foreach (Collider2D enemy in hitEnemies)
+        //{
+        //    Debug.Log("Hit " + enemy.name);
+        //    enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+        //}
     }
 
     void OnDrawGizmosSelected()
