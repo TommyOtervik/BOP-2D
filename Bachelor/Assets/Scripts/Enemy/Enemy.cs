@@ -11,31 +11,40 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Info")]
     public int maxHealth = 100;
 
-    // Sid
-    public Transform rayCast;
-    public LayerMask raycastMask;
     public float attackDistance; // Min. distance for attack
-    public float rayCastLength;
     public float moveSpeed;
     public float timer; // Timer for cooldown between attacks
 
     public Transform leftLimit;
     public Transform rightLimit;
+
+    [HideInInspector] public Transform target;
+    [HideInInspector] public bool inRange; // Check if player is in range
+    public GameObject hotZone;
+    public GameObject triggerArea;
+    #endregion
+
+
+    #region Raycast
+    // public Transform rayCast;
+    // public LayerMask raycastMask;
+    // public float rayCastLength;
+    // private RaycastHit2D hit;
+    // private Transfrom target;
+    // private bool inRange;
     #endregion
 
 
     #region Private Variables 
     Animator anim;
 
-
     [SerializeField]
     int currentHealth;
     // Sid
-    private RaycastHit2D hit;
-    private Transform target;
+
     private float distance; // Store distance b/w enemy and player
     private bool attackMode;
-    private bool inRange; // Check if player is in range
+
     private bool cooling; // Check if enemy is cooling after attack
     private float intTimer;
     #endregion
@@ -43,14 +52,17 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
-        SelectTarget(); 
+        SelectTarget();
 
         intTimer = timer;
 
         anim = GetComponent<Animator>();
-     
+
         currentHealth = maxHealth;
 
+        // Test 
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
     }
 
@@ -65,21 +77,26 @@ public class Enemy : MonoBehaviour
             SelectTarget();
         }
 
+        /*  Raycast
         if (inRange)
         {
             hit = Physics2D.Raycast(rayCast.position, transform.right, rayCastLength, raycastMask);
             RaycastDebugger();
         }
 
-        // When player is dectected
+        When player is dectected
         if (hit.collider != null)
             EnemyLogic();
         else if (hit.collider == null)
             inRange = false;
+       
 
         if (inRange == false)
             StopAttack();
-       
+        */
+
+        if (inRange)
+            EnemyLogic();
 
     }
 
@@ -140,13 +157,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void RaycastDebugger()
-    {
-        if (distance > attackDistance)
-            Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.red);
-        else if (attackDistance > distance)
-            Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.green);
-    }
+
 
     public void TakeDamage(int damage)
     {
@@ -168,22 +179,13 @@ public class Enemy : MonoBehaviour
 
         // Disable the enemy
         GetComponent<Collider2D>().enabled = false;
-       
+
 
         this.enabled = false;
     }
 
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            target = collision.transform;
-            inRange = true;
-            Flip();
-        }
-    }
 
     public void TriggerCooling()
     {
@@ -197,7 +199,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    private void SelectTarget()
+    public void SelectTarget()
     {
         float distanceToLeft = Vector2.Distance(transform.position, leftLimit.position);
         float distanceToRight = Vector2.Distance(transform.position, rightLimit.position);
@@ -212,7 +214,7 @@ public class Enemy : MonoBehaviour
 
     }
 
-    private void Flip()
+    public void Flip()
     {
         Vector3 rotation = transform.eulerAngles;
 
@@ -223,4 +225,29 @@ public class Enemy : MonoBehaviour
 
         transform.eulerAngles = rotation;
     }
+
+
+
+    /* Brukes for Raycast  
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+    if (collision.gameObject.CompareTag("Player"))
+       {
+        target = collision.transform;
+        inRange = true;
+        Flip();
+    }
+    }
+*/
+
+    /* Raycast Debugger
+     private void RaycastDebugger()
+    {
+     if (distance > attackDistance)
+         Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.red);
+     else if (attackDistance > distance)
+         Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.green);
+    }
+ */
+
 }
