@@ -305,7 +305,7 @@ public class PlayerMovement : MonoBehaviour
             // FIXME: Scuffed? String check?
             if (enemy.name.Equals("EnemyColliders"))
             {
-                Debug.Log("Hit " + enemy.name);
+                CinemachineShake.Instance.ShakeCamera(5f, .1f);
                 enemy.GetComponentInParent<Enemy>().TakeDamage(attackDamage);
             }
         }

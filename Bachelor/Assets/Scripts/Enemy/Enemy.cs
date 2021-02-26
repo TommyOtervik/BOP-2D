@@ -163,7 +163,10 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
 
         // Play hurt anim
-        anim.SetTrigger("Hurt");
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack")) { 
+            anim.SetTrigger("Hurt");
+            
+        }
 
         if (currentHealth <= 0)
         {
