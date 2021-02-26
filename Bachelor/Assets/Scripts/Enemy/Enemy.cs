@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Raycast
+    #region Raycast, bruker "HotZone"
     // public Transform rayCast;
     // public LayerMask raycastMask;
     // public float rayCastLength;
@@ -40,7 +40,6 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     int currentHealth;
-    // Sid
 
     private float distance; // Store distance b/w enemy and player
     private bool attackMode;
@@ -164,7 +163,7 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
 
         // Play hurt anim
-
+        anim.SetTrigger("Hurt");
 
         if (currentHealth <= 0)
         {
@@ -175,11 +174,17 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         // Die anim
+        anim.SetTrigger("Death");
 
 
         // Disable the enemy
-        GetComponent<Collider2D>().enabled = false;
+        Collider2D[] comps = GetComponentsInChildren<Collider2D>();
 
+        foreach (Collider2D c in comps)
+            c.enabled = false;
+        
+        // GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+        
 
         this.enabled = false;
     }
