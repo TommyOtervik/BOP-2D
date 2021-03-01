@@ -47,10 +47,9 @@ GameObject:
   - component: {fileID: 1586035443770310889}
   - component: {fileID: 824211133}
   - component: {fileID: 1503621388}
-  - component: {fileID: 1503621395}
   m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,7 +153,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.043772995, y: 0.6534087}
+  m_Offset: {x: -0.019292504, y: 0.65913}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -165,7 +164,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9441271, y: 1.124854}
+  m_Size: {x: 0.74960166, y: 1.1362965}
   m_EdgeRadius: 0
 --- !u!114 &1586035443770310888
 MonoBehaviour:
@@ -199,6 +198,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73313aa8331dd2c4bb6d315250b45037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackPoint: {fileID: 1351349244}
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 4096
+  attackRange: 1.3
+  maxHealth: 100
+  currentHealth: 0
 --- !u!114 &1586035443770310889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,25 +218,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawDebugRaycasts: 1
-  speed: 4
+  speed: 6
   coyoteDuration: 0.05
-  jumpForce: 1.7
+  jumpForce: 7
   jumpHoldForce: 1.5
   jumpHoldDuration: 0.1
-  fallMultiplier: 2.5
-  lowJumpMultiplier: 2
-  attackPoint: {fileID: 1351349244}
-  enemyLayers:
-    serializedVersion: 2
-    m_Bits: 4096
-  attackRange: 1
+  fallMultiplier: 10
+  lowJumpMultiplier: 6
   footOffsetLeftFacingRight: 0.95
   footOffsetRightFacingRight: 0.75
   footOffsetLeftFacingLeft: 0.75
   footOffsetRightFacingLeft: 0.95
   eyeHeight: 1
   headClearance: 1.02
-  groundDistance: 0.35
+  groundDistance: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -250,7 +251,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 04f03d0006097e34fb4da8148fd2176a, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -276,18 +277,3 @@ MonoBehaviour:
   m_newColors:
   - {r: 0.105882354, g: 0.14117648, b: 0.4392157, a: 1}
   - {r: 0.13725491, g: 0.30980393, b: 0.69411767, a: 1}
---- !u!114 &1503621395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1586035443770310887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bc650139964c8243b0a67c4aba4cabc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
-  healthbar: {fileID: 0}

@@ -53,8 +53,7 @@ public class PlayerMovement : MonoBehaviour
     PlayerMovement movement;
 
 
-    [SerializeField] GameObject projectile;
-    [SerializeField] Vector3 projectionSpawnOffset;
+    
 
 
     float delayToIdle = 0.0f;

@@ -1,12 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
+    #region Test Event System
 
+    #endregion
+
+
+    #region Combat Variables 
     [Header("Attack Properties")]
-    // Testing for angrep
+    
     public Transform attackPoint;
     public LayerMask enemyLayers;
     [SerializeField]
@@ -14,7 +20,28 @@ public class PlayerCombat : MonoBehaviour
     private int attackDamage = 20;
     private float attackRate = 2f;
     private float nextAttackTime = 0f;
-    // End Test Angrep
+
+    [Header("Ranged Attack Properties")]
+    [SerializeField] GameObject projectile;
+    [SerializeField] Vector3 projectionSpawnOffset;
+
+    #endregion
+
+
+    #region Health System 
+    [Header("Health Properties")]
+    
+
+
+    public int maxHealth = 100;
+    public int currentHealth;
+
+    // public event Action OnPlayerDamaged;
+
+    #endregion
+
+
+
 
 
     PlayerInput input;                      //The current inputs for the player
@@ -23,6 +50,10 @@ public class PlayerCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        currentHealth = maxHealth;
+        // healthbar.SetMaxHealth(maxHealth);
+
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
     }
@@ -30,7 +61,16 @@ public class PlayerCombat : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
+
         AttackManager();
+    }
+
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            TakeDamage(20);
     }
 
     void AttackManager()
@@ -55,6 +95,16 @@ public class PlayerCombat : MonoBehaviour
         {
             RangedAttack();
         }
+    }
+
+    private void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+    }
+
+    private void Die()
+    {
+
     }
 
 
@@ -86,14 +136,7 @@ public class PlayerCombat : MonoBehaviour
         enemy.GetComponentInParent<Enemy>().TakeDamage(attackDamage);
     }
 
-    // Tegner en sirkel som avgrenser hvor spilleren kan angripe
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-            return;
-
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
+  
 
 
     void AltMeleeAttack()
@@ -120,5 +163,15 @@ public class PlayerCombat : MonoBehaviour
         //    // Turn arrow in correct direction
         //    bolt.transform.localScale = facingVector;
         //}
+    }
+
+
+    // Tegner en sirkel som avgrenser hvor spilleren kan angripe
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 }
