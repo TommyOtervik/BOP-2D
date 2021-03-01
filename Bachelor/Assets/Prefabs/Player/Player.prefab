@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 1586035443770310891}
   - component: {fileID: 1586035443770310890}
   - component: {fileID: 1586035443770310888}
+  - component: {fileID: 2062751853379529906}
   - component: {fileID: 1586035443770310889}
   - component: {fileID: 824211133}
   - component: {fileID: 1503621388}
@@ -186,6 +187,18 @@ MonoBehaviour:
   firePressed: 0
   altFirePressed: 0
   rangedAttack: 0
+--- !u!114 &2062751853379529906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586035443770310887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73313aa8331dd2c4bb6d315250b45037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1586035443770310889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,9 +212,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawDebugRaycasts: 1
+  speed: 4
+  coyoteDuration: 0.05
   jumpForce: 1.7
   jumpHoldForce: 1.5
   jumpHoldDuration: 0.1
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
   attackPoint: {fileID: 1351349244}
   enemyLayers:
     serializedVersion: 2
@@ -214,10 +231,12 @@ MonoBehaviour:
   eyeHeight: 1
   headClearance: 1.02
   groundDistance: 0.35
-  grabDistance: 0.4
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
+  isOnGround: 0
+  isJumping: 0
+  isHeadBlocked: 0
   projectile: {fileID: 0}
   projectionSpawnOffset: {x: 0, y: 0, z: 0}
 --- !u!95 &824211133

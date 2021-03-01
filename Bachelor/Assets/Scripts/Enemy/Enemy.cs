@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector] public Transform target;
     [HideInInspector] public bool inRange; // Check if player is in range
+    public BoxCollider2D hitBox;
     public GameObject hotZone;
     public GameObject triggerArea;
     #endregion
@@ -45,6 +46,8 @@ public class Enemy : MonoBehaviour
     private bool attackMode;
 
     private bool cooling; // Check if enemy is cooling after attack
+    private int minRandomHurt = 1;
+    private int maxRandomHurt = 10;
     private float intTimer;
     #endregion
 
@@ -56,6 +59,7 @@ public class Enemy : MonoBehaviour
         intTimer = timer;
 
         anim = GetComponent<Animator>();
+       
 
         currentHealth = maxHealth;
 
@@ -106,13 +110,13 @@ public class Enemy : MonoBehaviour
 
         if (distance > attackDistance)
             StopAttack();
-        else if (attackDistance >= distance && cooling == false)
+        else if (distance <= attackDistance && !cooling)
             Attack();
 
 
         if (cooling)
         {
-            Cooldown();
+            Cooldown();  
             anim.SetBool("Attack", false);
         }
 
@@ -125,6 +129,7 @@ public class Enemy : MonoBehaviour
         {
             cooling = false;
             timer = intTimer;
+            
         }
     }
 
@@ -134,14 +139,16 @@ public class Enemy : MonoBehaviour
         attackMode = true; // To check if enemey can still attack or not
 
         anim.SetBool("canWalk", false);
-        anim.SetBool("Attack", true);
+        anim.SetBool("Attack", attackMode);
     }
+
+   
 
     private void StopAttack()
     {
         cooling = false;
         attackMode = false;
-        anim.SetBool("Attack", false);
+        anim.SetBool("Attack", attackMode);
     }
 
     private void Move()
@@ -163,9 +170,13 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
 
         // Play hurt anim
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack")) { 
+        //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack")) { 
+        //    anim.SetTrigger("Hurt");
+        //}
+        int hurtRand = UnityEngine.Random.Range(minRandomHurt, maxRandomHurt + 1);
+        if (hurtRand == 1)
+        {
             anim.SetTrigger("Hurt");
-            
         }
 
         if (currentHealth <= 0)
@@ -181,14 +192,11 @@ public class Enemy : MonoBehaviour
 
 
         // Disable the enemy
-        Collider2D[] comps = GetComponentsInChildren<Collider2D>();
+        Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
 
-        foreach (Collider2D c in comps)
+        foreach (Collider2D c in enemyColliders)
             c.enabled = false;
         
-        // GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-        
-
         this.enabled = false;
     }
 
