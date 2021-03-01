@@ -6,22 +6,35 @@ public class PrimitiveAttack : MonoBehaviour
 {
     public Transform attackPoint;
 
+    private float attackRate = 1.5f;
+    
     public GameObject bulletPrefab;
     // Start is called before the first frame update
     void Start()
     {
-        //Attack1();
-        Attack2();
+        StartCoroutine(AttackPattern());
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Attack1();
-        //Attack2();
+        
     }
 
-    void Attack1()
+    IEnumerator AttackPattern()
+    {
+        // Egentlig while fienden er i livet, evt om vi skal ha en trigger range før første angrep?
+        while (true)
+        {
+            yield return new WaitForSeconds(attackRate);
+            HorizontalVerticalAttack();
+            yield return new WaitForSeconds(attackRate);
+            DiagonalAttack();
+        }
+
+    }
+
+    void HorizontalVerticalAttack()
     {
         GameObject tempBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity, null);
         tempBullet.GetComponent<PrimitiveObjectMove>().Init(Vector2.left);
@@ -39,7 +52,7 @@ public class PrimitiveAttack : MonoBehaviour
         
     }
 
-    void Attack2()
+    void DiagonalAttack()
     {
         GameObject tempBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity, null);
         tempBullet.GetComponent<PrimitiveObjectMove>().Init(new Vector2(-1, 1));
