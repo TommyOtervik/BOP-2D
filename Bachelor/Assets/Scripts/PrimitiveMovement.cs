@@ -22,7 +22,6 @@ public class PrimitiveMovement : MonoBehaviour
     {
         if (transform.position == _nextPos.position)
         {
-            Debug.Log("Nådde posisjonen!");
             _nextPosIndex++;
             if (_nextPosIndex >= positions.Length)
             {
