@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCombat : MonoBehaviour
-{
-    #region Test Event System
 
-    #endregion
+
+public class Player : MonoBehaviour
+{
 
 
     #region Combat Variables 
@@ -17,7 +16,7 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask enemyLayers;
     [SerializeField]
     private float attackRange = 1f;
-    private int attackDamage = 20;
+    private const int MELEE_ATTACK_DAMAGE = 20;
     private float attackRate = 2f;
     private float nextAttackTime = 0f;
 
@@ -30,52 +29,46 @@ public class PlayerCombat : MonoBehaviour
     private const float ATTACK_WAIT_TIME_FOR_SHAKE = .3f;
 
     #endregion
-
+    
 
     #region Health System 
     [Header("Health Properties")]
     
-
-
     public int maxHealth = 100;
     public int currentHealth;
 
-    // public event Action OnPlayerDamaged;
-
     #endregion
 
-
-
-
-
-    PlayerInput input;                      //The current inputs for the player
+    PlayerInput input;  //The current inputs for the player
     Animator anim;
 
-    // Start is called before the first frame update
     void Start()
     {
 
         currentHealth = maxHealth;
-        // healthbar.SetMaxHealth(maxHealth);
+        
 
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-
-
-        AttackManager();
-    }
+   
 
     private void Update()
     {
 
         if (Input.GetKeyDown(KeyCode.Q))
+        {
             TakeDamage(20);
+            
+        }
+
+        AttackManager();
+
+        
     }
+
+
 
     void AttackManager()
     {
@@ -84,35 +77,33 @@ public class PlayerCombat : MonoBehaviour
         {
             if (input.firePressed)
             {
-                MeleeAttack();
+                Attack(MELEE_ATTACK_DAMAGE);
                 // If attack rate is 2, add 1 divided by 2 = 0.5 sec 
                 nextAttackTime = Time.time + 1f / attackRate;
             }
 
         }
-
-        if (input.altFirePressed)
-        {
-            AltMeleeAttack();
-        }
-        else if (input.rangedAttack)
-        {
-            RangedAttack();
-        }
     }
 
-    private void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
+        anim.SetTrigger("Hurt");
         currentHealth -= damage;
+
+        if (currentHealth <= 0)
+            Death();
     }
 
-    private void Die()
+    void Death()
     {
-
+        
+            Debug.Log("Dead?");
+            anim.SetTrigger("Death");
+ 
+        // Disable, respawn?
     }
 
-
-    void MeleeAttack()
+    void Attack(int amount)
     {
         // Attack animation
         anim.SetTrigger("Attack");
@@ -138,38 +129,10 @@ public class PlayerCombat : MonoBehaviour
         yield return new WaitForSeconds(ATTACK_WAIT_TIME_FOR_SHAKE);
 
         CinemachineShake.Instance.ShakeCamera(CAMERA_SHAKE_INTENSITY, CAMERA_SHAKE_DURATION);
-        enemy.GetComponentInParent<Enemy>().TakeDamage(attackDamage);
+        enemy.GetComponentInParent<EnemyCultist>().TakeDamage(MELEE_ATTACK_DAMAGE);
     }
 
   
-
-
-    void AltMeleeAttack()
-    {
-        anim.SetTrigger("SpecialAttack");
-    }
-
-    void RangedAttack()
-    {
-
-        //    anim.SetTrigger("Throw");
-        //    SpawnProjectile();
-    }
-
-
-    public void SpawnProjectile()
-    {
-        //if (projectile != null)
-        //{
-        //    // Set correct arrow spawn position
-        //    Vector3 facingVector = new Vector3(direction, 1, 1);
-        //    Vector3 projectionSpawnPosition = transform.localPosition + Vector3.Scale(projectionSpawnOffset, facingVector);
-        //    GameObject bolt = Instantiate(projectile, projectionSpawnPosition, gameObject.transform.localRotation) as GameObject;
-        //    // Turn arrow in correct direction
-        //    bolt.transform.localScale = facingVector;
-        //}
-    }
-
 
     // Tegner en sirkel som avgrenser hvor spilleren kan angripe
     void OnDrawGizmosSelected()
@@ -179,4 +142,5 @@ public class PlayerCombat : MonoBehaviour
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
+
 }

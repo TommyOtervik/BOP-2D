@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Enemy : MonoBehaviour
+public class EnemyCultist : MonoBehaviour
 {
     #region Public varaibles
 
-    [Header("Enemy Info")]
+    [Header("EnemyCultist Info")]
     public int maxHealth = 100;
 
     public float attackDistance; // Min. distance for attack
@@ -26,18 +26,10 @@ public class Enemy : MonoBehaviour
     #endregion
 
 
-    #region Raycast, bruker "HotZone"
-    // public Transform rayCast;
-    // public LayerMask raycastMask;
-    // public float rayCastLength;
-    // private RaycastHit2D hit;
-    // private Transfrom target;
-    // private bool inRange;
-    #endregion
-
-
     #region Private Variables 
     Animator anim;
+
+    
 
     [SerializeField]
     int currentHealth;
@@ -80,23 +72,6 @@ public class Enemy : MonoBehaviour
             SelectTarget();
         }
 
-        /*  Raycast
-        if (inRange)
-        {
-            hit = Physics2D.Raycast(rayCast.position, transform.right, rayCastLength, raycastMask);
-            RaycastDebugger();
-        }
-
-        When player is dectected
-        if (hit.collider != null)
-            EnemyLogic();
-        else if (hit.collider == null)
-            inRange = false;
-       
-
-        if (inRange == false)
-            StopAttack();
-        */
 
         if (inRange)
             EnemyLogic();
@@ -140,6 +115,8 @@ public class Enemy : MonoBehaviour
 
         anim.SetBool("canWalk", false);
         anim.SetBool("Attack", attackMode);
+
+       
     }
 
    
@@ -241,29 +218,5 @@ public class Enemy : MonoBehaviour
 
         transform.eulerAngles = rotation;
     }
-
-
-
-    /* Brukes for Raycast  
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-    if (collision.gameObject.CompareTag("Player"))
-       {
-        target = collision.transform;
-        inRange = true;
-        Flip();
-    }
-    }
-*/
-
-    /* Raycast Debugger
-     private void RaycastDebugger()
-    {
-     if (distance > attackDistance)
-         Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.red);
-     else if (attackDistance > distance)
-         Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.green);
-    }
- */
 
 }

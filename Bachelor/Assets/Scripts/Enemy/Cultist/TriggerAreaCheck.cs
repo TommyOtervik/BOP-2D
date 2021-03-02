@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TriggerAreaCheck : MonoBehaviour
 {
-    private Enemy enemyParent;
+    private EnemyCultist enemyParent;
 
     private void Awake()
     {
-        enemyParent = GetComponentInParent<Enemy>();
+        enemyParent = GetComponentInParent<EnemyCultist>();
 
     }
 
