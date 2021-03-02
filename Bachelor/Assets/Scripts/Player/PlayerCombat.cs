@@ -25,6 +25,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] GameObject projectile;
     [SerializeField] Vector3 projectionSpawnOffset;
 
+    private const float CAMERA_SHAKE_INTENSITY = 5f;
+    private const float CAMERA_SHAKE_DURATION = .1f;
+    private const float ATTACK_WAIT_TIME_FOR_SHAKE = .3f;
+
     #endregion
 
 
@@ -131,8 +135,9 @@ public class PlayerCombat : MonoBehaviour
     IEnumerator WaitForAttackDamage(Collider2D enemy)
     {
 
-        yield return new WaitForSeconds(.3f);
-        CinemachineShake.Instance.ShakeCamera(5f, .1f);
+        yield return new WaitForSeconds(ATTACK_WAIT_TIME_FOR_SHAKE);
+
+        CinemachineShake.Instance.ShakeCamera(CAMERA_SHAKE_INTENSITY, CAMERA_SHAKE_DURATION);
         enemy.GetComponentInParent<Enemy>().TakeDamage(attackDamage);
     }
 
