@@ -7,9 +7,10 @@ public class PlayerMovement : MonoBehaviour
 
     public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
 
-    private float speed = 4f;                //Player speed
-    private float coyoteDuration = .05f;     //How long the player can jump after falling
-    private float maxFallSpeed = -25f;       //Max speed player can fall
+    [Header("Movement Properties")]
+    public float speed = 4f;                //Player speed
+    public float coyoteDuration = .05f;     //How long the player can jump after falling
+    float maxFallSpeed = -25f;       //Max speed player can fall
 
     // facing direction
     private bool facingRight;
@@ -18,29 +19,15 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 6.3f;          //Initial force of jump
     public float jumpHoldForce = 1.9f;      //Incremental force when jump is held
     public float jumpHoldDuration = .1f;    //How long the jump key can be held
-    float jumpTime;							//Variable to hold jump duration
-
-    private float fallMultiplier = 2.5f;
-    private float lowJumpMultiplier = 2f;
-
-
-    [Header("Attack Properties")]
-    // Testing for angrep
-    public Transform attackPoint;
-    public LayerMask enemyLayers;
-    [SerializeField]
-    private float attackRange = 1f;
-    private int attackDamage = 20;
-    private float attackRate = 2f;
-    private float nextAttackTime = 0f;
-    private bool isEnemy = false;
-    // End Test Angrep
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
+    private const float BONUS_GRAVITY = 9.8f;
+    private float jumpTime;							//Variable to hold jump duration
 
 
     [Header("Environment Check Properties")]
     // Facing right
     public float footOffsetLeftFacingRight = 0.95f;
-
     public float footOffsetRightFacingRight = 0.75f;
     // Facing left
     public float footOffsetLeftFacingLeft = 0.75f;
@@ -51,16 +38,13 @@ public class PlayerMovement : MonoBehaviour
     public float eyeHeight = 1.11f;          //Height of wall checks
     public float headClearance = .25f;       //Space needed above the player's head
     public float groundDistance = .35f;      //Distance player is considered to be on the ground
-    public float grabDistance = .4f;        //The reach distance for wall grabs
     public LayerMask groundLayer;           //Layer of the ground
     
 
-    private bool isOnGround = false;         //Is the player on the ground?
-    private bool isJumping;                  //Is player jumping?
-    private bool isHeadBlocked;
-
-   
-
+    [Header("Status Flags")]
+    public bool isOnGround;                 //Is the player on the ground?
+    public bool isJumping;                  //Is player jumping?
+    public bool isHeadBlocked;
 
     PlayerInput input;                      //The current inputs for the player
     BoxCollider2D bodyCollider;             //The collider component
@@ -69,11 +53,11 @@ public class PlayerMovement : MonoBehaviour
     PlayerMovement movement;
 
 
-    [SerializeField] GameObject projectile;
-    [SerializeField] Vector3 projectionSpawnOffset;
+    
 
 
     float delayToIdle = 0.0f;
+    private const float DELAY_TO_IDLE_ANIM = 0.05f;
     float coyoteTime;                       //Variable to hold coyote duration
     float playerHeight;                     //Height of the player
 
@@ -83,7 +67,6 @@ public class PlayerMovement : MonoBehaviour
     Vector2 colliderStandSize;              //Size of the standing collider
     Vector2 colliderStandOffset;			//Offset of the standing collider
 
-    const float smallAmount = .05f;			//A small amount used for hanging position
 
     // Start is called before the first frame update
     void Start()
@@ -111,6 +94,7 @@ public class PlayerMovement : MonoBehaviour
         //Record the player's height from the collider
         playerHeight = bodyCollider.size.y;
 
+ 
         //Record initial collider size and offset
         colliderStandSize = bodyCollider.size;
         colliderStandOffset = bodyCollider.offset;
@@ -125,7 +109,6 @@ public class PlayerMovement : MonoBehaviour
         //Process ground and air movements
         GroundMovement();
         MidAirMovement();
-        AttackManager();
     }
 
     void PhysicsCheck()
@@ -194,8 +177,9 @@ public class PlayerMovement : MonoBehaviour
         // Run
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
+            
             // Reset timer
-            delayToIdle = 0.05f;
+            delayToIdle = DELAY_TO_IDLE_ANIM;
             anim.SetInteger("AnimState", 1);
         }
         // Idle
@@ -211,39 +195,49 @@ public class PlayerMovement : MonoBehaviour
     void MidAirMovement()
     {
 
-        
-
         if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
+
             isOnGround = false;
             isJumping = true;
-
-            jumpTime = Time.time + jumpHoldDuration;
 
             anim.SetTrigger("Jump");
             anim.SetBool("Grounded", isOnGround);
 
-            rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            Debug.Log(rigidBody.velocity.y);
+            jumpTime = Time.time + jumpHoldDuration;
 
-            
+            // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, 4);
+
         }
         else if (isJumping)
         {
 
             if (input.jumpHeld)
-                rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce * jumpHoldForce);
+                // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
 
+                // Uniform acceleration, "Vanlig"
+                // rigidBody.velocity = new Vector2(rigidBody.velocity.x, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight)); 
 
             if (jumpTime <= Time.time)
                 isJumping = false;
         }
+
+        // Add extra fake gravity to the player
+        Vector2 vel = rigidBody.velocity;
+        vel.x = rigidBody.velocity.x;
+        vel.y -= BONUS_GRAVITY * Time.deltaTime;
+        rigidBody.velocity = vel;
+
+
 
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
 
         if (rigidBody.velocity.y < 0)
         {
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+
         }
         else if (rigidBody.velocity.y > 0 && !input.jumpHeld)
         {
@@ -251,88 +245,13 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-
+  
         //If player is falling to fast, reduce the Y velocity to the max
         if (rigidBody.velocity.y < maxFallSpeed)
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, maxFallSpeed);
 
+        
     }
-
-    void AttackManager()
-    {
-
-        if(Time.time >= nextAttackTime)
-        {
-            if (input.firePressed)
-            {
-                MeleeAttack();
-                // If attack rate is 2, add 1 divided by 2 = 0.5 sec 
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
-
-        }
-
-        if (input.altFirePressed)
-        {
-            AltMeleeAttack();
-        }
-        else if (input.rangedAttack)
-        {
-            RangedAttack();
-        }
-    }
-
-
-    void MeleeAttack()
-    {
-        // Attack animation
-        anim.SetTrigger("Attack");
-
-        // Detect enemies in range of attack
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
-        // Damage them
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-        }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null)
-            return;
-
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
-
-
-    void AltMeleeAttack()
-    {
-        anim.SetTrigger("SpecialAttack");
-    }
-
-    void RangedAttack()
-    {
-
-        //    anim.SetTrigger("Throw");
-        //    SpawnProjectile();
-    }
-
-
-    public void SpawnProjectile()
-    {
-        //if (projectile != null)
-        //{
-        //    // Set correct arrow spawn position
-        //    Vector3 facingVector = new Vector3(direction, 1, 1);
-        //    Vector3 projectionSpawnPosition = transform.localPosition + Vector3.Scale(projectionSpawnOffset, facingVector);
-        //    GameObject bolt = Instantiate(projectile, projectionSpawnPosition, gameObject.transform.localRotation) as GameObject;
-        //    // Turn arrow in correct direction
-        //    bolt.transform.localScale = facingVector;
-        //}
-    }
-
 
 
     void FlipCharacterDirection()
@@ -387,11 +306,6 @@ public class PlayerMovement : MonoBehaviour
 
         //Return the results of the raycast
         return hit;
-    }
-
-    private void ResetIsJumping()
-    {
-        isJumping = false;
     }
 
     // Update is called once per frame
