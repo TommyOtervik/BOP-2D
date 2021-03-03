@@ -198,13 +198,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73313aa8331dd2c4bb6d315250b45037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPoint: {fileID: 0}
+  maxHealth: 100
+  currentHealth: 0
   attackPoint: {fileID: 1351349244}
   enemyLayers:
     serializedVersion: 2
     m_Bits: 4096
   attackRange: 1.3
-  maxHealth: 100
-  currentHealth: 0
+  projectile: {fileID: 0}
+  projectionSpawnOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &1586035443770310889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,8 +241,6 @@ MonoBehaviour:
   isOnGround: 0
   isJumping: 0
   isHeadBlocked: 0
-  projectile: {fileID: 0}
-  projectionSpawnOffset: {x: 0, y: 0, z: 0}
 --- !u!95 &824211133
 Animator:
   serializedVersion: 3
@@ -252,7 +253,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 04f03d0006097e34fb4da8148fd2176a, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 

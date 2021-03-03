@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 
 
@@ -69,10 +70,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            TakeDamage(20); 
-        }
+       
         AttackManager(); 
     }
 
@@ -104,20 +102,19 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
 
     public void Death()
     {
-        
         anim.SetTrigger(DEATH_STR);
-        currentHealth = 0;
+        GetComponent<PlayerMovement>().enabled = false;
+        
         StartCoroutine(WaitForRespawn());
-      
     }
 
     IEnumerator WaitForRespawn()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
-        transform.position = new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0);
-        anim.SetTrigger("Spellcast");
-        currentHealth = maxHealth;
+        // transform.position = new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
     }
 
     public void Attack(int amount)
