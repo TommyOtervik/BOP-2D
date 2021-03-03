@@ -108,6 +108,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         StartCoroutine(WaitForRespawn());
     }
 
+    // FIXME: Skal i GameManager? -> Må også gjøre spilleren "Usynlig" for fiender når hen er død.
     IEnumerator WaitForRespawn()
     {
         yield return new WaitForSeconds(1f);
