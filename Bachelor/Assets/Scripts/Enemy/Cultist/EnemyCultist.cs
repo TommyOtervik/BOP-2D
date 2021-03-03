@@ -2,38 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
-public class EnemyCultist : MonoBehaviour
+public class EnemyCultist : MonoBehaviour, IDamageable<int>
 {
-    #region Public varaibles
 
+    #region External Private Variables (For editor)
     [Header("EnemyCultist Info")]
-    public int maxHealth = 100;
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private float attackDistance; // Min. distance for attack
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float timer; // Timer for cooldown between attacks
+    [SerializeField] private bool inRange; // Check if player is in range
+    [SerializeField] private Transform target;
 
-    public float attackDistance; // Min. distance for attack
-    public float moveSpeed;
-    public float timer; // Timer for cooldown between attacks
+    // Venstre & Høyre grense for patruljering
+    [SerializeField] private Transform leftLimit;
+    [SerializeField] private Transform rightLimit;
 
-    public Transform leftLimit;
-    public Transform rightLimit;
+    // Søke / trigger område for AI
+    [SerializeField] private GameObject hotZone;
+    [SerializeField] private GameObject triggerArea;
 
-    [HideInInspector] public Transform target;
-    [HideInInspector] public bool inRange; // Check if player is in range
-    public BoxCollider2D hitBox;
-    public GameObject hotZone;
-    public GameObject triggerArea;
+    // BoxCollider for våpen til fiende
+    [SerializeField] private BoxCollider2D hitBox;
+    
+    [SerializeField] private int currentHealth;
     #endregion
 
 
-    #region Private Variables 
-    Animator anim;
-
-    
-
-    [SerializeField]
-    int currentHealth;
-
+    #region Internal Private Variables
+    private Animator anim;
     private float distance; // Store distance b/w enemy and player
     private bool attackMode;
 
@@ -41,6 +41,15 @@ public class EnemyCultist : MonoBehaviour
     private int minRandomHurt = 1;
     private int maxRandomHurt = 10;
     private float intTimer;
+    #endregion
+
+    #region Events
+    private UnityAction flipCultistListener;
+    private const string FLIP_CULTIST_KEY = "FlipCultist";
+    
+    private UnityAction hotZoneExitListener;
+    private const string HOT_ZONE_EXIT_KEY = "HotZoneExit";
+
     #endregion
 
 
@@ -51,14 +60,17 @@ public class EnemyCultist : MonoBehaviour
         intTimer = timer;
 
         anim = GetComponent<Animator>();
-       
 
         currentHealth = maxHealth;
+
+        flipCultistListener = new UnityAction(Flip);
+        hotZoneExitListener = new UnityAction(HotZoneExit);
+  
+
 
         // Test 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-
     }
 
     void Update()
@@ -113,22 +125,19 @@ public class EnemyCultist : MonoBehaviour
         timer = intTimer; // Reset timer when player enter attack range
         attackMode = true; // To check if enemey can still attack or not
 
-        anim.SetBool("canWalk", false);
+        anim.SetBool("canWalk", !attackMode);
         anim.SetBool("Attack", attackMode);
 
-       
     }
 
-   
-
-    private void StopAttack()
+    public void StopAttack()
     {
         cooling = false;
         attackMode = false;
         anim.SetBool("Attack", attackMode);
     }
 
-    private void Move()
+    public void Move()
     {
         anim.SetBool("canWalk", true);
 
@@ -158,15 +167,16 @@ public class EnemyCultist : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Die();
+            Death();
         }
     }
 
-    void Die()
+    public void Death()
     {
         // Die anim
         anim.SetTrigger("Death");
-
+        attackMode = false;
+        anim.SetBool("Attack", attackMode);
 
         // Disable the enemy
         Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
@@ -179,7 +189,7 @@ public class EnemyCultist : MonoBehaviour
 
 
 
-
+    // Bruker i animator for å sette "Cooldown" etter slag.
     public void TriggerCooling()
     {
         cooling = true;
@@ -192,7 +202,7 @@ public class EnemyCultist : MonoBehaviour
     }
 
 
-    public void SelectTarget()
+    private void SelectTarget()
     {
         float distanceToLeft = Vector2.Distance(transform.position, leftLimit.position);
         float distanceToRight = Vector2.Distance(transform.position, rightLimit.position);
@@ -204,10 +214,18 @@ public class EnemyCultist : MonoBehaviour
             target = rightLimit;
 
         Flip();
-
     }
 
-    public void Flip()
+    private void HotZoneExit()
+    {
+        
+        triggerArea.SetActive(true);
+        inRange = false;
+        SelectTarget();
+    }
+
+
+    private void Flip()
     {
         Vector3 rotation = transform.eulerAngles;
 
@@ -217,6 +235,43 @@ public class EnemyCultist : MonoBehaviour
             rotation.y = 0f;
 
         transform.eulerAngles = rotation;
+    }
+
+    private void OnEnable()
+    {
+        EventManager.StartListening(FLIP_CULTIST_KEY, flipCultistListener);
+        EventManager.StartListening(HOT_ZONE_EXIT_KEY, hotZoneExitListener);
+
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(FLIP_CULTIST_KEY, flipCultistListener);
+        EventManager.StopListening(HOT_ZONE_EXIT_KEY, hotZoneExitListener);
+
+    }
+
+    // Getters / Setters
+    public bool GetAttackmode()
+    {
+        return attackMode;
+    }
+
+  
+
+    public GameObject GetHotZone()
+    {
+        return hotZone;
+    }
+
+    public void SetInRange(bool inRange)
+    {
+        this.inRange = inRange;
+    }
+
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
     }
 
 }

@@ -53,9 +53,6 @@ public class PlayerMovement : MonoBehaviour
     PlayerMovement movement;
 
 
-    
-
-
     float delayToIdle = 0.0f;
     private const float DELAY_TO_IDLE_ANIM = 0.05f;
     float coyoteTime;                       //Variable to hold coyote duration

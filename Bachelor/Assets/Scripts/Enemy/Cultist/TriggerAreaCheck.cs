@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class TriggerAreaCheck : MonoBehaviour
 {
+    // Kjdelig referanse til cultist..
     private EnemyCultist enemyParent;
+ 
 
     private void Awake()
     {
@@ -18,9 +20,11 @@ public class TriggerAreaCheck : MonoBehaviour
         if (collider.gameObject.CompareTag("Player"))
         {
             gameObject.SetActive(false);
-            enemyParent.target = collider.transform;
-            enemyParent.inRange = true;
-            enemyParent.hotZone.SetActive(true);
+            // Skulle ha sendt data på en annen måte.
+            // Ikke public metoder..?
+            enemyParent.SetTarget(collider.transform);
+            enemyParent.SetInRange(true);
+            enemyParent.GetHotZone().SetActive(true);
         }
     }
 }

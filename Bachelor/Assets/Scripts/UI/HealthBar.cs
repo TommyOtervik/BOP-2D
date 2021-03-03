@@ -20,13 +20,13 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
-        SetHealth(player.currentHealth);
+        SetHealth(player.GetCurrentHealth());
     }
 
     public void SetMaxHealth()
     {
-        slider.maxValue = player.maxHealth;
-        slider.value = player.currentHealth;
+        slider.maxValue = player.GetMaxHealth();
+        slider.value = player.GetCurrentHealth();
     }
 
     public void SetHealth(int health)
