@@ -12,6 +12,19 @@ public class PrimitiveObjectMove : MonoBehaviour
     private const float MAXTravelDistance = 40.0f;
     
     
+    // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
+    private const string PLAYER_NAME = "Player";
+    
+    private int damageAmount = 20;
+
+    private Player player;
+
+    private void Awake()
+    {
+        player = FindObjectOfType<Player>();
+    }
+    
+    
     // Use this for initialization
 
     public void Init(Vector2 direction)
@@ -41,12 +54,21 @@ public class PrimitiveObjectMove : MonoBehaviour
         
     }
     
-    void OnTriggerEnter2D (Collider2D target) {
+    void OnTriggerEnter2D (Collider2D collision) {
+        if (collision.name == PLAYER_NAME)
+        {
+            // Hvis sant, gjør skade til spilleren
+            player.TakeDamage(damageAmount);
+        }
         Destroy(gameObject);
     }
     
-
+    
 }
+
+
+
+
 
 
 

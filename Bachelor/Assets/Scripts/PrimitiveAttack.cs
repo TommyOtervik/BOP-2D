@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PrimitiveAttack : MonoBehaviour
 {
-    public Transform attackPoint;
-
+    
     private float attackRate = 1.5f;
     
     public GameObject bulletPrefab;
