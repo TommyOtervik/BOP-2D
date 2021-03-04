@@ -28,10 +28,13 @@ public class JumpEnemyAttacker : MonoBehaviour
     
     [Header("Other")]
     private Rigidbody2D enemyRb;
+
+    private Animator enemyAnim;
     // Start is called before the first frame update
     void Start()
     {
         enemyRb = GetComponent<Rigidbody2D>();
+        enemyAnim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -41,6 +44,9 @@ public class JumpEnemyAttacker : MonoBehaviour
         checkingWall = Physics2D.OverlapCircle(wallCheckPoint.position, circleRadius, groundLayer);
         isGrounded = Physics2D.OverlapBox(groundCheck.position, boxSize, 0, groundLayer);
         canSeePlayer = Physics2D.OverlapBox(transform.position, lineOfSight, 0, playerLayer);
+
+        AnimationController();
+        
         if (!canSeePlayer && isGrounded)
         {
             Patrolling();
@@ -78,6 +84,7 @@ public class JumpEnemyAttacker : MonoBehaviour
 
     void FlipTowardsPlayer()
     {
+        Debug.Log("Blir jeg kalt?");
         float playerPosition = player.position.x - transform.position.x;
         if (playerPosition < 0 && facingRight)
         {
@@ -94,6 +101,13 @@ public class JumpEnemyAttacker : MonoBehaviour
         moveDirection *= -1;
         facingRight = !facingRight;
         transform.Rotate(0, 180, 0);
+    }
+
+    void AnimationController()
+    {
+        enemyAnim.SetBool("canSeePlayer", canSeePlayer);
+        enemyAnim.SetBool("isGrounded", isGrounded);
+
     }
 
     private void OnDrawGizmosSelected()
