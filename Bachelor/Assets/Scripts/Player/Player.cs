@@ -10,9 +10,10 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
 {
     #region General Variables
-    private PlayerInput input;  //The current inputs for the player
-    private Animator anim;
-   
+    private PlayerInput input;  // Gjendende input for spilleren
+    private Animator anim;    // Animator, setter animasjoner basert på funksjoner/variabler
+
+    // Konstanter for animator
     private const string HURT_STR = "Hurt";
     private const string DEATH_STR = "Death";
     private const string ATTACK_STR = "Attack";
@@ -50,6 +51,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     #region Events
     private UnityAction killFloorHitListener;
     private const string KILL_FLOOR_HIT_KEY = "KillFloorHit";
+
+    private const string PLAYER_DEAD_KEY = "PlayerDead";
     #endregion
 
 
@@ -61,7 +64,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     void Start()
     {
         currentHealth = maxHealth;
-        
+
+       
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
     }
@@ -75,7 +79,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     }
 
    
-
+    // Håndtere angrep (hvordan knapp som blir trykket på)
     void AttackManager()
     {
         if (Time.time >= nextAttackTime)
@@ -90,7 +94,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         // if, elif altFire, specialAttack..?
     }
 
-    
+    // Spilleren tar skade
     public void TakeDamage(int damage)
     {
         anim.SetTrigger(HURT_STR);
@@ -100,20 +104,29 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
             Death();
     }
 
+    // Spilleren dør
     public void Death()
     {
         anim.SetTrigger(DEATH_STR);
+
+        // Gjør spilleren "unsynlig" for fiender når hen dør.
         GetComponent<PlayerMovement>().enabled = false;
-        
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        // Fiender lytter til denne
+        EventManager.TriggerEvent(PLAYER_DEAD_KEY);
+
         StartCoroutine(WaitForRespawn());
     }
 
-    // FIXME: Skal i GameManager? -> Må også gjøre spilleren "Usynlig" for fiender når hen er død.
+    // FIXME: Skal i GameManager? (LoadScene..)
     IEnumerator WaitForRespawn()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
 
         // transform.position = new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0);
+       
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
@@ -157,12 +170,13 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
-
+    // Event lytter når objektet blir aktiv
     private void OnEnable()
     {
         EventManager.StartListening(KILL_FLOOR_HIT_KEY, killFloorHitListener);
     }
 
+    // Slå av lytter når objektet blir inaktivt (Memory leaks)
     private void OnDisable()
     {
         EventManager.StopListening(KILL_FLOOR_HIT_KEY, killFloorHitListener);

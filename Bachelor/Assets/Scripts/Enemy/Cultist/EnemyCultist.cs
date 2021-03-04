@@ -50,6 +50,9 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
     private UnityAction hotZoneExitListener;
     private const string HOT_ZONE_EXIT_KEY = "HotZoneExit";
 
+    private UnityAction playerDeadListener;
+    private const string PLAYER_DEAD_KEY = "PlayerDead";
+
     #endregion
 
 
@@ -65,7 +68,7 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
         flipCultistListener = new UnityAction(Flip);
         hotZoneExitListener = new UnityAction(HotZoneExit);
-  
+        playerDeadListener = new UnityAction(StopAttack);
 
 
         // Test 
@@ -241,14 +244,14 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
     {
         EventManager.StartListening(FLIP_CULTIST_KEY, flipCultistListener);
         EventManager.StartListening(HOT_ZONE_EXIT_KEY, hotZoneExitListener);
-
+        EventManager.StartListening(PLAYER_DEAD_KEY, playerDeadListener);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(FLIP_CULTIST_KEY, flipCultistListener);
         EventManager.StopListening(HOT_ZONE_EXIT_KEY, hotZoneExitListener);
-
+        EventManager.StopListening(PLAYER_DEAD_KEY, playerDeadListener);
     }
 
     // Getters / Setters
