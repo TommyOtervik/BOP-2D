@@ -49,7 +49,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 0}
   - m_Name: AirSpeedY
     m_Type: 1
@@ -413,19 +413,19 @@ AnimatorStateMachine:
     m_Position: {x: 132, y: 108, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110290548}
-    m_Position: {x: 420, y: 24, z: 0}
+    m_Position: {x: 400, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110272826}
     m_Position: {x: 420, y: 84, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110273628}
-    m_Position: {x: 420, y: 288, z: 0}
+    m_Position: {x: 420, y: 320, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110242590}
-    m_Position: {x: 648, y: 276, z: 0}
+    m_Position: {x: 740, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102586514443800624}
-    m_Position: {x: 876, y: 276, z: 0}
+    m_Position: {x: 960, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102009571870106696}
     m_Position: {x: 420, y: -60, z: 0}
@@ -443,7 +443,7 @@ AnimatorStateMachine:
     m_Position: {x: 420, y: 132, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102651568164570270}
-    m_Position: {x: 420, y: 228, z: 0}
+    m_Position: {x: 420, y: 250, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 110184104}
