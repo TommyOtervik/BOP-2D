@@ -9,13 +9,13 @@ public class KillFloor : MonoBehaviour
     private Transform spawnPoint;
 
     private const string PLAYER_TAG = "Player";
-    private const string KILL_FLOOR_HIT_KEY = "KillFloorHit";
+
 
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.transform.CompareTag(PLAYER_TAG))
         {
-            EventManager.TriggerEvent(KILL_FLOOR_HIT_KEY);
+            EventManager.TriggerEvent(EnumEvents.KILL_FLOOR_HIT);
         }
     }
 

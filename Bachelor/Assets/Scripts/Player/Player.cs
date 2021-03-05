@@ -50,9 +50,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
 
     #region Events
     private UnityAction killFloorHitListener;
-    private const string KILL_FLOOR_HIT_KEY = "KillFloorHit";
+    
 
-    private const string PLAYER_DEAD_KEY = "PlayerDead";
     #endregion
 
 
@@ -64,17 +63,13 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     void Start()
     {
         currentHealth = maxHealth;
-
-       
+ 
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
     }
 
-   
-
     private void Update()
-    {
-       
+    {  
         AttackManager(); 
     }
 
@@ -115,7 +110,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         GetComponent<BoxCollider2D>().enabled = false;
 
         // Fiender lytter til denne
-        EventManager.TriggerEvent(PLAYER_DEAD_KEY);
+        EventManager.TriggerEvent(EnumEvents.PLAYER_DEAD);
 
         StartCoroutine(WaitForRespawn());
     }
@@ -173,13 +168,17 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     // Event lytter når objektet blir aktiv
     private void OnEnable()
     {
-        EventManager.StartListening(KILL_FLOOR_HIT_KEY, killFloorHitListener);
+       EventManager.StartListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
+
+        CultistHitBox.CultistDamage += TakeDamage;
     }
 
     // Slå av lytter når objektet blir inaktivt (Memory leaks)
     private void OnDisable()
     {
-        EventManager.StopListening(KILL_FLOOR_HIT_KEY, killFloorHitListener);
+        EventManager.StopListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
+
+        CultistHitBox.CultistDamage -= TakeDamage;
     }
 
     // Getters

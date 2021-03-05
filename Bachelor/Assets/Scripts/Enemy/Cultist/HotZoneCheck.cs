@@ -5,24 +5,14 @@ using UnityEngine;
 public class HotZoneCheck : MonoBehaviour
 {
     private bool inRange;
-    // private Animator anim; // Kjedelig referanse?
-
     private const string PLAYER_NAME = "Player";
-    private const string FLIP_CULTIST_KEY = "FlipCultist";
-    private const string HOT_ZONE_EXIT_KEY = "HotZoneExit";
 
-    private void Awake()
-    {
-        // anim = GetComponentInParent<Animator>();
-    }
 
     private void Update()
     {
-        //if (inRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack"))
-        //{
         if(inRange)
         { 
-            EventManager.TriggerEvent(FLIP_CULTIST_KEY);
+            EventManager.TriggerEvent(EnumEvents.FLIP_CULTIST);
         }
     }
 
@@ -39,8 +29,7 @@ public class HotZoneCheck : MonoBehaviour
             inRange = false;
             gameObject.SetActive(false);
 
-            EventManager.TriggerEvent(HOT_ZONE_EXIT_KEY);
-
+            EventManager.TriggerEvent(EnumEvents.HOT_ZONE_EXIT);
         }
     }
 

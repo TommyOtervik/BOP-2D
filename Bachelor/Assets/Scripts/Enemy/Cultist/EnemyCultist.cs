@@ -45,14 +45,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
     #region Events
     private UnityAction flipCultistListener;
-    private const string FLIP_CULTIST_KEY = "FlipCultist";
-    
     private UnityAction hotZoneExitListener;
-    private const string HOT_ZONE_EXIT_KEY = "HotZoneExit";
-
     private UnityAction playerDeadListener;
-    private const string PLAYER_DEAD_KEY = "PlayerDead";
-
     #endregion
 
 
@@ -153,15 +147,11 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
     }
 
 
-
+    // Håndterer skade som er gjort mot AI.
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
 
-        // Play hurt anim
-        //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack")) { 
-        //    anim.SetTrigger("Hurt");
-        //}
         int hurtRand = UnityEngine.Random.Range(minRandomHurt, maxRandomHurt + 1);
         if (hurtRand == 1)
         {
@@ -174,6 +164,7 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         }
     }
 
+    // Håndterer død av AI
     public void Death()
     {
         // Die anim
@@ -192,7 +183,7 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
 
 
-    // Bruker i animator for å sette "Cooldown" etter slag.
+    // Bruker i animator for å vente med å angripe etter et slag.
     public void TriggerCooling()
     {
         cooling = true;
@@ -205,6 +196,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
     }
 
 
+    // Velger "Patruljeringspunkt" ut i fra distansen,
+    // velger er lengst unna.
     private void SelectTarget()
     {
         float distanceToLeft = Vector2.Distance(transform.position, leftLimit.position);
@@ -219,15 +212,27 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         Flip();
     }
 
+    // Går spilleren utenfor HotZone, skal AI patruljere
     private void HotZoneExit()
     {
-        
         triggerArea.SetActive(true);
         inRange = false;
         SelectTarget();
     }
 
+    // Hvis spilleren går inn i området skal AI søke etter spilleren,
+    // henter data fra TriggerAreaCheck (Om hen går innenfor).
+    // Setter target til spillerens pos, inRange og hotZone (er spilleren innenfor 
+    // denne sonen, skal AI følge etter)
+    private void UpdateAreaCheck(Transform trans, bool inRange, bool hotZoneActive)
+    {
+        target = trans;
+        this.inRange = inRange;
+        hotZone.SetActive(hotZoneActive);
+    }
 
+
+    // Snur fienden etter spilleren
     private void Flip()
     {
         Vector3 rotation = transform.eulerAngles;
@@ -240,41 +245,25 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         transform.eulerAngles = rotation;
     }
 
+    // Subscriber til events
     private void OnEnable()
     {
-        EventManager.StartListening(FLIP_CULTIST_KEY, flipCultistListener);
-        EventManager.StartListening(HOT_ZONE_EXIT_KEY, hotZoneExitListener);
-        EventManager.StartListening(PLAYER_DEAD_KEY, playerDeadListener);
+        EventManager.StartListening(EnumEvents.FLIP_CULTIST, flipCultistListener);
+        EventManager.StartListening(EnumEvents.HOT_ZONE_EXIT, hotZoneExitListener);
+        EventManager.StartListening(EnumEvents.PLAYER_DEAD, playerDeadListener);
+
+        // Trigger området til Cultist
+        TriggerAreaCheck.UpdateAreaEnter += UpdateAreaCheck;
     }
 
+    // Unsubscriber til events
     private void OnDisable()
     {
-        EventManager.StopListening(FLIP_CULTIST_KEY, flipCultistListener);
-        EventManager.StopListening(HOT_ZONE_EXIT_KEY, hotZoneExitListener);
-        EventManager.StopListening(PLAYER_DEAD_KEY, playerDeadListener);
+        EventManager.StopListening(EnumEvents.FLIP_CULTIST, flipCultistListener);
+        EventManager.StopListening(EnumEvents.HOT_ZONE_EXIT, hotZoneExitListener);
+        EventManager.StopListening(EnumEvents.PLAYER_DEAD, playerDeadListener);
+
+        // Trigger området til Cultist
+        TriggerAreaCheck.UpdateAreaEnter -= UpdateAreaCheck;
     }
-
-    // Getters / Setters
-    public bool GetAttackmode()
-    {
-        return attackMode;
-    }
-
-  
-
-    public GameObject GetHotZone()
-    {
-        return hotZone;
-    }
-
-    public void SetInRange(bool inRange)
-    {
-        this.inRange = inRange;
-    }
-
-    public void SetTarget(Transform target)
-    {
-        this.target = target;
-    }
-
 }
