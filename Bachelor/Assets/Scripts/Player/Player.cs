@@ -50,27 +50,42 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
 
     #region Events
     private UnityAction killFloorHitListener;
-    
 
+    // TEST FOR SAVE (SKAL EGENTLIG I GAMEMANAGER?)
+    private UnityAction tutorialToCastleListener;
+    private UnityAction loadPlayerListener;
+
+    public static event Action<int> UpdateHealth;
+    public static event Action<int> SetMaxHealth;
     #endregion
 
 
     private void Awake()
     {
+        currentHealth = maxHealth;
+
         killFloorHitListener = new UnityAction(Death);
+        tutorialToCastleListener = new UnityAction(SavePlayer);
+        loadPlayerListener = new UnityAction(LoadPlayer);
     }
 
     void Start()
     {
-        currentHealth = maxHealth;
- 
+        
+        SetMaxHealth?.Invoke(maxHealth);
+
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
     }
 
+
+
     private void Update()
     {  
-        AttackManager(); 
+        AttackManager();
+
+        UpdateHealth?.Invoke(currentHealth);
+        
     }
 
    
@@ -169,26 +184,54 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     private void OnEnable()
     {
        EventManager.StartListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
+       EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+       EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
-        CultistHitBox.CultistDamage += TakeDamage;
+
+       CultistHitBox.CultistDamage += TakeDamage;
     }
 
     // Slå av lytter når objektet blir inaktivt (Memory leaks)
     private void OnDisable()
     {
         EventManager.StopListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
+        EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+        EventManager.StopListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
+        
 
         CultistHitBox.CultistDamage -= TakeDamage;
     }
 
-    // Getters
+
+    // Brukes i PlayerData for save 
     public int GetCurrentHealth()
     {
         return currentHealth;
     }
 
-    public int GetMaxHealth()
+
+
+    // SKAL I GAME MANAGER
+    public void SavePlayer()
     {
-        return maxHealth;
+        SaveSystem.SavePlayer(this);
+
+        Debug.Log("Saved Player. HP: " + this.currentHealth); 
+    }
+
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystem.LoadPlayer();
+
+        this.currentHealth = data.GetCurrentHealth();
+
+        Debug.Log("Load Player. HP: " + this.currentHealth);
+        // BARE TEST FOR CASTLE NIVÅ
+        //Vector3 pos;
+        //pos.x = -6.7f;
+        //pos.y = -1f;
+        //pos.z = 0f;
+
+        //transform.position = pos;
     }
 }

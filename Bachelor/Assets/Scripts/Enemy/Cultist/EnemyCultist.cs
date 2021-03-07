@@ -177,8 +177,10 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
         foreach (Collider2D c in enemyColliders)
             c.enabled = false;
-        
+
         this.enabled = false;
+
+        EventManager.TriggerEvent(EnumEvents.CULTIST_DEAD);
     }
 
 
