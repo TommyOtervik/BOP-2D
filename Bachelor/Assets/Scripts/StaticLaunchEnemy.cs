@@ -8,7 +8,8 @@ public class StaticLaunchEnemy : MonoBehaviour
 
     public LayerMask groundLayer;
 
-    private bool canSeePlayer;
+    private bool canAttackHorizontal;
+    private bool canAttackGrenade;
     private bool horizontalAttackInProgress;
     private bool grenadeAttackInProgress;
     BoxCollider2D bodyCollider;
@@ -26,24 +27,49 @@ public class StaticLaunchEnemy : MonoBehaviour
 
     void Update()
     {
-        RayCastCheck();
-        if (canSeePlayer && !horizontalAttackInProgress && !grenadeAttackInProgress)
+        HorizontalRayCastCheck();
+        GrenadeRayCastCheck();
+        if (canAttackHorizontal && !canAttackGrenade)
         {
-            //StartCoroutine(HorizontalAttackPattern());
-            //StartCoroutine(GrenadeAttackPattern());
+            if (!horizontalAttackInProgress && !grenadeAttackInProgress)
+            {
+                StartCoroutine(HorizontalAttackPattern());
+            }
         }
+
+        if (canAttackGrenade)
+        {
+            if (!horizontalAttackInProgress && !grenadeAttackInProgress)
+            {
+                StartCoroutine(GrenadeAttackPattern());
+            }
+        }
+
     }
 
-    void RayCastCheck()
+    void HorizontalRayCastCheck()
     {
         RaycastHit2D playerHit = Raycast(new Vector2(0, -1), Vector2.left, 10);
         if (playerHit)
         {
-            canSeePlayer = true;
+            canAttackHorizontal = true;
         }
         else
         {
-            canSeePlayer = false;
+            canAttackHorizontal = false;
+        }
+    }
+    
+    void GrenadeRayCastCheck()
+    {
+        RaycastHit2D playerHit = Raycast(new Vector2(0, 1) * -1.3f, Vector2.left, 3);
+        if (playerHit)
+        {
+            canAttackGrenade = true;
+        }
+        else
+        {
+            canAttackGrenade = false;
         }
     }
     

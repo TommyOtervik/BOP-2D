@@ -579,25 +579,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4700578225409434121}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &866981638 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3424320596094682072, guid: f98988429d0fe3f4481c3323aefe4585,
-    type: 3}
-  m_PrefabInstance: {fileID: 3424320595249730782}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &866981639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866981638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3c044544b53d2c47ad26f9865630fa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyRb: {fileID: 0}
 --- !u!1 &872489011
 GameObject:
   m_ObjectHideFlags: 0
@@ -13666,7 +13647,8 @@ MonoBehaviour:
     m_Bits: 512
   bulletPrefab: {fileID: 1737950993475284604, guid: eb1de46795ac4ca4baeb45ac50321859,
     type: 3}
-  grenadePrefab: {fileID: 866981638}
+  grenadePrefab: {fileID: 3424320596094682072, guid: f98988429d0fe3f4481c3323aefe4585,
+    type: 3}
   horizontalAttackPoint: {fileID: 1301963813}
   grenadeLaunchAttackPoint: {fileID: 766777844}
 --- !u!61 &1207823101
@@ -91945,80 +91927,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 782677478085180686, guid: 1b2f05cd5e10d3043931e60c3d255601, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1b2f05cd5e10d3043931e60c3d255601, type: 3}
---- !u!1001 &3424320595249730782
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 86.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.86
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682068, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682070, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3424320596094682072, guid: f98988429d0fe3f4481c3323aefe4585,
-        type: 3}
-      propertyPath: m_Name
-      value: StaticLaunchEnemyGrenade
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f98988429d0fe3f4481c3323aefe4585, type: 3}
 --- !u!1001 &4700578225409434121
 PrefabInstance:
   m_ObjectHideFlags: 0
