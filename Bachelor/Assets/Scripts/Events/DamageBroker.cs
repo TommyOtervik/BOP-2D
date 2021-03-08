@@ -7,7 +7,7 @@ public class DamageBroker
 {
     public static event Action<int> TakeDamageEvent;
 
-    //private static List<IDamageable> enemies = new List<IDamageable>();
+   
     private static List<IDamageable> enemies = new List<IDamageable>();
 
     public static void CallTakeDamageEvent(int damage)
