@@ -11,7 +11,6 @@ public class CultistHitBox : MonoBehaviour
 
     private readonly int damageAmount = 20;
 
-    public static event Action<int> CultistDamage;
     private UnityAction cultistDeadListener;
 
 
@@ -24,7 +23,7 @@ public class CultistHitBox : MonoBehaviour
     {
         if (collision.name.Equals(PLAYER_NAME))
         {
-            CultistDamage?.Invoke(damageAmount);
+            DamageBroker.CallTakeDamageEvent(damageAmount);
         }
     }
 

@@ -84,8 +84,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     {  
         AttackManager();
 
-        UpdateHealth?.Invoke(currentHealth);
-        
+        UpdateHealth?.Invoke(currentHealth);  
     }
 
    
@@ -149,6 +148,14 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         // Detect enemies in range of attack
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
+
+
+        // DamageBroker.EnemyTakesDamage(damageAmount, GameObject han traff);
+
+
+
+
+
         // Damage them
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -156,6 +163,11 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
             if (enemy.name.Equals("EnemyColliders"))
             {
                 StartCoroutine(WaitForAttackDamage(enemy));
+            }
+
+            if (enemy.name.Equals("JumpAttacker"))
+            {
+                Debug.Log("Traff..?");
             }
         }
     }
@@ -187,8 +199,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
        EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
        EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
-
-       CultistHitBox.CultistDamage += TakeDamage;
+       DamageBroker.TakeDamageEvent += TakeDamage;
     }
 
     // Slå av lytter når objektet blir inaktivt (Memory leaks)
@@ -197,9 +208,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         EventManager.StopListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
         EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
         EventManager.StopListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
-        
 
-        CultistHitBox.CultistDamage -= TakeDamage;
+        DamageBroker.TakeDamageEvent -= TakeDamage;
     }
 
 

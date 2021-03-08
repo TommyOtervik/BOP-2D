@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class JumpEnemyAttacker : MonoBehaviour
+public class JumpEnemyAttacker : MonoBehaviour, IDamageable<int>
 {
     [Header("For Patrolling")]
     [SerializeField] private float moveSpeed;
@@ -28,13 +28,23 @@ public class JumpEnemyAttacker : MonoBehaviour
     
     [Header("Other")]
     private Rigidbody2D enemyRb;
-
     private Animator enemyAnim;
+    private int health;
+    private int damageAmount = 10;
+    private const string PLAYER_NAME = "Player";
+
+
+
+    private Collider2D porkuCollider;
+
     // Start is called before the first frame update
     void Start()
     {
         enemyRb = GetComponent<Rigidbody2D>();
         enemyAnim = GetComponent<Animator>();
+
+        porkuCollider = GetComponent<BoxCollider2D>();
+        //enemyRb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     // Update is called once per frame
@@ -66,9 +76,6 @@ public class JumpEnemyAttacker : MonoBehaviour
             Flip();
         }
         
-        
-        
-
         enemyRb.velocity = new Vector2(moveSpeed * moveDirection, enemyRb.velocity.y);
     }
 
@@ -123,5 +130,35 @@ public class JumpEnemyAttacker : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, lineOfSight);
         
         
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        // FIXME: == 12, Equals?
+        if (collision.gameObject.layer == 12)
+        {
+            Physics2D.IgnoreCollision(porkuCollider, collision.collider, true);
+        }
+
+
+        if (collision.gameObject.name.Equals(PLAYER_NAME))
+        {
+            DamageBroker.CallTakeDamageEvent(damageAmount);
+        }
+
+    }
+
+    
+
+    public void TakeDamage(int damageTaken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Death()
+    {
+        throw new NotImplementedException();
     }
 }

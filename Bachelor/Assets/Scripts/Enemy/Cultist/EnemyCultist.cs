@@ -41,6 +41,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
     private int minRandomHurt = 1;
     private int maxRandomHurt = 10;
     private float intTimer;
+
+    private Collider2D cultistCollider;
     #endregion
 
     #region Events
@@ -65,9 +67,24 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         playerDeadListener = new UnityAction(StopAttack);
 
 
-        // Test 
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
+
+        foreach (Collider2D c in enemyColliders)
+        {
+            if (c.name.Equals("EnemyColliders"))
+                cultistCollider = c;
+        }
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+        // FIXME: == 12, Equals?
+        if (collision.gameObject.layer == 12 && collision.collider.name.Equals("EnemyColliders"))
+        {
+            Physics2D.IgnoreCollision(cultistCollider, collision.collider, true);
+        }
     }
 
     void Update()
@@ -171,6 +188,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         anim.SetTrigger("Death");
         attackMode = false;
         anim.SetBool("Attack", attackMode);
+
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
 
         // Disable the enemy
         Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
