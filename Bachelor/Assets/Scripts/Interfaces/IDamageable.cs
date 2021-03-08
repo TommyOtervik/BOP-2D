@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDamageable<T>
+public interface IDamageable
 {
-    void TakeDamage(T damageTaken);
+    void TakeDamage(int damageTaken);
 
     void Death();
-  
+
+
+    GameObject GetEnemyGameObject();
 }

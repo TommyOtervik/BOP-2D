@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class JumpEnemyAttacker : MonoBehaviour, IDamageable<int>
+public class JumpEnemyAttacker : MonoBehaviour, IDamageable
 {
     [Header("For Patrolling")]
     [SerializeField] private float moveSpeed;
@@ -35,8 +35,22 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable<int>
 
 
 
+    // TESTING
+    [SerializeField] private int maxHealth = 30;
+    [SerializeField] private int currentHealth;
+    private int minRandomHurt = 1;
+    private int maxRandomHurt = 10;
+
+    private bool isDead;
+
     private Collider2D porkuCollider;
 
+
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -60,12 +74,19 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable<int>
         if (!canSeePlayer && isGrounded)
         {
             Patrolling();
-        }
+        }   
+        
+    }
 
-        
-        
-        
-        
+    // FIXME: IKKE BRA. 
+    private void Update()
+    {
+        if (isGrounded && isDead)
+        {
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            porkuCollider.enabled = false;
+            this.enabled = false;
+        }
     }
 
     void Patrolling()
@@ -150,15 +171,43 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable<int>
 
     }
 
-    
+    private void OnEnable()
+    {
+        DamageBroker.AddToEnemyList(this);
+    }
+
+    private void OnDisable()
+    {
+        DamageBroker.RemoveEnemyFromList(this);
+    }
+
+
 
     public void TakeDamage(int damageTaken)
     {
-        throw new NotImplementedException();
+        currentHealth -= damageTaken;
+
+        int hurtRand = UnityEngine.Random.Range(minRandomHurt, maxRandomHurt + 1);
+        if (hurtRand == 1)
+        {
+            enemyAnim.SetTrigger("Hurt");
+        }
+
+        if (currentHealth <= 0)
+            Death();
     }
 
     public void Death()
     {
-        throw new NotImplementedException();
+
+        enemyAnim.SetTrigger("Death");
+
+        isDead = true;
+       
+    }
+
+    public GameObject GetEnemyGameObject()
+    {
+        return porkuCollider.gameObject;
     }
 }

@@ -9,7 +9,7 @@ public class PendulumSwing : MonoBehaviour
     public float leftPushRange;
     public float rightPushRange;
     public float velocityThreshold;
-    public float pushStrength = 10.0f;
+    public float pushStrength = 100.0f;
     
     // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
@@ -52,9 +52,9 @@ public class PendulumSwing : MonoBehaviour
     {
         if (collision.gameObject.name == PLAYER_NAME)
         {
-            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+            Rigidbody2D enemyRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
             Vector3 awayFromPlayer = collision.gameObject.transform.position - transform.position;
-            enemyRigidbody.AddForce(awayFromPlayer * pushStrength, ForceMode.Impulse);
+            enemyRigidbody.AddForce(awayFromPlayer * pushStrength, ForceMode2D.Impulse);
             
         } 
         

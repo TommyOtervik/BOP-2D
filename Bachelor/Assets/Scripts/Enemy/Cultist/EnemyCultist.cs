@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public class EnemyCultist : MonoBehaviour, IDamageable<int>
+public class EnemyCultist : MonoBehaviour, IDamageable
 {
 
     #region External Private Variables (For editor)
@@ -54,6 +54,9 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
     void Awake()
     {
+
+        
+
         SelectTarget();
 
         intTimer = timer;
@@ -75,6 +78,11 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
                 cultistCollider = c;
         }
 
+    }
+    
+    public GameObject GetEnemyGameObject()
+    {
+        return cultistCollider.gameObject;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -176,9 +184,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         }
 
         if (currentHealth <= 0)
-        {
             Death();
-        }
+        
     }
 
     // Håndterer død av AI
@@ -200,6 +207,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
         this.enabled = false;
 
         EventManager.TriggerEvent(EnumEvents.CULTIST_DEAD);
+
+
     }
 
 
@@ -275,6 +284,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
         // Trigger området til Cultist
         TriggerAreaCheck.UpdateAreaEnter += UpdateAreaCheck;
+
+        DamageBroker.AddToEnemyList(this);
     }
 
     // Unsubscriber til events
@@ -286,5 +297,8 @@ public class EnemyCultist : MonoBehaviour, IDamageable<int>
 
         // Trigger området til Cultist
         TriggerAreaCheck.UpdateAreaEnter -= UpdateAreaCheck;
+
+
+        DamageBroker.RemoveEnemyFromList(this);
     }
 }

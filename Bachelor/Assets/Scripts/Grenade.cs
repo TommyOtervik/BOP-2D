@@ -11,7 +11,7 @@ public class Grenade : MonoBehaviour
     // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
     
-    private int damageAmount = 20;
+    private int damageAmount = 1;
 
     private Player player;
 

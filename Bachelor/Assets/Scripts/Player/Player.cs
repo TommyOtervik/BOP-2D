@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 
 
-public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
+public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 {
     #region General Variables
     private PlayerInput input;  // Gjendende input for spilleren
@@ -106,7 +106,10 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
     // Spilleren tar skade
     public void TakeDamage(int damage)
     {
-        anim.SetTrigger(HURT_STR);
+        // Quick fix..
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            anim.SetTrigger(HURT_STR);
+
         currentHealth -= damage;
 
         if (currentHealth <= 0)
@@ -148,27 +151,10 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         // Detect enemies in range of attack
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-
-
-        // DamageBroker.EnemyTakesDamage(damageAmount, GameObject han traff);
-
-
-
-
-
         // Damage them
         foreach (Collider2D enemy in hitEnemies)
         {
-            // FIXME: Scuffed? String check? Skulle ha hatt navnet CultistCollider.
-            if (enemy.name.Equals("EnemyColliders"))
-            {
-                StartCoroutine(WaitForAttackDamage(enemy));
-            }
-
-            if (enemy.name.Equals("JumpAttacker"))
-            {
-                Debug.Log("Traff..?");
-            }
+            StartCoroutine(WaitForAttackDamage(enemy)); 
         }
     }
 
@@ -178,7 +164,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         yield return new WaitForSeconds(ATTACK_WAIT_TIME_FOR_SHAKE);
 
         CinemachineShake.Instance.ShakeCamera(CAMERA_SHAKE_INTENSITY, CAMERA_SHAKE_DURATION);
-        enemy.GetComponentInParent<EnemyCultist>().TakeDamage(MELEE_ATTACK_DAMAGE);
+        DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
+      
     }
 
   
@@ -243,5 +230,10 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable<int>
         //pos.z = 0f;
 
         //transform.position = pos;
+    }
+
+    public GameObject GetEnemyGameObject()
+    {
+        throw new NotImplementedException();
     }
 }
