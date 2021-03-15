@@ -20,6 +20,7 @@ public class PendulumSwing : MonoBehaviour
 
     private void Awake()
     {
+        
         player = FindObjectOfType<Player>();
     }
 
