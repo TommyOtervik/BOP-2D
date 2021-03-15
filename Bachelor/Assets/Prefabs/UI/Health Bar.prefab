@@ -158,6 +158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782677477926662681}
   - component: {fileID: 782677477926662682}
+  - component: {fileID: 1081831211}
   m_Layer: 5
   m_Name: Health Bar
   m_TagString: Untagged
@@ -237,6 +238,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1081831211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782677477926662680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac39025e9f692446a1d9ac849862ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 782677477926662682}
 --- !u!1 &782677478085180684
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,7 +262,6 @@ GameObject:
   - component: {fileID: 782677478085180685}
   - component: {fileID: 782677478085180784}
   - component: {fileID: 782677478085180687}
-  - component: {fileID: 782677478085180686}
   m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
@@ -312,16 +325,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &782677478085180686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782677478085180684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f3d889cf49ad1b46a0984c46c04e123, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slider: {fileID: 0}

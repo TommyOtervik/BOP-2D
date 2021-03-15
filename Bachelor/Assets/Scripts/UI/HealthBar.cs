@@ -9,30 +9,31 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private Slider slider;
 
-    private Player player;
+    private int currentHealth;
 
-
-    private void Start()
+    private void SetMaxHealth(int health)
     {
-        player = FindObjectOfType<Player>();
-        SetMaxHealth();
+        slider.maxValue = health;
+        slider.value = currentHealth;
     }
 
-    private void Update()
-    {
-        SetHealth(player.currentHealth);
-    }
-
-    public void SetMaxHealth()
-    {
-        slider.maxValue = player.maxHealth;
-        slider.value = player.currentHealth;
-    }
-
-    public void SetHealth(int health)
+    private void SetHealth(int health)
     {
         slider.value = health;
+        currentHealth = health;
     }
 
- 
+
+    private void OnEnable()
+    {
+        Player.UpdateHealth += SetHealth;
+        Player.SetMaxHealth += SetMaxHealth;
+    }
+
+    private void OnDisable()
+    {
+        Player.UpdateHealth -= SetHealth;
+        Player.SetMaxHealth -= SetMaxHealth;
+    }
+
 }

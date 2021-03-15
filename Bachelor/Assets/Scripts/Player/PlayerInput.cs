@@ -19,6 +19,7 @@ public class PlayerInput : MonoBehaviour
     [HideInInspector] public bool altFirePressed;
     [HideInInspector] public bool rangedAttack;
     
+    
 
     bool readyToClear;								//Bool used to keep input in sync
     // Update is called once per frame
@@ -31,9 +32,10 @@ public class PlayerInput : MonoBehaviour
         //if (GameManager.IsGameOver())
             //return;
 
-        //Process keyboard, mouse, gamepad (etc) inputs
+        //Process keyboard, mouse inputs
         ProcessInputs();
         
+
         //Clamp the horizontal input to be between -1 and 1
         horizontal = Mathf.Clamp(horizontal, -1f, 1f);
     }
@@ -79,4 +81,6 @@ public class PlayerInput : MonoBehaviour
         altFirePressed = altFirePressed || Input.GetButton("Fire2");
         rangedAttack = rangedAttack || Input.GetButton("Fire3");
     }
+
+  
 }

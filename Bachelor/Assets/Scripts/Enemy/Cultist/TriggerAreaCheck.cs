@@ -1,26 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TriggerAreaCheck : MonoBehaviour
 {
-    private EnemyCultist enemyParent;
-
-    private void Awake()
-    {
-        enemyParent = GetComponentInParent<EnemyCultist>();
-
-    }
+    private const string PLAYER_NAME = "Player";
+    public static event Action<Transform, bool, bool> UpdateAreaEnter;
 
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag(PLAYER_NAME))
         {
             gameObject.SetActive(false);
-            enemyParent.target = collider.transform;
-            enemyParent.inRange = true;
-            enemyParent.hotZone.SetActive(true);
+            UpdateAreaEnter?.Invoke(collider.transform, true, true);
         }
     }
 }
