@@ -213,7 +213,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
         SaveSystem.SavePlayer(this);
 
-        Debug.Log("Saved Player. HP: " + this.currentHealth); 
+        Debug.Log("Saved Player. HP: " + this.currentHealth);
+        Debug.Log("Pos: " + this.transform.position + "- Scene:" + SceneManager.GetActiveScene().name);
     }
 
     public void LoadPlayer()
