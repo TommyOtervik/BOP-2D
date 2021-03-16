@@ -13,7 +13,9 @@ public class LevelLoader : MonoBehaviour
 
     private UnityAction tutorialToCastleListener;
 
-    
+    //private const int TUTORIAL_BUILD_INDEX = 0;
+    //private const int CASTLE_BUILD_INDEX = 1;
+
 
     private void Awake()
     {
@@ -23,6 +25,7 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadNextLevel()
     {
+        
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
         
     }
