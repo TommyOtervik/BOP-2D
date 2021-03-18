@@ -16,16 +16,14 @@ public class LeverTriggerArea : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
+        // FIXME: Events? 
         if (Input.GetKeyDown(KeyCode.E) && insideArea)
         {
             Debug.Log("Pressed E");
             removableFloor.Open();
-
-            // Send event? Spilleren 
-            
         }
     }
 
@@ -36,7 +34,6 @@ public class LeverTriggerArea : MonoBehaviour
     {
         if (collision.gameObject.name.Equals("Player"))
         {
-            Debug.Log("Player inside");
             insideArea = true;
             UIManager.DisplayEButtonOnLever();
         }
@@ -46,7 +43,6 @@ public class LeverTriggerArea : MonoBehaviour
     {
         if (collision.gameObject.name.Equals("Player"))
         {
-            Debug.Log("Player outside");
             insideArea = false;
             UIManager.StopDisplayEButton();
         }
