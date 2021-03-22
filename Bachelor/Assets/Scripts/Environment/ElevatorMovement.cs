@@ -33,6 +33,7 @@ public class ElevatorMovement : MonoBehaviour
     void Update()
     {
         Move();
+
     }
 
     private void Move()
