@@ -6,13 +6,18 @@ public class HotZoneCheck : MonoBehaviour
 {
     private bool inRange;
     private const string PLAYER_NAME = "Player";
+    private EnemyCultist enemyParent;
 
+    private void Awake()
+    {
+        enemyParent = GetComponentInParent<EnemyCultist>();
+    }
 
     private void Update()
     {
-        if(inRange)
-        { 
-            EventManager.TriggerEvent(EnumEvents.FLIP_CULTIST);
+        if(inRange && enemyParent.GetAnimator().GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack"))
+        {
+            enemyParent.Flip();
         }
     }
 
@@ -28,8 +33,9 @@ public class HotZoneCheck : MonoBehaviour
         {
             inRange = false;
             gameObject.SetActive(false);
-
-            EventManager.TriggerEvent(EnumEvents.HOT_ZONE_EXIT);
+            enemyParent.SetTriggerArea(true);
+            enemyParent.SetInRange(false);
+            enemyParent.SelectTarget();
         }
     }
 
