@@ -61,7 +61,7 @@ public class PlatformHugger : MonoBehaviour
             }
 
         }
-        // Viktig info, alle 4 posisjoner må ha en -90 Z rotasjon.
+        // Viktig info, alle posisjoner må ha en -90 Z rotasjon.
         // Sett i tillegg startposisjon til objektet sånn at han løper til høyre mot punkt 1 i positions array. Visst ikke blir det rotasjonskrøll.
         // 4    ----------------     1
         // 3    ----------------     2
