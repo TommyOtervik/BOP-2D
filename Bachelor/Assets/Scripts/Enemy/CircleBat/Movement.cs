@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class PrimitiveMovement : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     [SerializeField] private Transform[] positions;
     [SerializeField] private float objectSpeed;

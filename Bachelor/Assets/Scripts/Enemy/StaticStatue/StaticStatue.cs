@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StaticLaunchEnemy : MonoBehaviour
+public class StaticStatue : MonoBehaviour, IDamageable
 {
     public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
 
@@ -20,9 +20,15 @@ public class StaticLaunchEnemy : MonoBehaviour
     [SerializeField] Transform horizontalAttackPoint;
     [SerializeField] private Transform grenadeLaunchAttackPoint;
 
+    private const string PLAYER_NAME = "Player";
+    private int maxHealth = 30;
+    private int currentHealth;
+    public int collisionDamageAmount = 10;
+
         void Start()
     {
         bodyCollider = GetComponent<BoxCollider2D>();
+        currentHealth = maxHealth;
     }
 
     void Update()
@@ -140,6 +146,44 @@ public class StaticLaunchEnemy : MonoBehaviour
 
         //Return the results of the raycast
         return hit;
+    }
+    
+    public void TakeDamage(int damageTaken)
+    {
+        currentHealth -= damageTaken;
+        
+        if (currentHealth <= 0)
+            Death();
+    }
+    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+        if (collision.gameObject.name.Equals(PLAYER_NAME))
+        {
+            DamageBroker.CallTakeDamageEvent(collisionDamageAmount);
+        }
+
+    }
+    
+    public void Death()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        DamageBroker.AddToEnemyList(this);
+    }
+
+    private void OnDisable()
+    {
+        DamageBroker.RemoveEnemyFromList(this);
+    }
+    
+    public GameObject GetEnemyGameObject()
+    {
+        return bodyCollider.gameObject;
     }
 }
     

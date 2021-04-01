@@ -3,22 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grenade : MonoBehaviour
+public class StaticStatueGrenade : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D enemyRb;
     private bool tickInProgress;
     
-    // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
     
     private int damageAmount = 1;
-
-    private Player player;
-
-    private void Awake()
-    {
-        player = FindObjectOfType<Player>();
-    }
+    
     
     // Start is called before the first frame update
     void Start()
@@ -47,7 +40,7 @@ public class Grenade : MonoBehaviour
         if (collision.gameObject.name == PLAYER_NAME)
         {
             // Hvis sant, gjør skade til spilleren
-            player.TakeDamage(damageAmount);
+            DamageBroker.CallTakeDamageEvent(damageAmount);
             if (gameObject != null)
             {
                 Destroy(gameObject);
