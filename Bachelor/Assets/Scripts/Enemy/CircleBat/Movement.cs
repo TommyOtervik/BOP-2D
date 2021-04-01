@@ -11,6 +11,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         _nextPos = positions[0];
+        
     }
 
     void Update()
@@ -35,5 +36,6 @@ public class Movement : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, _nextPos.position, objectSpeed * Time.deltaTime);
             
         }
+        
     }
 }
