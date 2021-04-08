@@ -6,13 +6,13 @@ public class GameManager : MonoBehaviour
 {
 
     static GameManager current;
-    bool isDead;
-
-    RemovableFloor lockedFloor;
+  
+    public static Dictionary<string, bool> persistenceDictionary = new Dictionary<string, bool>();
 
     // Start is called before the first frame update
     void Awake()
     {
+        
         if (current != null && current != this)
         {
             Destroy(gameObject);
@@ -24,39 +24,12 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void AddToPersistenceDictionary(string key, bool value)
     {
-        if (isDead)
-            return;
 
-        // UIManager.Update()..?
+        persistenceDictionary.Add(key, value);
     }
 
 
-    public static bool IsGameOver()
-    {
-        if (current == null)
-            return false;
 
-        return current.isDead;
-    }
-
-
-    public static void PlayerDied()
-    {
-        if (current == null)
-            return;
-
-        
-    }
-
-
-    public static void RegisterFloor(RemovableFloor floor)
-    {
-        if (current == null)
-            return;
-
-        current.lockedFloor = floor;
-    }
 }

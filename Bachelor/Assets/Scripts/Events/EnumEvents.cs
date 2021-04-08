@@ -11,6 +11,7 @@ public enum EnumEvents
     CULTIST_DEAD,
 
     TUTORIAL_TO_CASTLE,
+    CASTLE_TO_TUTORIAL,
     LOAD_PLAYER
 
 }

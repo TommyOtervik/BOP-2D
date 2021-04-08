@@ -53,6 +53,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
     // TEST FOR SAVE (SKAL EGENTLIG I GAMEMANAGER?)
     private UnityAction tutorialToCastleListener;
+    private UnityAction castleToTutorialListener;
+
     private UnityAction loadPlayerListener;
 
     public static event Action<int> UpdateHealth;
@@ -66,6 +68,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
         killFloorHitListener = new UnityAction(Death);
         tutorialToCastleListener = new UnityAction(SavePlayer);
+        castleToTutorialListener = new UnityAction(SavePlayer);
         loadPlayerListener = new UnityAction(LoadPlayer);
     }
 
@@ -184,6 +187,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
        EventManager.StartListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
        EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+
+       EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
        EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
        DamageBroker.TakeDamageEvent += TakeDamage;
@@ -194,6 +199,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
         EventManager.StopListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
         EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+        EventManager.StopListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
         EventManager.StopListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
         DamageBroker.TakeDamageEvent -= TakeDamage;
@@ -208,7 +214,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
 
 
-    // SKAL I GAME MANAGER
+    // SKAL I GAME MANAGER?
     public void SavePlayer()
     {
         SaveSystem.SavePlayer(this);

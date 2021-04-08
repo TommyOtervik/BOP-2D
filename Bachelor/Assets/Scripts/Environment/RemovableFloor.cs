@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RemovableFloor : MonoBehaviour
+public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 {
+    [SerializeField]
+    private string objectName;
 
     private Rigidbody2D floor;
     private BoxCollider2D boxCollider;
@@ -13,6 +15,12 @@ public class RemovableFloor : MonoBehaviour
 
     private bool isOpen;
 
+
+    private void Awake()
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +29,7 @@ public class RemovableFloor : MonoBehaviour
 
         floor = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-        GameManager.RegisterFloor(this);
+       
     }
 
     // Update is called once per frame
@@ -42,6 +50,8 @@ public class RemovableFloor : MonoBehaviour
             StartCoroutine(WaitForDisable());
 
             isOpen = true;
+
+            GameManager.AddToPersistenceDictionary(objectName, false);
         }
     }
 
@@ -50,5 +60,10 @@ public class RemovableFloor : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         boxCollider.enabled = false;
 
+    }
+
+    public string GetObjectName()
+    {
+        return objectName;
     }
 }
