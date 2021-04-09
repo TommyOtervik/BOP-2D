@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     static GameManager current;
   
-    public static Dictionary<string, bool> persistenceDictionary = new Dictionary<string, bool>();
+    //public static Dictionary<string, bool> persistenceDictionary = new Dictionary<string, bool>();
 
     // Start is called before the first frame update
     void Awake()
@@ -24,11 +24,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public static void AddToPersistenceDictionary(string key, bool value)
-    {
+    //public static void AddToPersistenceDictionary(string key, bool value)
+    //{
 
-        persistenceDictionary.Add(key, value);
-    }
+    //    persistenceDictionary.Add(key, value);
+    //}
 
 
 

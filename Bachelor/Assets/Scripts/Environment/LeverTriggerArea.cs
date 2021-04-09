@@ -26,7 +26,7 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
         if (Input.GetKeyDown(KeyCode.E) && insideArea)
         {
             removableFloor.Open();
-            GameManager.AddToPersistenceDictionary(objectName, false);
+            // GameManager.AddToPersistenceDictionary(objectName, false);
         }
     }
 

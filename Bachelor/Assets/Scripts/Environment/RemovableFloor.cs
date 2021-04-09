@@ -15,15 +15,19 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
     private bool isOpen;
 
+    
 
     private void Awake()
     {
         
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
+
+
         startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         bounds = startPos + new Vector3(0, -20, 0);
 
@@ -51,7 +55,9 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
             isOpen = true;
 
-            GameManager.AddToPersistenceDictionary(objectName, false);
+            // GameManager.AddToPersistenceDictionary(objectName, false);
+            
+            
         }
     }
 
