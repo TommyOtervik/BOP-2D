@@ -46,8 +46,6 @@ public class EnemyCultist : MonoBehaviour, IDamageable
     #endregion
 
     #region Events
-    private UnityAction flipCultistListener;
-    private UnityAction hotZoneExitListener;
     private UnityAction playerDeadListener;
     #endregion
 

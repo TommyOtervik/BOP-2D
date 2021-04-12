@@ -14,7 +14,7 @@ public class SceneLoader : MonoBehaviour
     private void Awake()
     {
         
-        sceneData = SaveSystem.LoadSceneData(SceneManager.GetActiveScene().name);
+        // sceneData = SaveSystem.LoadSceneData(SceneManager.GetActiveScene().name);
 
 
       //var objectsOfInterface = FindObjectsOfType<MonoBehaviour>().OfType<ICanBeSetInactive>();

@@ -15,13 +15,6 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
     private bool isOpen;
 
-    
-
-    private void Awake()
-    {
-        
-
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +26,7 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
         floor = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
-       
+
     }
 
     // Update is called once per frame
@@ -56,8 +49,7 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
             isOpen = true;
 
             // GameManager.AddToPersistenceDictionary(objectName, false);
-            
-            
+
         }
     }
 
@@ -65,7 +57,6 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
     {
         yield return new WaitForSeconds(.5f);
         boxCollider.enabled = false;
-
     }
 
     public string GetObjectName()
