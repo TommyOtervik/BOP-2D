@@ -10,7 +10,7 @@ public class CultistHitBox : MonoBehaviour
     private const string PLAYER_NAME = "Player";
 
     [SerializeField]
-    private int damageAmount = 20;
+    private int damageAmount = 30;
 
     private UnityAction cultistDeadListener;
 

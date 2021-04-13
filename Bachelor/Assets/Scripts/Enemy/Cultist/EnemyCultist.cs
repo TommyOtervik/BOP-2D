@@ -127,7 +127,6 @@ public class EnemyCultist : MonoBehaviour, IDamageable
         {
             cooling = false;
             timer = intTimer;
-            
         }
     }
 
