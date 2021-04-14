@@ -8,7 +8,7 @@ public class AbominationHitBox : MonoBehaviour
     private const string PLAYER_NAME = "Player";
 
     [SerializeField]
-    private int damageAmount = 30;
+    private int damageAmount = 10;
 
 
     // Start is called before the first frame update

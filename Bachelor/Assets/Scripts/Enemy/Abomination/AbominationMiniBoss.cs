@@ -43,8 +43,10 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Awake()
     {
-       // transform.Rotate(0f, 0f, 0f);
-       
+        // transform.Rotate(0f, 0f, 0f);
+
+        playerDeadListener = new UnityAction(StopAttack);
+
         anim = GetComponent<Animator>();
         abomCollider = GetComponent<BoxCollider2D>();
 
@@ -56,37 +58,50 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-        Flip();
+       
 
         if (!attackMode && insideHotZone)
             Move();
-        else
+        else // Reset?
             anim.SetBool("canWalk", false);
+
+
 
         if (inRange)
             EnemyLogic();
+
+        
     }
 
     private void Move()
     {
         anim.SetBool("canWalk", true);
-
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Abomination_Attack") )
+        
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Abomination_Attack"))
         {
             Vector2 targetPos = new Vector2(player.position.x, transform.position.y);
-
             transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+            if (Vector2.Distance(transform.position, targetPos) <= attackRange)
+                inRange = true;
+            else
+                inRange = false;
+
+
+            Flip();
         }
     }
 
     private void EnemyLogic()
     {
+        
         distance = Vector2.Distance(transform.position, player.position);
-
+       
         if (distance > attackRange)
             StopAttack();
         else if (distance <= attackRange && !cooling)
             Attack();
+
 
         if (cooling)
         {
@@ -98,6 +113,7 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     private void Cooldown()
     {
         timer -= Time.deltaTime;
+        Debug.Log(timer);
         if (timer <= 0 && cooling && attackMode)
         {
             cooling = false;
@@ -179,6 +195,18 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         transform.eulerAngles = rotation;
     }
 
+    private void OnEnable()
+    {
+        EventManager.StartListening(EnumEvents.PLAYER_DEAD, playerDeadListener);
+        DamageBroker.AddToEnemyList(this);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(EnumEvents.PLAYER_DEAD, playerDeadListener);
+        DamageBroker.RemoveEnemyFromList(this);
+    }
+
     public void SetInRange(bool inRange)
     {
         this.inRange = inRange;
@@ -201,6 +229,6 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
 
     public GameObject GetEnemyGameObject()
     {
-        throw new System.NotImplementedException();
+        return abomCollider.gameObject;
     }
 }

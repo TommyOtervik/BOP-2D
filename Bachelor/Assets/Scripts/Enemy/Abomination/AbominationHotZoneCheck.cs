@@ -21,7 +21,7 @@ public class AbominationHotZoneCheck : MonoBehaviour
         if (collider.gameObject.CompareTag(PLAYER_NAME))
         {
             inRange = true;
-            enemy.SetInsideHotZone(true);
+            enemy.SetInsideHotZone(inRange);
         }
     }
 
@@ -30,7 +30,6 @@ public class AbominationHotZoneCheck : MonoBehaviour
         if (collision.gameObject.CompareTag(PLAYER_NAME))
         {
             inRange = false;
-            // gameObject.SetActive(false);
             enemy.SetTriggerArea(true);
             enemy.SetInRange(false);
             enemy.SetInsideHotZone(false);

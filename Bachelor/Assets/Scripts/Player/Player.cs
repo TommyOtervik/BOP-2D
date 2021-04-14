@@ -25,7 +25,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
     #region Health System 
     [Header("Health Properties")]
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int maxHealth = 1000;
     [SerializeField] private int currentHealth;
     #endregion
 
