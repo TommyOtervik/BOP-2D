@@ -12,12 +12,15 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     [SerializeField] private int maxHealth = 200;
     [SerializeField] private float attackRange;
     [SerializeField] private float speed;
-    [SerializeField] private float timer;
+    [SerializeField] private float cooldown;
     [SerializeField] private bool inRange;
-    [SerializeField] private Transform player;
+    [SerializeField] private Transform target;
+
+    [SerializeField] private AbominationHealthBar healthBar;
+
+    [SerializeField] private Transform startPoint;
 
     [SerializeField] private GameObject hotZone;
-    [SerializeField] private GameObject triggerArea;
 
     // BoxCollider for våpen til fiende
     [SerializeField] private BoxCollider2D hitBox;
@@ -33,7 +36,7 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     private bool insideHotZone;
     private int minRandomHurt = 1;
     private int maxRandomHurt = 10;
-    private float intTimer;
+    private float timeForNextAttack;
     private Collider2D abomCollider;
     #endregion
 
@@ -43,9 +46,10 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Awake()
     {
-        // transform.Rotate(0f, 0f, 0f);
+        healthBar.SetSize(1);
 
-        playerDeadListener = new UnityAction(StopAttack);
+        // transform.Rotate(0f, 0f, 0f);
+        playerDeadListener = new UnityAction(ResetAbomination);
 
         anim = GetComponent<Animator>();
         abomCollider = GetComponent<BoxCollider2D>();
@@ -58,72 +62,60 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-       
-
-        if (!attackMode && insideHotZone)
-            Move();
-        else // Reset?
-            anim.SetBool("canWalk", false);
-
-
-
-        if (inRange)
+        if (insideHotZone)
             EnemyLogic();
-
-        
+        else
+            ResetAbomination();
     }
 
     private void Move()
     {
-        anim.SetBool("canWalk", true);
-        
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Abomination_Attack"))
-        {
-            Vector2 targetPos = new Vector2(player.position.x, transform.position.y);
-            transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
 
-            if (Vector2.Distance(transform.position, targetPos) <= attackRange)
-                inRange = true;
-            else
-                inRange = false;
-
-
-            Flip();
-        }
     }
 
     private void EnemyLogic()
     {
         
-        distance = Vector2.Distance(transform.position, player.position);
-       
+        distance = Vector2.Distance(transform.position, target.position);
+        anim.SetBool("canWalk", true);
+
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Abomination_Attack"))
+        {
+
+            Vector2 targetPos = new Vector2(target.position.x, transform.position.y);
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+        }
+
         if (distance > attackRange)
             StopAttack();
-        else if (distance <= attackRange && !cooling)
+        else if (distance <= attackRange && !cooling)      
             Attack();
-
+   
 
         if (cooling)
         {
             Cooldown();
             anim.SetBool("Attack", false);
+  
         }
+       
+
+        Flip(target);
     }
 
     private void Cooldown()
     {
-        timer -= Time.deltaTime;
-        Debug.Log(timer);
-        if (timer <= 0 && cooling && attackMode)
+        timeForNextAttack -= Time.deltaTime;
+        if (timeForNextAttack <= 0 && cooling)
         {
             cooling = false;
-            timer = intTimer;
+            timeForNextAttack = cooldown;
         }
     }
 
     private void Attack()
     {
-        timer = intTimer;
+        timeForNextAttack = cooldown;
         attackMode = true;
 
         anim.SetBool("canWalk", !attackMode);
@@ -135,6 +127,21 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         cooling = false;
         attackMode = false;
         anim.SetBool("Attack", attackMode);
+    }
+
+    private void ResetAbomination()
+    {
+        currentHealth = maxHealth;
+
+        Vector2 targetPos = new Vector2(startPoint.position.x, transform.position.y);
+        transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+        if (transform.position.x == startPoint.position.x)
+        {
+            anim.SetBool("canWalk", false);
+        }
+           
+        Flip(startPoint);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -183,11 +190,11 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         cooling = true;
     }
 
-    public void Flip()
+    public void Flip(Transform tar)
     {
         Vector3 rotation = transform.eulerAngles;
 
-        if (transform.position.x > player.position.x)
+        if (transform.position.x > tar.position.x)
             rotation.y = 180f;
         else
             rotation.y = 0f;
@@ -217,10 +224,6 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         this.hotZone.SetActive(hotZone);
     }
 
-    public void SetTriggerArea(bool triggerArea)
-    {
-        this.triggerArea.SetActive(triggerArea);
-    }
 
     public void SetInsideHotZone(bool b)
     {

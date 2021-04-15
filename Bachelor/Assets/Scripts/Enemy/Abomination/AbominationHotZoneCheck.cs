@@ -5,8 +5,8 @@ using UnityEngine;
 public class AbominationHotZoneCheck : MonoBehaviour
 {
     private const string PLAYER_NAME = "Player";
+    private bool playerInside;
 
-    private bool inRange;
     [SerializeField]
     private AbominationMiniBoss enemy;
 
@@ -20,8 +20,8 @@ public class AbominationHotZoneCheck : MonoBehaviour
     {
         if (collider.gameObject.CompareTag(PLAYER_NAME))
         {
-            inRange = true;
-            enemy.SetInsideHotZone(inRange);
+            playerInside = true;
+            enemy.SetInsideHotZone(playerInside);
         }
     }
 
@@ -29,10 +29,9 @@ public class AbominationHotZoneCheck : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(PLAYER_NAME))
         {
-            inRange = false;
-            enemy.SetTriggerArea(true);
-            enemy.SetInRange(false);
-            enemy.SetInsideHotZone(false);
+            playerInside = false;
+            enemy.SetInsideHotZone(playerInside);
+           
             // enemy.SelectTarget(); Reset? Gå tilbake?
         }
     }
