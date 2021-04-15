@@ -79,13 +79,15 @@ public class AttackAndHealth : MonoBehaviour, IDamageable
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
         if (collision.gameObject.name.Equals(PLAYER_NAME))
         {
             DamageBroker.CallTakeDamageEvent(collisionDamageAmount);
         }
+        
+        Physics2D.IgnoreCollision(circleBatCollider, collision.collider, true);
 
     }
+    
     
     public void TakeDamage(int damageTaken)
     {
@@ -97,7 +99,10 @@ public class AttackAndHealth : MonoBehaviour, IDamageable
 
     public void Death()
     {
-        Destroy(gameObject);
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnEnable()

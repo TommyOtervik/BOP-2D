@@ -154,10 +154,12 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         // Damage them
         foreach (Collider2D enemy in hitEnemies)
         {
-            StartCoroutine(WaitForAttackDamage(enemy)); 
+            //StartCoroutine(WaitForAttackDamage(enemy)); 
+            DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
         }
     }
 
+    /*
     // "Venter" på animasjonen i .3 sekunder. Gjør skade til fiende og rister kameraet.
     IEnumerator WaitForAttackDamage(Collider2D enemy)
     {
@@ -167,6 +169,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
       
     }
+    */
+    
 
   
 
