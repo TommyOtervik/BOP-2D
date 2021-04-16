@@ -58,6 +58,12 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     public static event Action<int> UpdateHealth;
     public static event Action<int> SetMaxHealth;
     #endregion
+    
+    #region Pickups
+
+    private int coinAmount;
+    
+    #endregion
 
 
     private void Awake()
@@ -82,6 +88,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
     private void Update()
     {  
+        Debug.Log(coinAmount);
         AttackManager();
 
         UpdateHealth?.Invoke(currentHealth);  
@@ -114,6 +121,23 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
         if (currentHealth <= 0)
             Death();
+    }
+
+    public void Heal(int value)
+    {
+        if (currentHealth + value > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        else
+        {
+            currentHealth += value;
+        }
+    }
+
+    public void addCoin(int value)
+    {
+        coinAmount += value;
     }
 
     // Spilleren dør
@@ -191,6 +215,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
        EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
        DamageBroker.TakeDamageEvent += TakeDamage;
+       PickupBroker.HealthPickupEvent += Heal;
+       PickupBroker.CoinPickupEvent += addCoin;
     }
 
     // Slå av lytter når objektet blir inaktivt (Memory leaks)
@@ -201,6 +227,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         EventManager.StopListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
         DamageBroker.TakeDamageEvent -= TakeDamage;
+        PickupBroker.HealthPickupEvent -= Heal;
+        PickupBroker.CoinPickupEvent -= addCoin;
     }
 
 
