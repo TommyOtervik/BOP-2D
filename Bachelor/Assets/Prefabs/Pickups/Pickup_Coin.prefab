@@ -95,6 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2b0c583b945784d98ff81cedf44615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  drawDebugRaycasts: 1
+  hitGround: 0
+  collider: {fileID: 0}
 --- !u!61 &3754164503968347436
 BoxCollider2D:
   m_ObjectHideFlags: 0
