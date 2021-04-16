@@ -44,8 +44,21 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable
     private bool isDead;
 
     private Collider2D porkuCollider;
+    
+    // LOOT TABLE TESTING, IMPLEMENTER DETTE OVERALT LATER I ABSTRACT ENEMY ELLER LIGNENDE
+    public LootTable thisLoot;
 
-
+    private void MakeLoot()
+    {
+        if (thisLoot != null)
+        {
+            Pickup current = thisLoot.LootPickup();
+            if (current != null)
+            {
+                Instantiate(current.gameObject, transform.position, Quaternion.identity);
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -201,7 +214,7 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable
     {
 
         enemyAnim.SetTrigger("Death");
-
+        MakeLoot();
         isDead = true;
        
     }
