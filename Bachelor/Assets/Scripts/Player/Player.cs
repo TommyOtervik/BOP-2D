@@ -87,8 +87,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
 
     private void Update()
-    {  
-        Debug.Log(coinAmount);
+    {
         AttackManager();
 
         UpdateHealth?.Invoke(currentHealth);  
