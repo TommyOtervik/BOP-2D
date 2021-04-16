@@ -8,17 +8,9 @@ public class AbominationHealthBar : MonoBehaviour
 
     [SerializeField]
     private Transform bar;
-
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-       
-    }
-
  
     public void SetSize(float sizeNormalized)
     {
-        
+        bar.localScale = new Vector3(sizeNormalized, 1f);
     }
 }

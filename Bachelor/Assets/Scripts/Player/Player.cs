@@ -128,6 +128,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         GetComponent<PlayerMovement>().enabled = false;
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         GetComponent<BoxCollider2D>().enabled = false;
+        this.enabled = false;
 
         // Fiender lytter til denne
         EventManager.TriggerEvent(EnumEvents.PLAYER_DEAD);

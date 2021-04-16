@@ -13,7 +13,6 @@ public class ElevatorMovement : MonoBehaviour
     [SerializeField] 
     private float speed;
 
-    private bool moving;
 
     private Transform trans;
     [SerializeField]
