@@ -13,10 +13,14 @@ public class AttackAndHealth : Enemy, IDamageable
     
     private Collider2D circleBatCollider;
     public GameObject bulletPrefab;
+    
+    private Animator enemyAnim;
     // Start is called before the first frame update
     void Start()
     {
-        circleBatCollider = GetComponent<CircleCollider2D>();
+        circleBatCollider = GetComponent<BoxCollider2D>();
+        enemyAnim = GetComponent<Animator>();
+        enemyAnim.SetBool("isDead", false);
         currentHealth = maxHealth;
         StartCoroutine(AttackPattern());
     }
@@ -92,7 +96,7 @@ public class AttackAndHealth : Enemy, IDamageable
     public void TakeDamage(int damageTaken)
     {
         currentHealth -= damageTaken;
-        
+        enemyAnim.SetTrigger("wasHit");
         if (currentHealth <= 0)
             Death();
     }
@@ -102,6 +106,7 @@ public class AttackAndHealth : Enemy, IDamageable
         if (gameObject != null)
         {
             base.MakeLoot();
+            enemyAnim.SetBool("isDead", true);
             Destroy(gameObject);
         }
     }

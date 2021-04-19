@@ -132,7 +132,6 @@ public class JumpEnemyAttacker : Enemy, IDamageable
 
     void FlipTowardsPlayer()
     {
-        Debug.Log("Blir jeg kalt?");
         float playerPosition = player.position.x - transform.position.x;
         if (playerPosition < 0 && facingRight)
         {
