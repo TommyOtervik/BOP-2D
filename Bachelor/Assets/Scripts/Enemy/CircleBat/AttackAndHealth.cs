@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackAndHealth : MonoBehaviour, IDamageable
+public class AttackAndHealth : Enemy, IDamageable
 {
     [SerializeField] private int maxHealth = 30;
     [SerializeField] private int currentHealth;
@@ -101,6 +101,7 @@ public class AttackAndHealth : MonoBehaviour, IDamageable
     {
         if (gameObject != null)
         {
+            base.MakeLoot();
             Destroy(gameObject);
         }
     }

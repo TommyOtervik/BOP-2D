@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlyingEnemyPassive : MonoBehaviour, IDamageable
+public class FlyingEnemyPassive : Enemy, IDamageable
 {
     [SerializeField] public float speed;
     [SerializeField] public float lineOfSight;
@@ -60,6 +60,7 @@ public class FlyingEnemyPassive : MonoBehaviour, IDamageable
     {
         if (gameObject != null)
         {
+            base.MakeLoot();
             Destroy(gameObject);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class JumpEnemyAttacker : MonoBehaviour, IDamageable
+public class JumpEnemyAttacker : Enemy, IDamageable
 {
     [Header("For Patrolling")]
     [SerializeField] private float moveSpeed;
@@ -46,8 +46,9 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable
     private Collider2D porkuCollider;
     
     // LOOT TABLE TESTING, IMPLEMENTER DETTE OVERALT LATER I ABSTRACT ENEMY ELLER LIGNENDE
-    public LootTable thisLoot;
+    //public LootTable thisLoot;
 
+    /*
     private void MakeLoot()
     {
         if (thisLoot != null)
@@ -58,6 +59,12 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable
                 Instantiate(current.gameObject, transform.position, Quaternion.identity);
             }
         }
+    }
+    */
+    
+    private void MakeLoot()
+    {
+        base.MakeLoot();
     }
 
     private void Awake()
@@ -180,7 +187,9 @@ public class JumpEnemyAttacker : MonoBehaviour, IDamageable
         if (collision.gameObject.name.Equals(PLAYER_NAME))
         {
             DamageBroker.CallTakeDamageEvent(damageAmount);
+            Physics2D.IgnoreCollision(porkuCollider, collision.collider, true);
         }
+        
 
     }
 

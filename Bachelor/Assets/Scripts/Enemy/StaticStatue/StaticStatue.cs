@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StaticStatue : MonoBehaviour, IDamageable
+public class StaticStatue : Enemy, IDamageable
 {
     public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
 
@@ -168,6 +168,7 @@ public class StaticStatue : MonoBehaviour, IDamageable
     
     public void Death()
     {
+        base.MakeLoot();
         Destroy(gameObject);
     }
 

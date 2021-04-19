@@ -8,6 +8,7 @@ public abstract class Pickup : MonoBehaviour
     protected Vector2 upperBound;
     protected Vector2 lowerBound;
     protected float speed = 1.0f;
+    protected float fallSpeed = 2.0f;
     protected bool movingUp = true;
     protected float upperBoundYOffset = 0.6f;
     
@@ -39,7 +40,7 @@ public abstract class Pickup : MonoBehaviour
         if (!hitGround)
         {
             //transform.position = Vector2.MoveTowards(transform.position, Vector2.right, speed * Time.deltaTime);
-            transform.Translate(Vector3.down * speed * Time.deltaTime);
+            transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
         }
 
         else
