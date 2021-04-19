@@ -17,8 +17,13 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     [SerializeField] private Transform target;
     [SerializeField] private AbominationHealthBar healthBar;
 
+    [SerializeField] private GameObject flame;
+
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform enragePoint;
+
+    [SerializeField] private Transform enrageHitStartPoint;
+    [SerializeField] private Transform enrageHitEndPoint;
 
     [SerializeField] private GameObject hotZone;
 
@@ -37,26 +42,39 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
     private float enrageTimer;
     private int minRandomHurt = 1;
     private int maxRandomHurt = 10;
+    private Vector2 flameSize;
+    private float startX, endX, flameDistance;
+
     private float timeForNextAttack;
     private Collider2D abomCollider;
+
+
     #endregion
 
- 
+
 
     private UnityAction playerDeadListener;
     // Start is called before the first frame update
     void Awake()
     {
-        enrageTimer = 10;
-        
+
+        startX = enrageHitStartPoint.position.x;
+        endX = enrageHitEndPoint.position.x;
+        flameDistance = (startX - endX);
+
+        enrageTimer = 5;
+
+        flameSize = flame.GetComponent<BoxCollider2D>().size;
+
+
         playerDeadListener = new UnityAction(ResetAbomination);
 
         anim = GetComponent<Animator>();
         abomCollider = GetComponent<BoxCollider2D>();
 
         currentHealth = maxHealth;
-        
-        healthBar.SetSize((float) currentHealth / (float) maxHealth);
+
+        healthBar.SetSize((float)currentHealth / (float)maxHealth);
 
         anim.SetBool("canWalk", false);
     }
@@ -78,9 +96,9 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
 
     private void EnemyLogic()
     {
-        
+
         speed = 2f;
-        
+
         distance = Vector2.Distance(transform.position, target.position);
         anim.SetBool("canWalk", true);
 
@@ -92,16 +110,16 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
 
         if (distance > attackRange)
             StopAttack();
-        else if (distance <= attackRange && !cooling)      
+        else if (distance <= attackRange && !cooling)
             Attack();
-   
+
         if (cooling)
         {
             Cooldown();
             anim.SetBool("Attack", false);
         }
 
-       
+
         Flip(target);
     }
     private void Enrage()
@@ -121,7 +139,7 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
             Flip(target);
             anim.SetBool("isEnraged", true);
 
-            StartCoroutine(WaitForEnrage());  
+            StartCoroutine(WaitForEnrage());
         }
     }
 
@@ -134,7 +152,7 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         anim.SetBool("canWalk", true);
         anim.SetBool("isEnraged", false);
     }
-    
+
 
     private void Cooldown()
     {
@@ -164,8 +182,32 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
 
     public void SpawnFlame()
     {
-        Debug.Log("SpawnFlame");
+        StartCoroutine(FlameDelay(flame));
     }
+
+    IEnumerator FlameDelay(GameObject f)
+    {
+        
+        for (float i = startX; i >= flameDistance; i -= 2f)
+        {
+            Vector3 pos = new Vector3((startX - i), 0f);
+
+            GameObject flame = Instantiate(f, enrageHitStartPoint.position - pos, Quaternion.identity, null);
+
+            if(flame.transform.position.x <= endX)
+            {
+                Destroy(flame);
+                break;
+            }
+
+            yield return new WaitForSeconds(.05f);
+
+            Destroy(flame, .5f);
+         
+        }
+    }
+
+
 
     private void ResetAbomination()
     {
@@ -182,7 +224,7 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         {
             anim.SetBool("canWalk", false);
         }
-           
+
         Flip(startPoint);
     }
 
