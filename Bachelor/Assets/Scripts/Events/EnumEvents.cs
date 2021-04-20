@@ -9,6 +9,7 @@ public enum EnumEvents
     FLIP_CULTIST,
     PLAYER_DEAD,
     CULTIST_DEAD,
+    ABOMINATION_DEAD,
 
     TUTORIAL_TO_CASTLE,
     CASTLE_TO_TUTORIAL,
