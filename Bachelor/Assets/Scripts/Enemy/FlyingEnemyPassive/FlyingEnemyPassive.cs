@@ -14,11 +14,14 @@ public class FlyingEnemyPassive : Enemy, IDamageable
     private int maxHealth = 30;
     private int currentHealth;
     private Collider2D collider;
+    private Animator enemyAnim;
 
     void Start()
     {
         player = FindObjectOfType<Player>().transform;
-        collider = GetComponent<CircleCollider2D>();
+        collider = GetComponent<BoxCollider2D>();
+        enemyAnim = GetComponent<Animator>();
+        enemyAnim.SetBool("isDead", false);
         currentHealth = maxHealth;
         
     }
@@ -51,6 +54,7 @@ public class FlyingEnemyPassive : Enemy, IDamageable
     public void TakeDamage(int damageTaken)
     {
         currentHealth -= damageTaken;
+        enemyAnim.SetTrigger("wasHit");
         
         if (currentHealth <= 0)
             Death();
@@ -61,6 +65,7 @@ public class FlyingEnemyPassive : Enemy, IDamageable
         if (gameObject != null)
         {
             base.MakeLoot();
+            enemyAnim.SetBool("isDead", true);
             Destroy(gameObject);
         }
     }

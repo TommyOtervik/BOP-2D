@@ -62,6 +62,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     #region Pickups
 
     private int coinAmount;
+    private bool hasAbominationKey;
     
     #endregion
 
@@ -137,6 +138,12 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     public void addCoin(int value)
     {
         coinAmount += value;
+    }
+
+    // Burde nok ligget i en "Item/Inventory" class av noe slag. 
+    public void gotAbominationKey()
+    {
+        hasAbominationKey = true;
     }
 
     // Spilleren dør
@@ -216,6 +223,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
        DamageBroker.TakeDamageEvent += TakeDamage;
        PickupBroker.HealthPickupEvent += Heal;
        PickupBroker.CoinPickupEvent += addCoin;
+       PickupBroker.KeyPickupEvent += gotAbominationKey;
+
     }
 
     // Slå av lytter når objektet blir inaktivt (Memory leaks)
@@ -228,6 +237,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         DamageBroker.TakeDamageEvent -= TakeDamage;
         PickupBroker.HealthPickupEvent -= Heal;
         PickupBroker.CoinPickupEvent -= addCoin;
+        PickupBroker.KeyPickupEvent -= gotAbominationKey;
     }
 
 

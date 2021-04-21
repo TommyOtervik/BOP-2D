@@ -7,6 +7,8 @@ public class PickupBroker
 {
     public static event Action<int> HealthPickupEvent;
     public static event Action<int> CoinPickupEvent;
+
+    public static event Action KeyPickupEvent;
     
     
     public static void CallHealthPickupEvent(int healthValue)
@@ -18,5 +20,10 @@ public class PickupBroker
     {
         CoinPickupEvent?.Invoke(coinValue);
     }
-    
+
+    public static void CallKeyPickupEvent()
+    {
+        KeyPickupEvent?.Invoke();
+    }
+
 }
