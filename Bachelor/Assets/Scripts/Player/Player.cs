@@ -60,6 +60,13 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     public static event Action<int> UpdateHealth;
     public static event Action<int> SetMaxHealth;
     #endregion
+    
+    #region Pickups
+
+    private int coinAmount;
+    private bool hasAbominationKey;
+    
+    #endregion
 
 
     private void Awake()
@@ -84,7 +91,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
 
     private void Update()
-    {  
+    {
         AttackManager();
 
         UpdateHealth?.Invoke(currentHealth);  
@@ -117,6 +124,29 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
         if (currentHealth <= 0)
             Death();
+    }
+
+    public void Heal(int value)
+    {
+        if (currentHealth + value > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        else
+        {
+            currentHealth += value;
+        }
+    }
+
+    public void addCoin(int value)
+    {
+        coinAmount += value;
+    }
+
+    // Burde nok ligget i en "Item/Inventory" class av noe slag. 
+    public void gotAbominationKey()
+    {
+        hasAbominationKey = true;
     }
 
     // Spilleren dør
@@ -158,10 +188,12 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         // Damage them
         foreach (Collider2D enemy in hitEnemies)
         {
-            StartCoroutine(WaitForAttackDamage(enemy)); 
+            //StartCoroutine(WaitForAttackDamage(enemy)); 
+            DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
         }
     }
 
+    /*
     // "Venter" på animasjonen i .3 sekunder. Gjør skade til fiende og rister kameraet.
     IEnumerator WaitForAttackDamage(Collider2D enemy)
     {
@@ -171,6 +203,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
       
     }
+    */
+    
 
   
 
@@ -193,6 +227,10 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
        EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
        DamageBroker.TakeDamageEvent += TakeDamage;
+       PickupBroker.HealthPickupEvent += Heal;
+       PickupBroker.CoinPickupEvent += addCoin;
+       PickupBroker.KeyPickupEvent += gotAbominationKey;
+
     }
 
     // Slå av lytter når objektet blir inaktivt (Memory leaks)
@@ -204,6 +242,9 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         EventManager.StopListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
         DamageBroker.TakeDamageEvent -= TakeDamage;
+        PickupBroker.HealthPickupEvent -= Heal;
+        PickupBroker.CoinPickupEvent -= addCoin;
+        PickupBroker.KeyPickupEvent -= gotAbominationKey;
     }
 
 
