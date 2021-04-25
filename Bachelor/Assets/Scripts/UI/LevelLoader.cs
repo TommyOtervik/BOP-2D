@@ -12,6 +12,9 @@ public class LevelLoader : MonoBehaviour
     private const string ANIM_TRIGGER_START = "Start";
 
     private UnityAction tutorialToCastleListener;
+    private UnityAction castleToTutorialListener;
+
+    private static string levelNameChange;
 
     //private const int TUTORIAL_BUILD_INDEX = 0;
     //private const int CASTLE_BUILD_INDEX = 1;
@@ -19,35 +22,45 @@ public class LevelLoader : MonoBehaviour
 
     private void Awake()
     {
-        tutorialToCastleListener = new UnityAction(LoadNextLevel);
+        tutorialToCastleListener = new UnityAction(LoadLevel);
+        castleToTutorialListener = new UnityAction(LoadLevel);
+
         EventManager.TriggerEvent(EnumEvents.LOAD_PLAYER);
     }
 
-    private void LoadNextLevel()
+    public static void SetLevelName(string name)
     {
-        
-        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
-        
+        levelNameChange = name;
     }
 
-    IEnumerator LoadLevel(int levelIndex)
+    private void LoadLevel()
+    {
+        // Castle_Level
+        // Tutorial_Level
+        
+        StartCoroutine(LoadLevelE(levelNameChange));
+    }
+
+    IEnumerator LoadLevelE(string sceneName)
     {
         // Player anim
         transition.SetTrigger(ANIM_TRIGGER_START);
         // Wait
         yield return new WaitForSeconds(transitionTime);
         // Load scene
-        SceneManager.LoadScene(levelIndex);  
+        SceneManager.LoadScene(sceneName);
     }
 
     private void OnEnable()
     {
         EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+        EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+        EventManager.StopListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
     }
 
 }

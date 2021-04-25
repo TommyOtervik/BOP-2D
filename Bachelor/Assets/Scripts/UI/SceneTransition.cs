@@ -10,8 +10,10 @@ public class SceneTransition : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.name.Equals(PLAYER_NAME))
+        {
+            LevelLoader.SetLevelName("Castle_Level");
             EventManager.TriggerEvent(EnumEvents.TUTORIAL_TO_CASTLE);
-       
-           
+        }
+        
     }
 }

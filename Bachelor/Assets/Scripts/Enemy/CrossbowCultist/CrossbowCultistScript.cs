@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CrossbowCultistScript : MonoBehaviour, IDamageable
 {
+    [SerializeField] private bool drawDebugRaycasts = true;
+    [SerializeField] private LayerMask groundLayer;
 
     #region External Private Variables (For editor)
     [Header("EnemyCultist Info")]
@@ -15,14 +17,18 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
 
     // RaycastTEst
     [SerializeField] private Transform raycastPoint;
+
+
     [SerializeField] private LayerMask raycastMask;
     [SerializeField] private float rayCastLength;
     private RaycastHit2D hit;
+
+
     [SerializeField] private Transform target;
 
     // Venstre & Høyre grense for patruljering
-    [SerializeField] private Transform leftLimit;
-    [SerializeField] private Transform rightLimit;
+    //[SerializeField] private Transform leftLimit;
+    //[SerializeField] private Transform rightLimit;
 
     [SerializeField] private GameObject projectile;
     [SerializeField] private Vector3 projectionSpawnOffset;
@@ -47,7 +53,7 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
 
     void Awake()
     {
-        SelectTarget(); 
+        //SelectTarget(); 
 
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
@@ -63,110 +69,49 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
 
     void Update()
     {
-        
-
-        if (!attackMode)
-            Move();
-
-        if (!InsideOfLimits() && !inRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack"))
-            SelectTarget();
-
-        if(inRange)
-        {
-            hit = Physics2D.Raycast(raycastPoint.position, transform.right, rayCastLength, raycastMask);
-            RaycastDebugger();
-        }
-
-        if (hit.collider != null)
-            EnemyLogic();
-        else if (hit.collider == null)
-            inRange = false;
-
-        if (!inRange)
-            StopAttack();
+        HorizontalRayCastCheck();
     }
 
-    private bool InsideOfLimits()
+ 
+    private void HorizontalRayCastCheck()
     {
-        return transform.position.x > leftLimit.position.x && transform.position.x < rightLimit.position.x;
-    }
+        RaycastHit2D playerHit = Raycast(new Vector2(0, -1), Vector2.left, rayCastLength);
 
-
-    // Velger "Patruljeringspunkt" ut i fra distansen,
-    // velger den som er lengst unna.
-    public void SelectTarget()
-    {
-        float distanceToLeft = Vector2.Distance(transform.position, leftLimit.position);
-        float distanceToRight = Vector2.Distance(transform.position, rightLimit.position);
-
-
-        if (distanceToLeft > distanceToRight)
-            target = leftLimit;
-        else
-            target = rightLimit;
-
-        Flip();
-    }
-
-    public void Flip()
-    {
-        Vector3 rotation = transform.eulerAngles;
-
-        if (transform.position.x > target.position.x)
-            rotation.y = 180f;
-        else
-            rotation.y = 0f;
-
-        transform.eulerAngles = rotation;
-    }
-
-    private void RaycastDebugger()
-    {
-        if (distance > attackDistance)
-            Debug.DrawRay(raycastPoint.position, transform.right * rayCastLength, Color.red);
-        else if (attackDistance > distance)
-            Debug.DrawRay(raycastPoint.position, transform.right * rayCastLength, Color.green);
-    }
-
-    private void EnemyLogic()
-    {
-        distance = Vector2.Distance(transform.position, target.position);
-
-        if (distance > attackDistance)
-        {
-            StopAttack();
-        }
-        else if (attackDistance >= distance && !cooling)
-        {
+        if (playerHit)
             Attack();
-        }
-
-        if (cooling)
-        {
-            anim.SetBool("Attack", true);
-        }
-
     }
-    private void OnTriggerEnter2D(Collider2D trig)
+
+    //These two Raycast methods wrap the Physics2D.Raycast() and provide some extra
+    //functionality
+    RaycastHit2D Raycast(Vector2 offset, Vector2 rayDirection, float length)
     {
-        if (trig.gameObject.CompareTag("Player"))
-        {
-            target = trig.transform;
-            inRange = true;
-            Flip();
-        }
+        //Call the overloaded Raycast() method using the ground layermask and return 
+        //the results
+        return Raycast(offset, rayDirection, length, groundLayer);
     }
 
-    private void Move()
+    RaycastHit2D Raycast(Vector2 offset, Vector2 rayDirection, float length, LayerMask mask)
     {
-        anim.SetBool("canWalk", true);
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("CrossbowCultist_attack"))
-        {
-            Vector2 targetPosition = new Vector2(target.position.x, transform.position.y);
+        //Record the enemy's position
+        Vector2 pos = transform.position;
 
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        //Send out the desired raycast and record the result
+        RaycastHit2D hit = Physics2D.Raycast(pos + offset, rayDirection, length, mask);
+
+        //If we want to show debug raycasts in the scene...
+        if (drawDebugRaycasts)
+        {
+            //...determine the color based on if the raycast hit...
+            Color color = hit ? Color.red : Color.green;
+            //...and draw the ray in the scene view
+            Debug.DrawRay(pos + offset, rayDirection * length, color);
         }
+
+        //Return the results of the raycast
+        return hit;
     }
+
+  
 
     private void Attack()
     {
@@ -186,7 +131,7 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
    
     public void SpawnBolt()
     {
-      
+        
     }
 
    
