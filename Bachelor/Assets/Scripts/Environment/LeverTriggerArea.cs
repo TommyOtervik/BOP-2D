@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeverTriggerArea : MonoBehaviour
+public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
 {
+
+    [SerializeField]
+    private string objectName;
 
     [SerializeField]
     private RemovableFloor removableFloor;
@@ -11,7 +14,7 @@ public class LeverTriggerArea : MonoBehaviour
     private bool insideArea;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         
     }
@@ -22,8 +25,8 @@ public class LeverTriggerArea : MonoBehaviour
         // FIXME: Events? 
         if (Input.GetKeyDown(KeyCode.E) && insideArea)
         {
-            Debug.Log("Pressed E");
             removableFloor.Open();
+            // GameManager.AddToPersistenceDictionary(objectName, false);
         }
     }
 
@@ -46,5 +49,10 @@ public class LeverTriggerArea : MonoBehaviour
             insideArea = false;
             UIManager.StopDisplayEButton();
         }
+    }
+
+    public string GetObjectName()
+    {
+        return objectName;
     }
 }

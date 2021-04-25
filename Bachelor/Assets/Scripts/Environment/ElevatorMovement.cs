@@ -13,8 +13,8 @@ public class ElevatorMovement : MonoBehaviour
     [SerializeField] 
     private float speed;
 
-    private Transform trans;
 
+    private Transform trans;
     [SerializeField]
     private Transform endTransform;
 
@@ -29,11 +29,10 @@ public class ElevatorMovement : MonoBehaviour
         nextPos = endPos;
     }
 
-    // Update is called once per frame
-    void Update()
+    
+    void FixedUpdate()
     {
         Move();
-
     }
 
     private void Move()
@@ -58,5 +57,23 @@ public class ElevatorMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         
+    }
+
+
+    // Holder spilleren på plattformen
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.collider.transform.SetParent(trans);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.collider.transform.SetParent(null);
+        }
     }
 }

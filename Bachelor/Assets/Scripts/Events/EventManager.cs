@@ -10,6 +10,17 @@ public class EventManager : MonoBehaviour
 
     private static EventManager eventManager;
 
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+
+        if (FindObjectsOfType(GetType()).Length > 1)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public static EventManager instance
     {
         get
@@ -73,4 +84,6 @@ public class EventManager : MonoBehaviour
             thisEvent.Invoke();
         }
     }
+
+    
 }
