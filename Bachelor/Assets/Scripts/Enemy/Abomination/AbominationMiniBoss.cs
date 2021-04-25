@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AbominationMiniBoss : MonoBehaviour, IDamageable
+public class AbominationMiniBoss : Enemy, IDamageable
 {
 
     #region External Private Variables
@@ -242,7 +242,12 @@ public class AbominationMiniBoss : MonoBehaviour, IDamageable
         }
 
         if (currentHealth <= 0)
+        {
+            base.MakeLoot();
             Death();
+        }
+
+        
     }
 
     public void Death()
