@@ -61,7 +61,7 @@ public class PlayerInput : MonoBehaviour
         crouchHeld = false;
         firePressed = false;
         altFirePressed = false;
-
+        rangedAttack = false;
         readyToClear = false;
     }
 

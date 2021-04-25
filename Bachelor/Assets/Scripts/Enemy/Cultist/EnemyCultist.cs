@@ -171,8 +171,12 @@ public class EnemyCultist : Enemy, IDamageable
         }
 
         if (currentHealth <= 0)
+        {
             base.MakeLoot();
             Death();
+        }
+
+        
         
     }
 

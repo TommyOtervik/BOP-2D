@@ -17,6 +17,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     private const string HURT_STR = "Hurt";
     private const string DEATH_STR = "Death";
     private const string ATTACK_STR = "Attack";
+    private const string RANGED_ATTACK_STR = "Throw";
 
     [Header("General Properties")]
     [SerializeField] private Transform spawnPoint;
@@ -32,6 +33,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     #region Combat Variables 
     [Header("Attack Properties")]
     [SerializeField] private Transform attackPoint;
+    [SerializeField] private Transform rangedAttackPoint;
     [SerializeField] private LayerMask enemyLayers;
 
     [SerializeField] private float attackRange = 1f;
@@ -40,8 +42,10 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     private float nextAttackTime = 0f;
 
     [Header("Ranged Attack Properties")]
-    [SerializeField] GameObject projectile;
-    [SerializeField] Vector3 projectionSpawnOffset;
+    [SerializeField] GameObject shurikenPrefab;
+    private const int RANGED_ATTACK_DAMAGE = 20;
+    private float rangedAttackRate = 2f;
+    private float nextRangedAttackTime = 0f;
 
     private const float CAMERA_SHAKE_INTENSITY = 5f;
     private const float CAMERA_SHAKE_DURATION = .1f;
@@ -68,6 +72,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     
     #endregion
 
+    public PlayerMovement movementScript;
+
 
     private void Awake()
     {
@@ -84,6 +90,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         
         SetMaxHealth?.Invoke(maxHealth);
 
+        movementScript = GetComponent<PlayerMovement>();
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
     }
@@ -111,6 +118,15 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
             }
         }   
         // if, elif altFire, specialAttack..?
+        if (Time.time >= nextRangedAttackTime)
+        {
+            if (input.rangedAttack)
+            {
+                RangedAttack(RANGED_ATTACK_DAMAGE);
+                // If attack rate is 2, add 1 divided by 2 = 0.5 sec 
+                nextRangedAttackTime = Time.time + 1f / rangedAttackRate;
+            }
+        }   
     }
 
     // Spilleren tar skade
@@ -190,6 +206,28 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         {
             //StartCoroutine(WaitForAttackDamage(enemy)); 
             DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
+        }
+    }
+    // FIX
+    public void RangedAttack(int amount)
+    {
+        // Attack animation
+        anim.SetTrigger(RANGED_ATTACK_STR);
+        
+    }
+
+    // Kalles som event i animasjon "Throw"
+    public void SpawnProjectile()
+    {
+        // INSTANTIATE
+        GameObject shuriken = Instantiate(shurikenPrefab, rangedAttackPoint.position, Quaternion.identity, null);
+        if (movementScript.FacingRight)
+        {
+            shuriken.GetComponent<Projectile_Rogue>().Init(Vector2.right);    
+        }
+        else
+        {
+            shuriken.GetComponent<Projectile_Rogue>().Init(Vector2.left);
         }
     }
 

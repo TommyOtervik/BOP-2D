@@ -9,13 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 471022}
-  - component: {fileID: 8117459099762396285}
   - component: {fileID: 21253194}
   - component: {fileID: 9594526}
   - component: {fileID: 5001438}
   - component: {fileID: 6782457372456317555}
-  - component: {fileID: 9090165403070610275}
-  m_Layer: 0
+  - component: {fileID: -8670133426478863837}
+  m_Layer: 14
   m_Name: Shuriken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,19 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8117459099762396285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 194752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74f33771c2cbb5c46b054d6aa61cc2c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 7
 --- !u!212 &21253194
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -85,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 590083285
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300002, guid: c9425a0a07de17d448634afef40b7445, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -155,7 +141,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
---- !u!114 &9090165403070610275
+--- !u!114 &-8670133426478863837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -167,4 +153,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f33771c2cbb5c46b054d6aa61cc2c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
