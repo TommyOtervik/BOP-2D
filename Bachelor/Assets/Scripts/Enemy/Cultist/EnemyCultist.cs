@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public class EnemyCultist : MonoBehaviour, IDamageable
+public class EnemyCultist : Enemy, IDamageable
 {
 
     #region External Private Variables (For editor)
@@ -171,6 +171,7 @@ public class EnemyCultist : MonoBehaviour, IDamageable
         }
 
         if (currentHealth <= 0)
+            base.MakeLoot();
             Death();
         
     }
