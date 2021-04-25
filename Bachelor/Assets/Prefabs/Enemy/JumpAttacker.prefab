@@ -181,6 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54d52a5052a3c84ea5a1c41d0bd29e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisLoot: {fileID: 11400000, guid: 05d1c64033e111147a4e32fde05826be, type: 2}
   moveSpeed: 5
   groundCheckPoint: {fileID: 6447285354797729897}
   wallCheckPoint: {fileID: 6447285352748608876}
@@ -196,6 +197,8 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 512
+  maxHealth: 20
+  currentHealth: 0
 --- !u!61 &6447285353892079168
 BoxCollider2D:
   m_ObjectHideFlags: 0
