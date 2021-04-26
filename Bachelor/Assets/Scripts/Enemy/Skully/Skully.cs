@@ -42,7 +42,8 @@ public class Skully : Enemy, IDamageable
     {
         collider = GetComponent<BoxCollider2D>();
         currentHealth = maxHealth;
-        transform.position = upperRight.position;
+        transform.position = spawnPoint.position;
+        target = upperRight;
     }
 
     // Update is called once per frame
@@ -52,6 +53,7 @@ public class Skully : Enemy, IDamageable
     }
     
     
+    // Hit Right
     void Attack1()
     {
         int bulletAmount = 9;
@@ -65,6 +67,7 @@ public class Skully : Enemy, IDamageable
         
     }
 
+    // Hit left
     void Attack2()
     {
         int bulletAmount = 9;
@@ -129,7 +132,7 @@ public class Skully : Enemy, IDamageable
 
     void MovementCheck()
     {
-        if (transform == upperLeft)
+        if (transform.position == upperLeft.position)
         {
             // Sjekke stuff 
             if (!attackInProgress && !leftToRightSprayFinished && rightToLeftSprayFinished)
@@ -137,26 +140,34 @@ public class Skully : Enemy, IDamageable
                 EventManager.TriggerEvent(EnumEvents.SKULLY_HIT_UPPER_LEFT);
             }
         }
-        else if (transform == upperRight)
+        else if (transform.position == upperRight.position)
         {
+            Debug.Log("Big true");
             if (!attackInProgress && !rightToLeftSprayFinished)
             {
                 EventManager.TriggerEvent(EnumEvents.SKULLY_HIT_UPPER_RIGHT);
             }
-            
         }
+        
+        
 
         if (target != null)
         {
             MovePointToPoint(transform, target);
         }
     }
-    
-   
-    
-    
 
-    
+    void resetVariables()
+    {
+        leftToRightSprayFinished = false;
+        rightToLeftSprayFinished = false;
+    }
+
+
+
+
+
+
 
 
 
