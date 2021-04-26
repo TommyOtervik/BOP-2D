@@ -6,6 +6,15 @@ using UnityEngine.Events;
 
 public class Skully : Enemy, IDamageable
 {
+    /*
+     *HUSK PÅ AT DU HAR COMMENTA UT STUFF I AWAKE METODEN
+        VELG ATTACK PATTERN I DET HAN LANDER / ER I SPAWN POINT?
+        TRENGER IKKE VELGE ATTACK2 fordi den er kobla til ATTACK1 ?
+     *
+     *
+     * 
+     */
+    
     // Collision enter etterpå
     private int maxHealth = 30;
     private int currentHealth;
@@ -27,15 +36,20 @@ public class Skully : Enemy, IDamageable
     private bool attackInProgress = false;
     private bool leftToRightSprayFinished = false;
     private bool rightToLeftSprayFinished = false;
+    private bool rangedAttacksFinished = false;
     
     private UnityAction hitUpperLeftListener;
     private UnityAction hitUpperRightListener;
+    private UnityAction hitUpperCenterListener;
+    private UnityAction hitSpawnPointListener;
 
 // Start is called before the first frame update
     void Awake()
     {
         hitUpperLeftListener = new UnityAction(Attack2);
         hitUpperRightListener = new UnityAction(Attack1);
+        //hitUpperCenterListener = new UnityAction(DiveAttack());
+        //hitSpawnPointListener = new UnityAction(ChooseAttack());
     }
 
     void Start()
@@ -112,6 +126,8 @@ public class Skully : Enemy, IDamageable
         else
         {
             leftToRightSprayFinished = true;
+            // Går bra fordi komboen starter alltid fra høyre og avsluttes på høyre
+            rangedAttacksFinished = true;
         }
 
 
@@ -148,8 +164,13 @@ public class Skully : Enemy, IDamageable
                 EventManager.TriggerEvent(EnumEvents.SKULLY_HIT_UPPER_RIGHT);
             }
         }
-        
-        
+        else if (transform.position == spawnPoint.position)
+        {
+            // FIX LATER KANSKJE EVENT?
+            resetAttackVariables();
+        }
+
+
 
         if (target != null)
         {
@@ -157,10 +178,11 @@ public class Skully : Enemy, IDamageable
         }
     }
 
-    void resetVariables()
+    void resetAttackVariables()
     {
         leftToRightSprayFinished = false;
         rightToLeftSprayFinished = false;
+        rangedAttacksFinished = false;
     }
 
 
@@ -202,6 +224,8 @@ public class Skully : Enemy, IDamageable
     {
         EventManager.StartListening(EnumEvents.SKULLY_HIT_UPPER_LEFT, hitUpperLeftListener);
         EventManager.StartListening(EnumEvents.SKULLY_HIT_UPPER_RIGHT, hitUpperRightListener);
+        EventManager.StartListening(EnumEvents.SKULLY_HIT_UPPER_CENTER, hitUpperCenterListener);
+        EventManager.StartListening(EnumEvents.SKULLY_HIT_SPAWN_POINT, hitSpawnPointListener);
         DamageBroker.AddToEnemyList(this);
 
     }
@@ -211,6 +235,8 @@ public class Skully : Enemy, IDamageable
     {
         EventManager.StopListening(EnumEvents.SKULLY_HIT_UPPER_LEFT, hitUpperLeftListener);
         EventManager.StopListening(EnumEvents.SKULLY_HIT_UPPER_RIGHT, hitUpperRightListener);
+        EventManager.StopListening(EnumEvents.SKULLY_HIT_UPPER_CENTER, hitUpperCenterListener);
+        EventManager.StopListening(EnumEvents.SKULLY_HIT_SPAWN_POINT, hitSpawnPointListener);
         DamageBroker.RemoveEnemyFromList(this);
     }
 }
