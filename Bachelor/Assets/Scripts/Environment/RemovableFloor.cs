@@ -20,6 +20,8 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
     void Start()
     {
 
+        if (GameManager.IsFloorOpen())
+            Destroy(this.gameObject);
 
         startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         bounds = startPos + new Vector3(0, -20, 0);
@@ -48,8 +50,7 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
             isOpen = true;
 
-            // GameManager.AddToPersistenceDictionary(objectName, false);
-
+            GameManager.PlayerOpenedFloor(isOpen);
         }
     }
 

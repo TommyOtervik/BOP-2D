@@ -262,7 +262,6 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         SaveSystem.SavePlayer(this);
 
         Debug.Log("Saved Player. HP: " + this.currentHealth);
-        Debug.Log("Pos: " + this.transform.position + "- Scene:" + SceneManager.GetActiveScene().name);
     }
 
     public void LoadPlayer()
@@ -272,13 +271,6 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         this.currentHealth = data.GetCurrentHealth();
 
         Debug.Log("Load Player. HP: " + this.currentHealth);
-        // BARE TEST FOR CASTLE NIVÅ
-        //Vector3 pos;
-        //pos.x = -6.7f;
-        //pos.y = -1f;
-        //pos.z = 0f;
-
-        //transform.position = pos;
     }
 
     public GameObject GetEnemyGameObject()

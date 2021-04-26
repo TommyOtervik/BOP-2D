@@ -40,6 +40,7 @@ public class AbominationMiniBoss : Enemy, IDamageable
     private bool cooling; // Check if enemy is cooling after attack
     private bool insideHotZone; // Check if player inside
     private float enrageTimer; // Enrage Timer
+    private bool isDead;
     private int minRandomHurt = 1;
     private int maxRandomHurt = 10;
     private float startX, endX, flameDistance; // Enraged attack distance variables
@@ -47,30 +48,46 @@ public class AbominationMiniBoss : Enemy, IDamageable
     private float timeForNextAttack;
     private Collider2D abomCollider;
 
-
     #endregion
     private UnityAction playerDeadListener;
+    private UnityAction abomDeadListener;
 
     // Start is called before the first frame update
+    private void Start()
+    {
+        //GameManager.RegisterAbomination(this);
+
+        if (!GameManager.IsAbomDead())
+            currentHealth = maxHealth;
+        else
+            currentHealth = 0;
+
+        if (currentHealth <= 0)
+            Death();
+        
+    }
+
     void Awake()
     {
-        enrageTimer = 5;
+        this.enrageTimer = 100f;
 
         startX = enrageHitStartPoint.position.x;
         endX = enrageHitEndPoint.position.x;
         flameDistance = (startX - endX);
 
         playerDeadListener = new UnityAction(ResetAbomination);
+        //abomDeadListener = new UnityAction(SaveAbominationData);
+
 
         anim = GetComponent<Animator>();
         abomCollider = GetComponent<BoxCollider2D>();
-
-        currentHealth = maxHealth;
 
         healthBar.SetSize((float)currentHealth / (float)maxHealth);
 
         anim.SetBool("canWalk", false);
     }
+
+   
 
     // Update is called once per frame
     void Update()
@@ -85,6 +102,7 @@ public class AbominationMiniBoss : Enemy, IDamageable
             Enrage();
         else
             ResetAbomination();
+
     }
 
     private void EnemyLogic()
@@ -246,8 +264,7 @@ public class AbominationMiniBoss : Enemy, IDamageable
             base.MakeLoot();
             Death();
         }
-
-        
+   
     }
 
     public void Death()
@@ -267,7 +284,10 @@ public class AbominationMiniBoss : Enemy, IDamageable
 
         this.enabled = false;
 
+        isDead = true;
+
         EventManager.TriggerEvent(EnumEvents.ABOMINATION_DEAD);
+        GameManager.PlayerKilledAbom(isDead);
     }
 
     // Brukes i animator for å vente med å angripe etter et slag.
@@ -291,18 +311,52 @@ public class AbominationMiniBoss : Enemy, IDamageable
     private void OnEnable()
     {
         EventManager.StartListening(EnumEvents.PLAYER_DEAD, playerDeadListener);
+        //EventManager.StartListening(EnumEvents.ABOMINATION_DEAD, abomDeadListener);
+
         DamageBroker.AddToEnemyList(this);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EnumEvents.PLAYER_DEAD, playerDeadListener);
+        //EventManager.StopListening(EnumEvents.ABOMINATION_DEAD, abomDeadListener);
+
         DamageBroker.RemoveEnemyFromList(this);
     }
 
+    //public void SaveAbominationData()
+    //{
+    //    SaveSystem.SaveAbomination(this);
+
+    //    Debug.Log("Saved Abom. HP: " + this.currentHealth);
+    //}
+
+    //public void LoadAbominationData()
+    //{
+    //    AbominationData data = SaveSystem.LoadAbomination();
+
+    //    this.currentHealth = data.GetCurrentHealth();
+
+    //    Debug.Log("Load Abom. HP: " + this.currentHealth);
+    //}
+
+    public int GetCurrentHealth()
+    {
+        return this.currentHealth;
+    }
     public void SetInsideHotZone(bool b)
     {
         this.insideHotZone = b;
+    }
+
+    public void SetEnrageTimer(float timer)
+    {
+        this.enrageTimer = timer;
+    }
+
+    public bool GetIsDead()
+    {
+        return this.isDead;
     }
  
     public GameObject GetEnemyGameObject()

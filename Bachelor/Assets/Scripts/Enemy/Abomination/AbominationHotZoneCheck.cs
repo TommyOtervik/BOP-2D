@@ -24,10 +24,11 @@ public class AbominationHotZoneCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.CompareTag(PLAYER_NAME))
+        if (collider.gameObject.CompareTag(PLAYER_NAME) && !enemy.GetIsDead())
         {
             playerInside = true;
             enemy.SetInsideHotZone(playerInside);
+            enemy.SetEnrageTimer(5f);
             StartCoroutine(WallDelay());
         }
     }

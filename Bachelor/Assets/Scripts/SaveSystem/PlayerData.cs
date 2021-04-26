@@ -21,6 +21,6 @@ public class PlayerData
 
     public int GetCurrentHealth()
     {
-        return currentHealth;
+        return this.currentHealth;
     }
 }
