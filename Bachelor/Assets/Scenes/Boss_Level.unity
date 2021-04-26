@@ -33189,12 +33189,6 @@ PrefabInstance:
       propertyPath: upperCenter
       value: 
       objectReference: {fileID: 892984307}
-    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
-        type: 3}
-      propertyPath: bulletPrefab
-      value: 
-      objectReference: {fileID: 7491654197230529605, guid: 8390d32be95c68f48824e892ec29bda9,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e08166d6a0aa3974aa3b62b8b1b86372, type: 3}
 --- !u!1001 &5802204827935318110
