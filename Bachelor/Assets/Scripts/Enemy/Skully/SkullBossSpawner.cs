@@ -19,6 +19,7 @@ public class SkullBossSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.U))
         {
             SpawnBulletsFromLeft(5);
@@ -28,6 +29,7 @@ public class SkullBossSpawner : MonoBehaviour
         {
             SpawnBulletsFromRight(5);
         }
+        */
     }
 
     void SpawnBulletsFromLeft(int amount)

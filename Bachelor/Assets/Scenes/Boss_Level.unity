@@ -289,6 +289,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &104152328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104152329}
+  m_Layer: 0
+  m_Name: SkullyPointSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &104152329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104152328}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 56.95, y: -42.79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &269325915
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2514,12 +2544,12 @@ PrefabInstance:
     - target: {fileID: 1586035443770310885, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 54.7
+      value: 39.3
       objectReference: {fileID: 0}
     - target: {fileID: 1586035443770310885, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -44.3
+      value: -44.77
       objectReference: {fileID: 0}
     - target: {fileID: 1586035443770310885, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
@@ -2588,38 +2618,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 048cd02a83a3fd74682f716d23e76dff, type: 3}
---- !u!1 &471245191 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2488568314662281464, guid: e08166d6a0aa3974aa3b62b8b1b86372,
-    type: 3}
-  m_PrefabInstance: {fileID: 2488568314325516671}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &471245192
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471245191}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.009910002}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.25, y: 0.4}
-    newSize: {x: 0.25, y: 0.4}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.38017997}
-  m_EdgeRadius: 0
 --- !u!1001 &589164974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10306,6 +10304,36 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &892984306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 892984307}
+  m_Layer: 0
+  m_Name: SkullyPointUpperCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &892984307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892984306}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 55.34, y: -34.76, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &939615390
 GameObject:
   m_ObjectHideFlags: 0
@@ -12038,7 +12066,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232704834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 54.69985, y: -41.606834, z: -15}
+  m_LocalPosition: {x: 39.297417, y: -41.708824, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -25058,6 +25086,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90f041d91aca2e24d87e0d6d3abb1e1e, type: 3}
+--- !u!1 &1580558718
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1580558719}
+  m_Layer: 0
+  m_Name: SkullyPointUpperRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1580558719
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580558718}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 70.85, y: -35.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1640964067
 GameObject:
   m_ObjectHideFlags: 0
@@ -25100,6 +25158,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1731607070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1731607071}
+  m_Layer: 0
+  m_Name: SkullyPointUpperLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1731607071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731607070}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 37.65, y: -34.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1829658872
 GameObject:
@@ -32848,12 +32936,12 @@ PrefabInstance:
     - target: {fileID: 807563758967942893, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 54.7
+      value: 39.3
       objectReference: {fileID: 0}
     - target: {fileID: 807563758967942893, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -41.63
+      value: -42.100002
       objectReference: {fileID: 0}
     - target: {fileID: 807563758967942893, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
@@ -33029,17 +33117,17 @@ PrefabInstance:
     - target: {fileID: 2488568314662281462, guid: e08166d6a0aa3974aa3b62b8b1b86372,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 58.7
+      value: 57.12
       objectReference: {fileID: 0}
     - target: {fileID: 2488568314662281462, guid: e08166d6a0aa3974aa3b62b8b1b86372,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -38.6
+      value: -42.5
       objectReference: {fileID: 0}
     - target: {fileID: 2488568314662281462, guid: e08166d6a0aa3974aa3b62b8b1b86372,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.4296875
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2488568314662281462, guid: e08166d6a0aa3974aa3b62b8b1b86372,
         type: 3}
@@ -33081,6 +33169,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skully
       objectReference: {fileID: 0}
+    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
+        type: 3}
+      propertyPath: upperLeft
+      value: 
+      objectReference: {fileID: 1731607071}
+    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
+        type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 104152329}
+    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
+        type: 3}
+      propertyPath: upperRight
+      value: 
+      objectReference: {fileID: 1580558719}
+    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
+        type: 3}
+      propertyPath: upperCenter
+      value: 
+      objectReference: {fileID: 892984307}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e08166d6a0aa3974aa3b62b8b1b86372, type: 3}
 --- !u!1001 &5802204827935318110
