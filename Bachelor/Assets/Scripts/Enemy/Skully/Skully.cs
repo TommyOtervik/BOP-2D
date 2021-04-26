@@ -1,9 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Skully : Enemy, IDamageable
 {
+    /*
+     *HUSK PÅ AT DU HAR COMMENTA UT STUFF I AWAKE METODEN
+        VELG ATTACK PATTERN I DET HAN LANDER / ER I SPAWN POINT?
+        TRENGER IKKE VELGE ATTACK2 fordi den er kobla til ATTACK1 ?
+     *
+     *
+     * 
+     */
+    
     // Collision enter etterpå
     private int maxHealth = 30;
     private int currentHealth;
@@ -18,14 +29,35 @@ public class Skully : Enemy, IDamageable
     [SerializeField] private Transform upperLeft;
     [SerializeField] private Transform upperRight;
     [SerializeField] private Transform upperCenter;
+
+    [SerializeField] private GameObject bulletPrefab;
+    private float attackRate = 0.4f;
     private Transform target;
     private bool attackInProgress = false;
+    private bool leftToRightSprayFinished = false;
+    private bool rightToLeftSprayFinished = false;
+    private bool rangedAttacksFinished = false;
+    
+    private UnityAction hitUpperLeftListener;
+    private UnityAction hitUpperRightListener;
+    private UnityAction hitUpperCenterListener;
+    private UnityAction hitSpawnPointListener;
 
 // Start is called before the first frame update
+    void Awake()
+    {
+        hitUpperLeftListener = new UnityAction(Attack2);
+        hitUpperRightListener = new UnityAction(Attack1);
+        //hitUpperCenterListener = new UnityAction(DiveAttack());
+        //hitSpawnPointListener = new UnityAction(ChooseAttack());
+    }
+
     void Start()
     {
         collider = GetComponent<BoxCollider2D>();
         currentHealth = maxHealth;
+        transform.position = spawnPoint.position;
+        target = upperRight;
     }
 
     // Update is called once per frame
@@ -33,19 +65,74 @@ public class Skully : Enemy, IDamageable
     {
         MovementCheck();
     }
-
-
-
+    
+    
+    // Hit Right
     void Attack1()
     {
-        if (target != null)
+        int bulletAmount = 9;
+        /*
+        if (!attackInProgress && !rightToLeftSprayFinished)
         {
-            return;
+            StartCoroutine(SpawnBulletsDown(bulletAmount, attackRate, "Left"));
+        }
+        */
+        StartCoroutine(SpawnBulletsDown(bulletAmount, attackRate, "Left"));
+        
+    }
+
+    // Hit left
+    void Attack2()
+    {
+        int bulletAmount = 9;
+        
+        /*
+        if (!attackInProgress && !leftToRightSprayFinished && rightToLeftSprayFinished)
+        {
+            StartCoroutine(SpawnBulletsDown(bulletAmount, attackRate, "Right"));
+        }
+        */
+        StartCoroutine(SpawnBulletsDown(bulletAmount, attackRate, "Right"));
+    }
+
+    IEnumerator SpawnBulletsDown(int amount, float delay, string sprayDirection)
+    {
+        attackInProgress = true;
+        if (sprayDirection == "Left")
+        {
+            target = upperLeft;
+        }
+        else
+        {
+            target = upperRight;
+        }
+        
+        
+        GameObject tempBullet;
+        for (int i = 0; i < amount; i++)
+        {
+            tempBullet = Instantiate(bulletPrefab, attackPointDown.position, Quaternion.identity);
+            tempBullet.GetComponent<Bullet>().Init(Vector2.down);
+
+            yield return new WaitForSeconds(delay);
+
         }
 
-        target = upperCenter;
-        Debug.Log("Pang Pang masse damage");
+        attackInProgress = false;
+        if (sprayDirection == "Left")
+        {
+            rightToLeftSprayFinished = true;
+        }
+        else
+        {
+            leftToRightSprayFinished = true;
+            // Går bra fordi komboen starter alltid fra høyre og avsluttes på høyre
+            rangedAttacksFinished = true;
+        }
+
+
     }
+
 
     void MovePointToPoint(Transform current, Transform target)
     {
@@ -61,53 +148,48 @@ public class Skully : Enemy, IDamageable
 
     void MovementCheck()
     {
+        if (transform.position == upperLeft.position)
+        {
+            // Sjekke stuff 
+            if (!attackInProgress && !leftToRightSprayFinished && rightToLeftSprayFinished)
+            {
+                EventManager.TriggerEvent(EnumEvents.SKULLY_HIT_UPPER_LEFT);
+            }
+        }
+        else if (transform.position == upperRight.position)
+        {
+            Debug.Log("Big true");
+            if (!attackInProgress && !rightToLeftSprayFinished)
+            {
+                EventManager.TriggerEvent(EnumEvents.SKULLY_HIT_UPPER_RIGHT);
+            }
+        }
+        else if (transform.position == spawnPoint.position)
+        {
+            // FIX LATER KANSKJE EVENT?
+            resetAttackVariables();
+        }
+
+
+
         if (target != null)
         {
             MovePointToPoint(transform, target);
         }
     }
-    
-    void LeftToRight(Transform current, Transform target)
-    {
-        if (current == upperLeft)
-        {
-            while (current != target)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-            }
-            
-        }
 
-        else
-        {
-            while (current != upperLeft)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, upperLeft.position, speed * Time.deltaTime);
-            }
-            
-            
-        }
+    void resetAttackVariables()
+    {
+        leftToRightSprayFinished = false;
+        rightToLeftSprayFinished = false;
+        rangedAttacksFinished = false;
+    }
 
-       
-        
-    }
-    void RightToLeft(Transform current, Transform target)
-    {
-        
-    }
-    void Center(Transform current, Transform target)
-    {
-        
-    }
-    void SpawnPoint(Transform current, Transform target)
-    {
-        
-    }
-    
-    
-    
 
-    
+
+
+
+
 
 
 
@@ -131,19 +213,30 @@ public class Skully : Enemy, IDamageable
             Destroy(gameObject);
         }
     }
-
-    private void OnEnable()
-    {
-        DamageBroker.AddToEnemyList(this);
-    }
-
-    private void OnDisable()
-    {
-        DamageBroker.RemoveEnemyFromList(this);
-    }
+    
     
     public GameObject GetEnemyGameObject()
     {
         return collider.gameObject;
+    }
+    
+    private void OnEnable()
+    {
+        EventManager.StartListening(EnumEvents.SKULLY_HIT_UPPER_LEFT, hitUpperLeftListener);
+        EventManager.StartListening(EnumEvents.SKULLY_HIT_UPPER_RIGHT, hitUpperRightListener);
+        EventManager.StartListening(EnumEvents.SKULLY_HIT_UPPER_CENTER, hitUpperCenterListener);
+        EventManager.StartListening(EnumEvents.SKULLY_HIT_SPAWN_POINT, hitSpawnPointListener);
+        DamageBroker.AddToEnemyList(this);
+
+    }
+
+    // Slå av lytter når objektet blir inaktivt (Memory leaks)
+    private void OnDisable()
+    {
+        EventManager.StopListening(EnumEvents.SKULLY_HIT_UPPER_LEFT, hitUpperLeftListener);
+        EventManager.StopListening(EnumEvents.SKULLY_HIT_UPPER_RIGHT, hitUpperRightListener);
+        EventManager.StopListening(EnumEvents.SKULLY_HIT_UPPER_CENTER, hitUpperCenterListener);
+        EventManager.StopListening(EnumEvents.SKULLY_HIT_SPAWN_POINT, hitSpawnPointListener);
+        DamageBroker.RemoveEnemyFromList(this);
     }
 }
