@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
 {
+    private const string PLAYER_NAME = "Player";
 
     [SerializeField]
     private string objectName;
@@ -13,12 +14,6 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
 
     private bool insideArea;
 
-    // Start is called before the first frame update
-    void Awake()
-    {
-        
-    }
-
     
     void Update()
     {
@@ -26,7 +21,6 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
         if (Input.GetKeyDown(KeyCode.E) && insideArea)
         {
             removableFloor.Open();
-            // GameManager.AddToPersistenceDictionary(objectName, false);
         }
     }
 
@@ -35,7 +29,7 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name.Equals("Player"))
+        if (collision.CompareTag(PLAYER_NAME))
         {
             insideArea = true;
             UIManager.DisplayEButtonOnLever();
@@ -44,7 +38,7 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.name.Equals("Player"))
+        if (collision.CompareTag(PLAYER_NAME))
         {
             insideArea = false;
             UIManager.StopDisplayEButton();

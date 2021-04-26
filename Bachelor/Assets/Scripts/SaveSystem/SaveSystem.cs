@@ -17,39 +17,6 @@ public static class SaveSystem
         stream.Close();
     }
 
-    public static void SaveSceneData(SceneData sceneData)
-    {
-        BinaryFormatter formatter = new BinaryFormatter();
-        string path = Application.persistentDataPath + "/" + sceneData.name + ".yolo";
-
-        FileStream stream = new FileStream(path, FileMode.Create);
-        SceneData data = new SceneData(sceneData);
-
-        formatter.Serialize(stream, data);
-        stream.Close();
-    }
-
-    public static SceneData LoadSceneData(string sceneName)
-    {
-        Debug.Log("LoadScene " + sceneName);
-        string path = Application.persistentDataPath + "/" + sceneName + ".yolo";
-
-        if (File.Exists(path))
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path, FileMode.Open);
-
-            SceneData data = formatter.Deserialize(stream) as SceneData;
-
-            return data;
-        }
-        else
-        {
-            Debug.LogError("Save file not found in " + path);
-            return null;
-        }
-
-    }
 
     public static PlayerData LoadPlayer()
     {
@@ -69,6 +36,43 @@ public static class SaveSystem
             Debug.LogError("Save file not found in " + path);
             return null;
         }
+    }
+
+    public static void SaveAbomination(AbominationMiniBoss abom)
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+        string path = Application.persistentDataPath + "/abom.dat";
+
+        FileStream stream = new FileStream(path, FileMode.Create);
+        AbominationData data = new AbominationData(abom);
+
+
+        formatter.Serialize(stream, data);
+        stream.Close();
+    }
+
+    public static AbominationData LoadAbomination()
+    {
+        
+
+        string path = Application.persistentDataPath + "/abom.dat";
+
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            AbominationData data = formatter.Deserialize(stream) as AbominationData;
+            
+
+            return data;
+        }
+        else
+        {
+            Debug.LogError("Save file not found in " + path);
+            return null;
+        }
+
     }
 
 }

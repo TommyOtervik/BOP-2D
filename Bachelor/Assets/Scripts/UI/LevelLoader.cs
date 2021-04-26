@@ -26,6 +26,7 @@ public class LevelLoader : MonoBehaviour
         castleToTutorialListener = new UnityAction(LoadLevel);
 
         EventManager.TriggerEvent(EnumEvents.LOAD_PLAYER);
+        
     }
 
     public static void SetLevelName(string name)
