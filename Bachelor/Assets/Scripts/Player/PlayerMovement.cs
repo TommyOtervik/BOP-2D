@@ -15,6 +15,11 @@ public class PlayerMovement : MonoBehaviour
     // facing direction
     private bool facingRight;
 
+    public bool FacingRight
+    {
+        get { return facingRight; }
+    }
+
     [Header("Jump Properties")]
     public float jumpForce = 6.3f;          //Initial force of jump
     public float jumpHoldForce = 1.9f;      //Incremental force when jump is held

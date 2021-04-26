@@ -19,7 +19,7 @@ TagManager:
   - Traps
   - Enemies
   - Pickups
-  - 
+  - Player_Shuriken
   - 
   - 
   - 
@@ -61,4 +61,7 @@ TagManager:
     locked: 0
   - name: Pickups
     uniqueID: 1303522965
+    locked: 0
+  - name: Player_Shuriken
+    uniqueID: 590083285
     locked: 0
