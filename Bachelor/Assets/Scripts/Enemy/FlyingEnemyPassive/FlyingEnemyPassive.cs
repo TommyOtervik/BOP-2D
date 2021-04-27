@@ -15,6 +15,7 @@ public class FlyingEnemyPassive : Enemy, IDamageable
     private int currentHealth;
     private Collider2D collider;
     private Animator enemyAnim;
+    private float damageTimer;
 
     void Start()
     {
@@ -23,11 +24,13 @@ public class FlyingEnemyPassive : Enemy, IDamageable
         enemyAnim = GetComponent<Animator>();
         enemyAnim.SetBool("isDead", false);
         currentHealth = maxHealth;
-        
+        damageTimer = 0f;
+
     }
     // Update is called once per frame
     void Update()
     {
+        damageTimer -= Time.deltaTime;
         float distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         if (distanceFromPlayer < lineOfSight)
         {
@@ -42,14 +45,26 @@ public class FlyingEnemyPassive : Enemy, IDamageable
         Gizmos.DrawWireSphere(transform.position, lineOfSight);
     }
     
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name.Equals(PLAYER_NAME))
+        if (collision.gameObject.name.Equals(PLAYER_NAME) && damageTimer <= 0)
         {
             DamageBroker.CallTakeDamageEvent(collisionDamageAmount);
+            damageTimer = 1.0f;
         }
-        Physics2D.IgnoreCollision(collider, collision.collider, true);
+        
     }
+    
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.name.Equals(PLAYER_NAME) && damageTimer <= 0)
+        {
+            DamageBroker.CallTakeDamageEvent(collisionDamageAmount);
+            damageTimer = 1.0f;
+        }
+        
+    }
+    
     
     public void TakeDamage(int damageTaken)
     {

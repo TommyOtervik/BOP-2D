@@ -10,7 +10,7 @@ public class StaticStatueGrenade : MonoBehaviour
     
     private const string PLAYER_NAME = "Player";
     
-    private int damageAmount = 1;
+    private int damageAmount = 10;
     
     
     // Start is called before the first frame update

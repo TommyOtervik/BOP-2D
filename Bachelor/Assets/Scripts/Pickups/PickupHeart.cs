@@ -7,7 +7,7 @@ using Vector2 = UnityEngine.Vector2;
 
 public class PickupHeart : Pickup
 {
-    private int healingValue = 20;
+    private int healingValue = 10;
     /*
     private const string PLAYER_NAME = "Player";
     private Vector2 startPosition;

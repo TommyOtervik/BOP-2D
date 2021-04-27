@@ -21,7 +21,7 @@ public class StaticStatue : Enemy, IDamageable
     [SerializeField] private Transform grenadeLaunchAttackPoint;
 
     private const string PLAYER_NAME = "Player";
-    private int maxHealth = 30;
+    private int maxHealth = 100;
     private int currentHealth;
     public int collisionDamageAmount = 10;
 
@@ -94,9 +94,13 @@ public class StaticStatue : Enemy, IDamageable
     {
         horizontalAttackInProgress = true;
         HorizontalAttack();
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         HorizontalAttack();
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
+        HorizontalAttack();
+        yield return new WaitForSeconds(0.5f);
+        HorizontalAttack();
+        yield return new WaitForSeconds(0.5f);
         HorizontalAttack();
         yield return new WaitForSeconds(2.0f);
         horizontalAttackInProgress = false;
@@ -106,11 +110,15 @@ public class StaticStatue : Enemy, IDamageable
     {
         grenadeAttackInProgress = true;
         GrenadeAttack();
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
+        GrenadeAttack();
+        yield return new WaitForSeconds(0.5f);
+        GrenadeAttack();
+        yield return new WaitForSeconds(0.5f);
+        GrenadeAttack();
+        yield return new WaitForSeconds(0.5f);
         GrenadeAttack();
         yield return new WaitForSeconds(1.0f);
-        GrenadeAttack();
-        yield return new WaitForSeconds(2.0f);
         grenadeAttackInProgress = false;
     }
     

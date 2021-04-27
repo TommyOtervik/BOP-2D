@@ -13,7 +13,7 @@ public class StaticStatueBullet : MonoBehaviour
     // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
     
-    private int damageAmount = 1;
+    private int damageAmount = 10;
     
     
     void Start()

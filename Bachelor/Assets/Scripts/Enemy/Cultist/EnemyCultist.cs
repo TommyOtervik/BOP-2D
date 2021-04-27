@@ -172,12 +172,24 @@ public class EnemyCultist : Enemy, IDamageable
 
         if (currentHealth <= 0)
         {
-            base.MakeLoot();
+            MakeLoot();
             Death();
         }
 
         
         
+    }
+    
+    protected override void MakeLoot()
+    {
+        if (thisLoot != null)
+        {
+            Pickup current = thisLoot.LootPickup();
+            if (current != null)
+            {
+                Instantiate(current.gameObject, new Vector2(transform.position.x + 0.5f, transform.position.y + 3), Quaternion.identity);
+            }
+        }
     }
 
     // Håndterer død av AI

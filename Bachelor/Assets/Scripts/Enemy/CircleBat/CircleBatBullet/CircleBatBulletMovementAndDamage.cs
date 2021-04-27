@@ -9,7 +9,7 @@ public class CircleBatBulletMovementAndDamage : MonoBehaviour
     private float speed = 10.0f;
     private float distanceTravelled;
     private Vector2 lastPosition;
-    private const float MAXTravelDistance = 40.0f;
+    private float MAXTravelDistance = 30.0f;
     
     
     // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
@@ -52,9 +52,9 @@ public class CircleBatBulletMovementAndDamage : MonoBehaviour
         {
             // Hvis sant, gjør skade til spilleren
             DamageBroker.CallTakeDamageEvent(damageAmount);
+            Destroy(gameObject);
         }
-        // All annen type kollisjon, ødelegg objektet
-        Destroy(gameObject);
+        
     }
     
     

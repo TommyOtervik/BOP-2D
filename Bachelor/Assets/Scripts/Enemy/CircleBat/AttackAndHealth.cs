@@ -8,21 +8,29 @@ public class AttackAndHealth : Enemy, IDamageable
     [SerializeField] private int currentHealth;
     [SerializeField] private int collisionDamageAmount = 10;
     
+    [SerializeField] public float lineOfSight;
+    private const int OffsetY = 2;
     private float attackRate = 1.5f;
+    
     private const string PLAYER_NAME = "Player";
+    private Transform player;
     
     private Collider2D circleBatCollider;
     public GameObject bulletPrefab;
     
     private Animator enemyAnim;
+
+    private float distanceFromPlayer;
+
+    private bool attackInProgress;
     // Start is called before the first frame update
     void Start()
     {
+        player = FindObjectOfType<Player>().transform;
         circleBatCollider = GetComponent<BoxCollider2D>();
         enemyAnim = GetComponent<Animator>();
         enemyAnim.SetBool("isDead", false);
         currentHealth = maxHealth;
-        StartCoroutine(AttackPattern());
     }
     
     
@@ -30,7 +38,12 @@ public class AttackAndHealth : Enemy, IDamageable
     // Update is called once per frame
     void Update()
     {
-        
+        distanceFromPlayer = Vector2.Distance(player.position, transform.position);
+        if (distanceFromPlayer < lineOfSight && !attackInProgress)
+        {
+            StartCoroutine(AttackPattern());
+            attackInProgress = true;
+        }
     }
 
     IEnumerator AttackPattern()
@@ -38,11 +51,18 @@ public class AttackAndHealth : Enemy, IDamageable
         // Egentlig while fienden er i livet, evt om vi skal ha en trigger range før første angrep?
         while (true)
         {
+            if (distanceFromPlayer > lineOfSight)
+            {
+                break;
+            }
+
             yield return new WaitForSeconds(attackRate);
             HorizontalVerticalAttack();
             yield return new WaitForSeconds(attackRate);
             DiagonalAttack();
         }
+
+        attackInProgress = false;
 
     }
 
@@ -124,5 +144,11 @@ public class AttackAndHealth : Enemy, IDamageable
     public GameObject GetEnemyGameObject()
     {
         return circleBatCollider.gameObject;
+    }
+    
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, lineOfSight);
     }
 }
