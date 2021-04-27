@@ -65,9 +65,7 @@ public class GameManager : MonoBehaviour
     //    if (current == null)
     //        return;
 
-    //    current.abom = abom;
-
-        
+    //    current.abom = abom;  
     //}
 
 

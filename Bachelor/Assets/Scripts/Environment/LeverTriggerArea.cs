@@ -19,9 +19,8 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
     {
         // FIXME: Events? 
         if (Input.GetKeyDown(KeyCode.E) && insideArea)
-        {
             removableFloor.Open();
-        }
+        
     }
 
   

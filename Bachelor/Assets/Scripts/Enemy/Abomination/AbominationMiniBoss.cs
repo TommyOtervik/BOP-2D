@@ -204,7 +204,6 @@ public class AbominationMiniBoss : Enemy, IDamageable
 
             GameObject flame = Instantiate(f, enrageHitStartPoint.position - pos, Quaternion.identity, null);
 
-
             if(flame.transform.position.x <= endX)
             {
                 Destroy(flame);
