@@ -8,33 +8,7 @@ using Vector2 = UnityEngine.Vector2;
 public class PickupHeart : Pickup
 {
     private int healingValue = 10;
-    /*
-    private const string PLAYER_NAME = "Player";
-    private Vector2 startPosition;
-    private Vector2 upperBound;
-    private Vector2 lowerBound;
-    private float speed = 1.0f;
-    private bool movingUp = true;
-    private float upperBoundYOffset = 0.6f;
-    */
     
-    // Start is called before the first frame update
-    /*
-    void Start()
-    {
-        startPosition = transform.position;
-        upperBound = new Vector2(startPosition.x, startPosition.y + upperBoundYOffset);
-        lowerBound = startPosition;
-    }
-    */
-
-    // Update is called once per frame
-    /*
-    void Update()
-    {
-        Move();
-    }
-    */
 
     void OnTriggerEnter2D (Collider2D collision) {
         if (collision.name == PLAYER_NAME)
