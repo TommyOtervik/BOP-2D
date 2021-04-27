@@ -12,6 +12,7 @@ public abstract class Pickup : MonoBehaviour
     protected bool movingUp = true;
     protected float upperBoundYOffset = 0.6f;
     
+
     //Raycast stuff
     public LayerMask groundLayer;
     public bool drawDebugRaycasts = true;

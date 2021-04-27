@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrossbowCultistScript : MonoBehaviour, IDamageable
+public class CrossbowCultistScript : Enemy, IDamageable
 {
     [SerializeField] private bool drawDebugRaycasts = true;
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask playerLayer;
 
     #region External Private Variables (For editor)
     [Header("EnemyCultist Info")]
@@ -18,20 +18,12 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
     // RaycastTEst
     [SerializeField] private Transform raycastPoint;
 
-
-    [SerializeField] private LayerMask raycastMask;
+    
     [SerializeField] private float rayCastLength;
     private RaycastHit2D hit;
-
-
-    [SerializeField] private Transform target;
-
-    // Venstre & Høyre grense for patruljering
-    //[SerializeField] private Transform leftLimit;
-    //[SerializeField] private Transform rightLimit;
-
+    
     [SerializeField] private GameObject projectile;
-    [SerializeField] private Vector3 projectionSpawnOffset;
+    [SerializeField] private Transform rangedAttackPoint;
     
 
     [SerializeField] private int currentHealth;
@@ -40,35 +32,27 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
     #region Internal Private Variables
     private Animator anim;
     private float distance; // Store distance b/w enemy and player
-    private bool attackMode;
     private bool inRange; // Check if player is in range
-    private bool cooling;
-    private int intTimer;
+    private float attackTimer;
 
     private Collider2D cultistCollider;
     #endregion
 
     //private const int ENEMY_LAYER_INT = 12;
 
-
     void Awake()
     {
-        //SelectTarget(); 
-
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
-
-        Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
-
-        foreach (Collider2D c in enemyColliders)
-        {
-            if (c.name.Equals("EnemyColliders"))
-                cultistCollider = c;
-        }
+        attackTimer = 0.0f;
+        anim.SetBool("canWalk", false);
+        anim.SetBool("Attack", false);
     }
+    
 
     void Update()
     {
+        attackTimer -= Time.deltaTime;
         HorizontalRayCastCheck();
     }
 
@@ -87,7 +71,7 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
     {
         //Call the overloaded Raycast() method using the ground layermask and return 
         //the results
-        return Raycast(offset, rayDirection, length, groundLayer);
+        return Raycast(offset, rayDirection, length, playerLayer);
     }
 
     RaycastHit2D Raycast(Vector2 offset, Vector2 rayDirection, float length, LayerMask mask)
@@ -115,29 +99,28 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
 
     private void Attack()
     {
-        timer = intTimer;
-        attackMode = true;
+        anim.SetTrigger("attackTrigger");
+    }
 
-        anim.SetBool("canWalk", false);
-        anim.SetBool("Attack", true);
+    public void SpawnBolt()
+    {
+        GameObject bolt = Instantiate(projectile, rangedAttackPoint.position, Quaternion.identity, null);
+        bolt.GetComponent<Bolt>().Init(Vector2.left);
     }
 
     private void StopAttack()
     {
-        cooling = false;
-        attackMode = false;
         anim.SetBool("Attack", false);
     }
    
-    public void SpawnBolt()
-    {
-        
-    }
-
-   
+    
     public void Death()
     {
-        throw new System.NotImplementedException();
+        if (gameObject != null)
+        {
+            base.MakeLoot();
+            Destroy(gameObject);
+        }
     }
 
     public GameObject GetEnemyGameObject()
@@ -147,7 +130,10 @@ public class CrossbowCultistScript : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damageTaken)
     {
-        throw new System.NotImplementedException();
+        currentHealth -= damageTaken;
+        anim.SetTrigger("Hurt");
+        if (currentHealth <= 0)
+            Death();
     }
 
     private void OnEnable()
