@@ -52,9 +52,9 @@ public class CircleBatBulletMovementAndDamage : MonoBehaviour
         {
             // Hvis sant, gjør skade til spilleren
             DamageBroker.CallTakeDamageEvent(damageAmount);
+            Destroy(gameObject);
         }
-        // All annen type kollisjon, ødelegg objektet
-        Destroy(gameObject);
+        
     }
     
     
