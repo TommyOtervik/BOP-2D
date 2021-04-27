@@ -33,7 +33,7 @@ public class CrossbowCultistScript : Enemy, IDamageable
     private Animator anim;
     private float distance; // Store distance b/w enemy and player
     private bool inRange; // Check if player is in range
-    private float attackTimer;
+    
 
     private Collider2D cultistCollider;
     #endregion
@@ -44,15 +44,14 @@ public class CrossbowCultistScript : Enemy, IDamageable
     {
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
-        attackTimer = 0.0f;
-        anim.SetBool("canWalk", false);
-        anim.SetBool("Attack", false);
+        
+        
     }
     
 
     void Update()
     {
-        attackTimer -= Time.deltaTime;
+        
         HorizontalRayCastCheck();
     }
 
@@ -63,6 +62,10 @@ public class CrossbowCultistScript : Enemy, IDamageable
 
         if (playerHit)
             Attack();
+        else
+        {
+            anim.SetTrigger("Idle");
+        }
     }
 
     //These two Raycast methods wrap the Physics2D.Raycast() and provide some extra
