@@ -35,7 +35,7 @@ public class CrossbowCultistScript : Enemy, IDamageable
     private bool inRange; // Check if player is in range
     
 
-    private Collider2D cultistCollider;
+    
     #endregion
 
     //private const int ENEMY_LAYER_INT = 12;
@@ -44,8 +44,6 @@ public class CrossbowCultistScript : Enemy, IDamageable
     {
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
-        
-        
     }
     
 
@@ -128,7 +126,7 @@ public class CrossbowCultistScript : Enemy, IDamageable
 
     public GameObject GetEnemyGameObject()
     {
-        return cultistCollider.gameObject;
+        return null;
     }
 
     public void TakeDamage(int damageTaken)
