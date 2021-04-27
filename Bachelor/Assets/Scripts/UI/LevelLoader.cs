@@ -13,17 +13,17 @@ public class LevelLoader : MonoBehaviour
 
     private UnityAction tutorialToCastleListener;
     private UnityAction castleToTutorialListener;
+    private UnityAction castleToBossListener;
 
     private static string levelNameChange;
-
-    //private const int TUTORIAL_BUILD_INDEX = 0;
-    //private const int CASTLE_BUILD_INDEX = 1;
 
 
     private void Awake()
     {
         tutorialToCastleListener = new UnityAction(LoadLevel);
         castleToTutorialListener = new UnityAction(LoadLevel);
+        castleToBossListener = new UnityAction(LoadLevel);
+
 
         EventManager.TriggerEvent(EnumEvents.LOAD_PLAYER);
         
@@ -56,12 +56,14 @@ public class LevelLoader : MonoBehaviour
     {
         EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
         EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
+        EventManager.StartListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
         EventManager.StopListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
+        EventManager.StopListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
     }
 
 }
