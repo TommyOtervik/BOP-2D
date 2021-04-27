@@ -101,6 +101,7 @@ MonoBehaviour:
   maxHealth: 30
   currentHealth: 0
   collisionDamageAmount: 10
+  lineOfSight: 10.32
   bulletPrefab: {fileID: 2835115085528482496, guid: 635eb84b7d060154f8e61b57cc73e400,
     type: 3}
 --- !u!114 &5673957485770032014
@@ -116,7 +117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   positions:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   objectSpeed: 5

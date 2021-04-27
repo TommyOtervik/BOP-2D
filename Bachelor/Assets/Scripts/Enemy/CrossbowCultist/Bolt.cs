@@ -6,7 +6,7 @@ using UnityEngine;
 public class Bolt : MonoBehaviour
 {
     private Vector2 direction;
-    private float speed = 10.0f;
+    private float speed = 25.0f;
     private float distanceTravelled;
     private Vector2 lastPosition;
     private const float MAXTravelDistance = 40.0f;
@@ -15,7 +15,7 @@ public class Bolt : MonoBehaviour
     // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
     
-    private int damageAmount = 10;
+    private int damageAmount = 35;
     
     
     // Use this for initialization

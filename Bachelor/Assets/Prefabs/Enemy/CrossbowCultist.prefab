@@ -134,7 +134,7 @@ MonoBehaviour:
   moveSpeed: 2
   timer: 2
   raycastPoint: {fileID: 8719298978472210889}
-  rayCastLength: 30
+  rayCastLength: 35
   projectile: {fileID: 194752, guid: 077c47fa0b0551c4cb155d7b77a59319, type: 3}
   rangedAttackPoint: {fileID: 8719298979008542896}
   currentHealth: 0
