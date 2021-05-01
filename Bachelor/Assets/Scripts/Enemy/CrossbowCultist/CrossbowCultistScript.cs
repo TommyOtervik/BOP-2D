@@ -77,7 +77,7 @@ public class CrossbowCultistScript : Enemy, IDamageable
 
     RaycastHit2D Raycast(Vector2 offset, Vector2 rayDirection, float length, LayerMask mask)
     {
-        //Record the enemy's position
+        //Record the player position
         Vector2 pos = transform.position;
 
         //Send out the desired raycast and record the result
