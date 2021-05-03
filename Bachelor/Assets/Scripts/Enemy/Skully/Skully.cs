@@ -26,6 +26,8 @@ public class Skully : Enemy, IDamageable
     [SerializeField] private GameObject bulletPrefab;
     private float attackRate = 0.4f;
     private Transform positionTarget;
+    private bool hasTarget;
+    
     private bool attackInProgress = false;
     private bool leftToRightSprayFinished = false;
     private bool rightToLeftSprayFinished = false;
@@ -36,13 +38,15 @@ public class Skully : Enemy, IDamageable
 
     private SkullyState state;
     private SkullBossSpawner spawner;
+    
+    
 
-    private bool kjør = true;
+    
 
 // Start is called before the first frame update
     void Awake()
     {
-
+        hasTarget = false;
     }
 
     void Start()
@@ -57,28 +61,72 @@ public class Skully : Enemy, IDamageable
     // Update is called once per frame
     void Update()
     {
-        if (!attackInProgress)
+        // Skully er HEIME
+        if (transform == spawnPoint)
         {
-            //Debug.Log(attackInProgress.ToString());
-            AngleAttackRight();
-            attackInProgress = !attackInProgress;
-
+            PickTarget();
         }
 
-        
+        if (transform.position == positionTarget.position)
+        {
+            PickAttack();
+        }
+
+        MovementCheck();
+
+        // Sjekk om jeg har target, hvis ikke, velg?
+        // 
+        // attack?
+
+        // 
+
     }
 
     void PositionCheck()
     {
+        if (transform.position == upperLeft.position)
+        {
+            
+        }
+        else if (transform.position == upperRight.position)
+        {
+            
+        }
         
+        else if (transform.position == spawnPoint.position)
+        {
+            
+        }
+
     }
 
-    void ChooseAttack()
+    void PickTarget()
     {
-        if (attackInProgress)
+        if (!hasTarget)
         {
-            return;
+            int attackNumber = UnityEngine.Random.Range(0,2);
+            switch(attackNumber) 
+            {
+                case 0:
+                    // UpperLeft
+                    positionTarget = upperLeft;
+                    break;
+                case 1:
+                    // UpperRight
+                    positionTarget = upperRight;
+                    break;
+                default:
+                    // code block
+                    break;
+            }    
         }
+
+        
+    }
+    
+
+    void PickAttack()
+    {
         
         int attackNumber = UnityEngine.Random.Range(0,3);
         switch(attackNumber) 
@@ -235,7 +283,7 @@ public class Skully : Enemy, IDamageable
 
     void MovementCheck()
     {
-        if (positionTarget != null)
+        if (hasTarget)
         {
             MovePointToPoint(transform, positionTarget);
         }
