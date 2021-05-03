@@ -1,8 +1,5 @@
 # BOP-2D
-Bachelor Prosjekt
+Bachelor Prosjekt for Anders Olai Pedersen og Tommy Otervik
 
 
-Hey!
 
-Test2!
-Fra test
