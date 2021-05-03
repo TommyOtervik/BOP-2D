@@ -52,7 +52,7 @@ public class SkullBossSpawner : MonoBehaviour
             yield return new WaitForSeconds(delay);
 
         }
-        // Listener si fra til Skully når det er done? 
+        
     }
     
     

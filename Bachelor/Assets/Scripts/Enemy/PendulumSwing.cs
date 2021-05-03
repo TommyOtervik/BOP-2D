@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * UFERDIG KLASSE, BARE Å IGNORERE.
+ */
 public class PendulumSwing : MonoBehaviour
 {
     public Rigidbody2D body2d;
@@ -11,7 +13,7 @@ public class PendulumSwing : MonoBehaviour
     public float velocityThreshold;
     public float pushStrength = 100.0f;
     
-    // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
+    
     private const string PLAYER_NAME = "Player";
     
     private int damageAmount = 20;
@@ -48,7 +50,7 @@ public class PendulumSwing : MonoBehaviour
             body2d.angularVelocity = velocityThreshold * -1;
         }
     }
-    // PUSH STRENGTH ER UNTESTED, FIKS I MÅRRA 
+    // PUSH STRENGTH ER UNTESTED
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.name == PLAYER_NAME)

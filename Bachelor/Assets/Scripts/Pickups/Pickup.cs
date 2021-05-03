@@ -38,12 +38,12 @@ public abstract class Pickup : MonoBehaviour
 
     void Move()
     {
+        // Hvis pickup ikke har truffet bakken, få den til å falle
         if (!hitGround)
         {
-            //transform.position = Vector2.MoveTowards(transform.position, Vector2.right, speed * Time.deltaTime);
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
         }
-
+        // Håndterer bevegelse opp og ned
         else
         {
             if (movingUp)
