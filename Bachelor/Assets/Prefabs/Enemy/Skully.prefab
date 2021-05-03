@@ -126,8 +126,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thisLoot: {fileID: 0}
   attackPointDown: {fileID: 7103742141323525246}
-  attackPointDownLeft: {fileID: 7583913083025966545}
-  attackPointDownRight: {fileID: 5975308122781275477}
+  attackPointLeft: {fileID: 7583913083025966545}
+  attackPointRight: {fileID: 5975308122781275477}
   spawnPoint: {fileID: 0}
   upperLeft: {fileID: 0}
   upperRight: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5975308122781275477}
   m_Layer: 12
-  m_Name: AttackPointDownRight
+  m_Name: AttackPointRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7583913083025966545}
   m_Layer: 12
-  m_Name: AttackPointDownLeft
+  m_Name: AttackPointLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
