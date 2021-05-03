@@ -4,45 +4,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-
+/*
+ * Dette skriptet tilhører Cultist.
+ * Holder styr på helse, angrep, animasjoner og patruljering 
+ * 
+ * @AOP - 225280
+ */
 public class EnemyCultist : Enemy, IDamageable
 {
 
     #region External Private Variables (For editor)
     [Header("EnemyCultist Info")]
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private float attackDistance; // Min. distance for attack
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float timer; // Timer for cooldown between attacks
-    [SerializeField] private bool inRange; // Check if player is in range
-    [SerializeField] private Transform target;
+    [SerializeField] private int maxHealth = 100;  // Max. helse
+    [SerializeField] private float attackDistance; // Min. distanse for angrep
+    [SerializeField] private float moveSpeed;      // Hastighet
+    [SerializeField] private float timer;          // Nedteller for tiden mellom angrep
+    [SerializeField] private bool inRange;         // Sjekker om spilleren er innenfor rekkevidde
+    [SerializeField] private Transform target;     // "Mål" / Spilleren
 
-    // Venstre & Høyre grense for patruljering
-    [SerializeField] private Transform leftLimit;
-    [SerializeField] private Transform rightLimit;
-
-    // Søke / trigger område for AI
-    [SerializeField] private GameObject hotZone;
-    [SerializeField] private GameObject triggerArea;
-
-    // BoxCollider for våpen til fiende
-    [SerializeField] private BoxCollider2D hitBox;
     
-    [SerializeField] private int currentHealth;
+    [SerializeField] private Transform leftLimit;  // Venstre grense for patruljering
+    [SerializeField] private Transform rightLimit; // Høyre grense for patruljering
+
+    [SerializeField] private GameObject hotZone;      // Søke område
+    [SerializeField] private GameObject triggerArea;  // Trigger område
+    [SerializeField] private BoxCollider2D hitBox;    // BoxCollider for våpen
+
+    [SerializeField] private int currentHealth;       // Nåværende helse
     #endregion
 
 
     #region Internal Private Variables
-    private Animator anim;
-    private float distance; // Store distance b/w enemy and player
-    private bool attackMode;
+    private Animator anim;   // Animator referanse
+    private float distance;  // Distanse mellom fiende og spiller
+    private bool attackMode; // Angreps modus
 
-    private bool cooling; // Check if enemy is cooling after attack
-    private int minRandomHurt = 1;
-    private int maxRandomHurt = 10;
+    private bool cooling;               // Sjekker om fiende "kjøler ned" etter angrep
+    private int MIN_RANDOM_HURT = 1;    // Brukes til animajson, gir 10% sjanse til å sette Abom. i "Hurt" anim.
+    private int MAX_RANDOM_HURT = 10;
     private float intTimer;
+    private const int PLAYER_LAYER_INT = 12;
 
-    private Collider2D cultistCollider;
+    private Collider2D cultistCollider; 
     #endregion
 
     #region Events
@@ -52,7 +55,7 @@ public class EnemyCultist : Enemy, IDamageable
 
     void Awake()
     {
-
+        // Velger patruljerings-punk
         SelectTarget();
 
         intTimer = timer;
@@ -60,17 +63,16 @@ public class EnemyCultist : Enemy, IDamageable
 
         currentHealth = maxHealth;
 
+        // Lytter om spilleren er død
         playerDeadListener = new UnityAction(StopAttack);
 
-
+        // Henter komponenten Colliders
         Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
-
         foreach (Collider2D c in enemyColliders)
         {
             if (c.name.Equals("EnemyColliders"))
                 cultistCollider = c;
         }
-
     }
     
     public GameObject GetEnemyGameObject()
@@ -80,38 +82,41 @@ public class EnemyCultist : Enemy, IDamageable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
-        // FIXME: == 12, Equals?
-        if (collision.gameObject.layer == 12 && collision.collider.name.Equals("EnemyColliders"))
-        {
+        // Ignorerer kollisjon med spiller og andre fiender
+        if (collision.gameObject.layer == PLAYER_LAYER_INT && collision.collider.name.Equals("EnemyColliders"))
             Physics2D.IgnoreCollision(cultistCollider, collision.collider, true);
-        }
+        
     }
 
     void Update()
     {
+        // Så lenge han ikke angriper -> Gå
         if (!attackMode)
             Move();
 
+        // Hvis spilleren ikke er i nærheten -> Patruljer
         if (!InsideOfLimits() && !inRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack"))
             SelectTarget();
         
-
+        // Er spilleren i nærheten
         if (inRange)
             EnemyLogic();
     }
 
 
+    // Fiende logikk
     private void EnemyLogic()
     {
+        // Distanse mellom fiende og spiller
         distance = Vector2.Distance(transform.position, target.position);
 
-        if (distance > attackDistance)
+        
+        if (distance > attackDistance) // Er spilleren for langt unna -> Stop å angripe
             StopAttack();
-        else if (distance <= attackDistance && !cooling)
+        else if (distance <= attackDistance && !cooling) // Er spilleren innenfor rekkevidde -> Angrip
             Attack();
 
-
+        // "Kjøler ned", venter mellom angrep
         if (cooling)
         {
             Cooldown();  
@@ -132,11 +137,11 @@ public class EnemyCultist : Enemy, IDamageable
 
     void Attack()
     {
-        timer = intTimer; // Reset timer when player enter attack range
-        attackMode = true; // To check if enemey can still attack or not
+        timer = intTimer;  // Restart tidtaker når spilleren kommer innenfor rekkevidde
+        attackMode = true; // For å sjekke om fienden kan angripe eller ikke
 
-        anim.SetBool("canWalk", !attackMode);
-        anim.SetBool("Attack", attackMode);
+        anim.SetBool("canWalk", !attackMode); // "Stopper" fienden (animasjon)
+        anim.SetBool("Attack", attackMode);   // Angreps animasjon
     }
 
     public void StopAttack()
@@ -148,23 +153,22 @@ public class EnemyCultist : Enemy, IDamageable
 
     public void Move()
     {
-        anim.SetBool("canWalk", true);
+        anim.SetBool("canWalk", true); // Gå animasjon 
 
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Enemy_attack"))
         {
             Vector2 targetPos = new Vector2(target.position.x, transform.position.y);
-
             transform.position = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
         }
     }
 
 
-    // Håndterer skade som er gjort mot AI.
+    // Håndterer skade
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
 
-        int hurtRand = UnityEngine.Random.Range(minRandomHurt, maxRandomHurt + 1);
+        int hurtRand = UnityEngine.Random.Range(MIN_RANDOM_HURT, MAX_RANDOM_HURT + 1);
         if (hurtRand == 1)
         {
             anim.SetTrigger("Hurt");
@@ -174,10 +178,7 @@ public class EnemyCultist : Enemy, IDamageable
         {
             MakeLoot();
             Death();
-        }
-
-        
-        
+        }        
     }
     
     protected override void MakeLoot()
@@ -192,7 +193,7 @@ public class EnemyCultist : Enemy, IDamageable
         }
     }
 
-    // Håndterer død av AI
+    // Håndterer død 
     public void Death()
     {
         // Die anim
@@ -273,7 +274,7 @@ public class EnemyCultist : Enemy, IDamageable
     }
 
 
-    // Setters som brukes i TriggerAreaCheck.cs
+    // Setters
     public void SetTarget(Transform target)
     {
         this.target = target;

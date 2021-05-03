@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
+/*
+ * Statisk klasse som holder styr på permanente endringer i spillet.
+ * 
+ */
 public class GameManager : MonoBehaviour
 {
 
-    static GameManager current;
-    private Door lockedDoor;
-    private List<PickupKey> keys;
-    private RemovableFloor removableFloor;
+    static GameManager current;  
 
+    private Door lockedDoor; 
+    private List<PickupKey> keys;
+    
 
     //private AbominationMiniBoss abom;
 
@@ -21,7 +24,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        
         if (current != null && current != this)
         {
             Destroy(gameObject);
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // Sjekker om spilleren har nøkkelen og er på innsiden av et område.
     public static void RegisterInsideTrigger(bool isInside)
     {
         if (current == null)
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour
             current.lockedDoor.Open();
     }
 
+    // Registerer at døren eksisterer
     public static void RegisterDoor(Door door)
     {
         if (current == null)
@@ -51,6 +55,7 @@ public class GameManager : MonoBehaviour
         current.lockedDoor = door;
     }
     
+    // Registerer at spilleren fikk nøkkelen
     public static void PlayerGrabbedKey(PickupKey key)
     {
         if (current == null)
@@ -60,15 +65,7 @@ public class GameManager : MonoBehaviour
             current.keys.Add(key);
     }
 
-    //public static void RegisterAbomination(AbominationMiniBoss abom)
-    //{
-    //    if (current == null)
-    //        return;
-
-    //    current.abom = abom;  
-    //}
-
-
+    // Registerer at gulvet er åpnet
     public static void PlayerOpenedFloor(bool isOpen)
     {
         current.hasBeenOpened = isOpen;
@@ -79,7 +76,7 @@ public class GameManager : MonoBehaviour
         return current.hasBeenOpened;
     }
 
-
+    // Registrerer at spilleren har drept Abom.
     public static void PlayerKilledAbom(bool isKilled)
     {
         current.hasBeenKilled = isKilled;

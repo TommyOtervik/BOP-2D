@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+ * Dette skriptet håndterer det visuelle med "Healthbar" til 
+ * abomination. 
+ * 
+ * @ AOP - 225280
+ */
 public class AbominationHealthBar : MonoBehaviour
 {
 

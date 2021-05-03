@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
+/*
+ * Lagrins system
+ *  Brukes til å lagre data i binær format. Serializable.
+ *  
+ *   @AOP - 225280
+ */
 public static class SaveSystem
 {
-
     public static void SavePlayer(Player player)
     {
         BinaryFormatter formatter = new BinaryFormatter();
@@ -53,8 +57,6 @@ public static class SaveSystem
 
     public static AbominationData LoadAbomination()
     {
-        
-
         string path = Application.persistentDataPath + "/abom.dat";
 
         if (File.Exists(path))
@@ -64,7 +66,6 @@ public static class SaveSystem
 
             AbominationData data = formatter.Deserialize(stream) as AbominationData;
             
-
             return data;
         }
         else

@@ -17,18 +17,16 @@ public class LevelLoader : MonoBehaviour
 
     private static string levelNameChange;
 
-
     private void Awake()
     {
         tutorialToCastleListener = new UnityAction(LoadLevel);
         castleToTutorialListener = new UnityAction(LoadLevel);
         castleToBossListener = new UnityAction(LoadLevel);
 
-
         EventManager.TriggerEvent(EnumEvents.LOAD_PLAYER);
-        
     }
 
+    // Er nok ikke den tryggeste måten, kan bli kalt fra hvor som helst..
     public static void SetLevelName(string name)
     {
         levelNameChange = name;
@@ -36,9 +34,6 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLevel()
     {
-        // Castle_Level
-        // Tutorial_Level
-        
         StartCoroutine(LoadLevelE(levelNameChange));
     }
 

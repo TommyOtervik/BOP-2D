@@ -2,124 +2,114 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/*
+ * Tilhører spilleren.
+ *  Håndterer bevegelsen / fysikken.
+ *   
+ */
 public class PlayerMovement : MonoBehaviour
 {
 
-    public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
+    public bool drawDebugRaycasts = true;   
 
     [Header("Movement Properties")]
-    public float speed = 4f;                //Player speed
-    public float coyoteDuration = .05f;     //How long the player can jump after falling
-    float maxFallSpeed = -25f;       //Max speed player can fall
+    [SerializeField] private float speed = 4f;                // Spillerens hastighet
+    [SerializeField] private float coyoteDuration = .05f;     // Tidsrommet spilleren kan hoppe før hen faller
+    private float maxFallSpeed = -25f;              // Maks. hastighet spilleren faller
 
-    // facing direction
-    private bool facingRight;
-
+    private bool facingRight;   // Retningen spilleren ser i
     public bool FacingRight
     {
         get { return facingRight; }
     }
 
     [Header("Jump Properties")]
-    public float jumpForce = 6.3f;          //Initial force of jump
-    public float jumpHoldForce = 1.9f;      //Incremental force when jump is held
-    public float jumpHoldDuration = .1f;    //How long the jump key can be held
-    public float fallMultiplier = 2.5f;
-    public float lowJumpMultiplier = 2f;
-    private const float BONUS_GRAVITY = 9.8f;
-    private float jumpTime;							//Variable to hold jump duration
+    public float jumpForce = 6.3f;                 // Opprinnelig hoppkraft
+    public float jumpHoldForce = 1.9f;             // Inkrementell kraft når hopp holdes
+    public float jumpHoldDuration = .1f;           // Hvor lenge hoppeknappen kan holdes
+    public float fallMultiplier = 2.5f;            // Fallmultiplikator
+    public float lowJumpMultiplier = 2f;           // Lavt-hoppmultiplikator
+    private const float BONUS_GRAVITY = 9.8f;      // Bonus gravitasjon, brukes for å gjøre hoppet mer "urealistisk"
+    private float jumpTime;						   // Variabel for å holde hoppvarighet
 
 
     [Header("Environment Check Properties")]
     // Facing right
-    public float footOffsetLeftFacingRight = 0.95f;
-    public float footOffsetRightFacingRight = 0.75f;
+    [SerializeField] private float footOffsetLeftFacingRight = 0.95f;
+    [SerializeField] private float footOffsetRightFacingRight = 0.75f;
     // Facing left
-    public float footOffsetLeftFacingLeft = 0.75f;
-    public float footOffsetRightFacingLeft = 0.95f;
-    
-    
-    //public float footOffset = .32f;          //X Offset of feet raycast
-    public float eyeHeight = 1.11f;          //Height of wall checks
-    public float headClearance = .25f;       //Space needed above the player's head
-    public float groundDistance = .35f;      //Distance player is considered to be on the ground
-    public LayerMask groundLayer;           //Layer of the ground
+    [SerializeField] private float footOffsetLeftFacingLeft = 0.75f;
+    [SerializeField] private float footOffsetRightFacingLeft = 0.95f;
+
+
+    [SerializeField] private float eyeHeight = 1.11f;           // Høyde på veggsjekker
+    [SerializeField] private float headClearance = .25f;        // Plass som trengs over spillerens hode
+    [SerializeField] private float groundDistance = .35f;       // Avstanden som regnes som bakken
+    [SerializeField] private LayerMask groundLayer;             // Layer for bakken (plattformene)
     
 
     [Header("Status Flags")]
-    public bool isOnGround;                 //Is the player on the ground?
-    public bool isJumping;                  //Is player jumping?
-    public bool isHeadBlocked;
+    [SerializeField] private bool isOnGround;                 // Er spilleren på bakken?
+    [SerializeField] private bool isJumping;                  // Hopper spilleren?
+    [SerializeField] private bool isHeadBlocked;
 
-    PlayerInput input;                      //The current inputs for the player
-    BoxCollider2D bodyCollider;             //The collider component
-    Rigidbody2D rigidBody;                  //The rigidbody component
-    Animator anim;
-    PlayerMovement movement;
+    PlayerInput input;                      // Gjeldende inputs for spilleren
+    BoxCollider2D bodyCollider;             // Collider-komponenten
+    Rigidbody2D rigidBody;                  // Rigidbody-komponenten
+    Animator anim;                          // Animator-komponenten
+    PlayerMovement movement;                // PlayerMovement-komponenten
 
 
-    float delayToIdle = 0.0f;
+    private float delayToIdle = 0.0f;
     private const float DELAY_TO_IDLE_ANIM = 0.05f;
-    float coyoteTime;                       //Variable to hold coyote duration
-    float playerHeight;                     //Height of the player
-
-    float originalXScale;                   //Original scale on X axis
-    int direction = 1;                      //Direction player is facing
-
-    Vector2 colliderStandSize;              //Size of the standing collider
-    Vector2 colliderStandOffset;			//Offset of the standing collider
+    private float coyoteTime;                       // Variabel for å holde coyote-time
 
 
-    // Start is called before the first frame update
+    private float originalXScale;                   // Original scale på X-aksen
+    private int direction = 1;                      // Retning
+
+
     void Start()
     {
-        //Get a reference to the required components
+        // Få en referanse til de nødvendige komponentene
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
         rigidBody = GetComponent<Rigidbody2D>();
         bodyCollider = GetComponent<BoxCollider2D>();
         movement = GetComponent<PlayerMovement>();
 
-        //If any of the needed components don't exist...
+        // Hvis noen av de nødvendige komponentene ikke eksisterer ...
         if (movement == null || rigidBody == null || input == null || anim == null)
         {
-            //...log an error and then remove this component
+            // ... logg en feil og fjern deretter denne komponenten
             Debug.LogError("A needed component is missing from the player");
             Destroy(this);
         }
 
         facingRight = true;
-        
-        //Record the original x scale of the player
+      
         originalXScale = transform.localScale.x;
-
-        //Record the player's height from the collider
-        playerHeight = bodyCollider.size.y;
-
- 
-        //Record initial collider size and offset
-        colliderStandSize = bodyCollider.size;
-        colliderStandOffset = bodyCollider.offset;
     }
     
 
     void FixedUpdate()
     {
-        //Check the environment to determine status
+        // Sjekk området rudt for å bestemme status
         PhysicsCheck();
 
-        //Process ground and air movements
+        // Behandle bakke- og luftbevegelser
         GroundMovement();
         MidAirMovement();
     }
 
     void PhysicsCheck()
     {
-        //Start by assuming the player isn't on the ground and the head isn't blocked
+        // Start med å anta at spilleren ikke er på bakken og at hodet ikke er blokkert
         isOnGround = false;
         isHeadBlocked = false;
 
-        //Cast rays for the left and right foot
+        // Raycast for venstre og høyre fot
         RaycastHit2D leftCheck;
         RaycastHit2D rightCheck;
         
@@ -135,8 +125,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-
-        //If either ray hit the ground, the player is on the ground
+        // Hvis en av strålene traff bakken, er spilleren på bakken
         if (leftCheck || rightCheck)
         {
             isOnGround = true;
@@ -149,45 +138,44 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("Grounded", isOnGround);
         }
 
-        //Cast the ray to check above the player's head
+        // Raycast for å sjekke over spillerens hode
         RaycastHit2D headCheck = Raycast(new Vector2(0f, bodyCollider.size.y), Vector2.up, headClearance);
 
-        //If that ray hits, the player's head is blocked
+        // Hvis den strålen treffer, er spillerhodet blokkert
         if (headCheck)
             isHeadBlocked = true;
     }
 
     void GroundMovement()
     {
-        //Calculate the desired velocity based on inputs
+        // Beregn ønsket hastighet basert på inputs
         float inputX = Input.GetAxis("Horizontal");
         float xVelocity = speed * inputX;
-        //If the sign of the velocity and direction don't match, flip the character
+        // Hvis hastighet og retning ikke stemmer overens, snu.
         if (xVelocity * direction < 0f)
             FlipCharacterDirection();
 
-        //Apply the desired velocity 
+        // Bruk ønsket hastighet
         rigidBody.velocity = new Vector2(xVelocity, rigidBody.velocity.y);
 
 
-        //If the player is on the ground, extend the coyote time window
+        // Hvis spilleren er på bakken, utvider du coyotetidsvinduet
         if (isOnGround)
         {
             coyoteTime = Time.time + coyoteDuration;
         }
 
-        // Run
+        // Løp
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
-            
             // Reset timer
             delayToIdle = DELAY_TO_IDLE_ANIM;
             anim.SetInteger("AnimState", 1);
         }
-        // Idle
+        // Idle (Stå i ro)
         else
         {
-            // Prevents flickering transitions to idle
+            // Hindrer flimrende overganger i animasjon
             delayToIdle -= Time.deltaTime;
             if (delayToIdle < 0)
                 anim.SetInteger("AnimState", 0);
@@ -197,41 +185,39 @@ public class PlayerMovement : MonoBehaviour
     void MidAirMovement()
     {
 
+        // Hvis man trykker hopp og man er på bakken og hodet ikke er blokkert
         if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
 
             isOnGround = false;
             isJumping = true;
-
+            // Setter animasjonene
             anim.SetTrigger("Jump");
             anim.SetBool("Grounded", isOnGround);
-
+            // Holder styr på hopp tiden
             jumpTime = Time.time + jumpHoldDuration;
-
-            // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            // Hopp hastighet
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 4);
 
         }
+        // Hvis man allerede hopper
         else if (isJumping)
         {
-
+            // Sjekk om man holder inne knappen
             if (input.jumpHeld)
                 rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce * jumpHoldForce);
-                // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
-
-                // Uniform acceleration, "Vanlig"
-                // rigidBody.velocity = new Vector2(rigidBody.velocity.x, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight)); 
 
             if (jumpTime <= Time.time)
                 isJumping = false;
+
         }
 
-        // Add extra fake gravity to the player
+        // Legger til ekstra falsk gravitasjon til spilleren
+        // Dette gjør hoppet mindre realistisk, på en god måte
         Vector2 vel = rigidBody.velocity;
         vel.x = rigidBody.velocity.x;
         vel.y -= BONUS_GRAVITY * Time.deltaTime;
         rigidBody.velocity = vel;
-
 
 
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);
@@ -246,9 +232,7 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
-
-  
-        //If player is falling to fast, reduce the Y velocity to the max
+        // Hvis spilleren faller for raskt, reduserer du Y-hastigheten
         if (rigidBody.velocity.y < maxFallSpeed)
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, maxFallSpeed);
 
@@ -258,16 +242,16 @@ public class PlayerMovement : MonoBehaviour
 
     void FlipCharacterDirection()
     {
-        //Turn the character by flipping the direction
+        // Snu karakteren ved å snu retningen
         direction *= -1;
 
-        //Record the current scale
+        // Registrer gjeldende scale
         Vector3 scale = transform.localScale;
 
-        //Set the X scale to be the original times the direction
+        // Sett X-scale til å være originalen ganger retningen
         scale.x = originalXScale * direction;
 
-        //Apply the new scale
+        // Bruk den nye scale
         transform.localScale = scale;
 
         if (facingRight)
@@ -310,9 +294,5 @@ public class PlayerMovement : MonoBehaviour
         return hit;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

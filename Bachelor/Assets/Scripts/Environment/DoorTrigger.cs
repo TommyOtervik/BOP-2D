@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Dette skriptet tilhører dør objektet som orginalt er låst.
+ * Sjekker om spilleren er innenfor sonen.
+ *   
+ * @AOP - 225280
+ */
 public class DoorTrigger : MonoBehaviour
 {
     private const string PLAYER_NAME = "Player";
@@ -17,7 +23,6 @@ public class DoorTrigger : MonoBehaviour
             GameManager.RegisterInsideTrigger(isInside);
         }
     }
-
 
     private void OnTriggerExit2D(Collider2D collision)
     {
