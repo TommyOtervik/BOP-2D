@@ -6,7 +6,8 @@ using UnityEngine.Events;
 
 
 /*
- * Dette skriptet hører til Abomination (Mini-boss)
+ * Dette skriptet tilhører Abomination (Mini-boss). 
+ * Det håndterer Helse, States, Angrep og Bevegelse.
  * 
  * @ AOP - 225280
  */
