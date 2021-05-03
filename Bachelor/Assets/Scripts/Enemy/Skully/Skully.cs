@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
 public class Skully : Enemy, IDamageable
 {
     // Collision enter etterpå
-    private int maxHealth = 1;
+    private int maxHealth = 1000;
     private int currentHealth;
     private Collider2D collider;
     private float speed = 10.0f;
@@ -52,9 +52,8 @@ public class Skully : Enemy, IDamageable
     [SerializeField] private Sprite redSprite;
     
     [SerializeField] private SkullyHealthBar healthBar;
+
     
-    
- 
 
 
 
@@ -98,7 +97,7 @@ public class Skully : Enemy, IDamageable
                 {
                     return;
                 }
-                
+                // Venter i 2 sekunder før han velger target
                 PickTargetWaitInSeconds(2);
                 
                 
@@ -114,11 +113,11 @@ public class Skully : Enemy, IDamageable
             } else if (current.position == upperRightForAirAttack.position && !attackInProgress)
             {
                 AirAttack("Left");
-                SideAttackRight();
+                SideAttackLeft();
             } else if (current.position == upperLeftForAirAttack.position && !attackInProgress)
             {
                 AirAttack("Right");
-                SideAttackLeft();
+                SideAttackRight();
             }
 
 
@@ -326,6 +325,7 @@ public class Skully : Enemy, IDamageable
         ChangeSpriteToNormal();
 
     }
+    
     
     
 
