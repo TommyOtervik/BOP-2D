@@ -9,7 +9,7 @@ using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 
 /*
- * Denne klassen bærer preg av tidsklamma. 
+ *  
  */
 public class Skully : Enemy, IDamageable
 {
@@ -202,7 +202,7 @@ public class Skully : Enemy, IDamageable
     {
         StartCoroutine(SpawnBulletsRightAngle(17, attackRate));
     }
-
+    // Air attack
     IEnumerator SpawnBulletsDown(int amount, float delay, string direction)
     {
         if (direction.Equals("Left"))
@@ -235,7 +235,7 @@ public class Skully : Enemy, IDamageable
 
 
     }
-    
+    // Skrått attack 1
     IEnumerator SpawnBulletsLeftAngle(int amount, float delay)
     {
         ChangeSpriteToRed();
@@ -281,7 +281,7 @@ public class Skully : Enemy, IDamageable
         ChangeSpriteToNormal();
 
     }
-    
+    // Skrått attack 2
     IEnumerator SpawnBulletsRightAngle(int amount, float delay)
     {
         ChangeSpriteToRed();
