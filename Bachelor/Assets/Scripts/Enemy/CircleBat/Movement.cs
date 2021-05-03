@@ -1,6 +1,6 @@
 ﻿
 using UnityEngine;
-
+// Klassen holder styr på bevegelsen mellom de forhåndslagde punktene. 
 public class Movement : MonoBehaviour
 {
     [SerializeField] private Transform[] positions;
