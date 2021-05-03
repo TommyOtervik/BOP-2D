@@ -12,13 +12,13 @@ public class Bolt : MonoBehaviour
     private const float MAXTravelDistance = 40.0f;
     
     
-    // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
+   
     private const string PLAYER_NAME = "Player";
     
     private int damageAmount = 35;
     
     
-    // Use this for initialization
+    
 
     public void Init(Vector2 direction)
     {

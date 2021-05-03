@@ -15,8 +15,8 @@ public class PlatformHugger : MonoBehaviour
         private const string PLAYER_NAME = "Player";
 
         
-        // Rotasjonstesting
-        private float distanceToPoint; // This will store the remaining distance between player and _nextPos.transform
+        
+        private float distanceToPoint; 
         void Start()
         {
             _nextPos = positions[0];
@@ -31,10 +31,10 @@ public class PlatformHugger : MonoBehaviour
         {
             if (transform.position == _nextPos.position)
             {
-                // Rotasjonstest
+                
                 Rotate();
                 
-                // Originalet
+                
                 _nextPosIndex++;
                 if (_nextPosIndex >= positions.Length)
                 {

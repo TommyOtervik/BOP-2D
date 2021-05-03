@@ -339,22 +339,22 @@ PrefabInstance:
     - target: {fileID: 2241523648112137257, guid: 711be704b380be54886d7488fd27b7a9,
         type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[0].x
-      value: 73.20922
+      value: 76.54191
       objectReference: {fileID: 0}
     - target: {fileID: 2241523648112137257, guid: 711be704b380be54886d7488fd27b7a9,
         type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[0].y
-      value: -46.72257
+      value: -41.282448
       objectReference: {fileID: 0}
     - target: {fileID: 2241523648112137257, guid: 711be704b380be54886d7488fd27b7a9,
         type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[1].x
-      value: 41.97804
+      value: 41.389915
       objectReference: {fileID: 0}
     - target: {fileID: 2241523648112137257, guid: 711be704b380be54886d7488fd27b7a9,
         type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[1].y
-      value: -46.552532
+      value: -41.25944
       objectReference: {fileID: 0}
     - target: {fileID: 2241523648112137257, guid: 711be704b380be54886d7488fd27b7a9,
         type: 3}
@@ -2544,12 +2544,12 @@ PrefabInstance:
     - target: {fileID: 1586035443770310885, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 57.87
+      value: 39.12
       objectReference: {fileID: 0}
     - target: {fileID: 1586035443770310885, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -43.62
+      value: -44.12
       objectReference: {fileID: 0}
     - target: {fileID: 1586035443770310885, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
@@ -12100,7 +12100,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 7.921741
   m_Depth: -1
@@ -12126,7 +12126,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232704834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 57.87, y: -40.95, z: -15}
+  m_LocalPosition: {x: 39.12329, y: -36.41932, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -51186,12 +51186,12 @@ PrefabInstance:
     - target: {fileID: 807563758967942893, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 57.87
+      value: 39.12
       objectReference: {fileID: 0}
     - target: {fileID: 807563758967942893, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -40.95
+      value: -41.45
       objectReference: {fileID: 0}
     - target: {fileID: 807563758967942893, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
@@ -51238,6 +51238,11 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 1858120225}
+    - target: {fileID: 807563758967942894, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
+        type: 3}
+      propertyPath: m_Lens.FieldOfView
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 807563758967942895, guid: 4af4758b4695e7e4eaefa8f3b01ead6c,
         type: 3}
       propertyPath: m_Name
@@ -51430,6 +51435,12 @@ PrefabInstance:
       objectReference: {fileID: 1359315294}
     - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
         type: 3}
+      propertyPath: redSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7565a659bb1638c45a7c270a4a289494,
+        type: 3}
+    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
+        type: 3}
       propertyPath: upperLeft
       value: 
       objectReference: {fileID: 1731607071}
@@ -51448,6 +51459,12 @@ PrefabInstance:
       propertyPath: upperCenter
       value: 
       objectReference: {fileID: 892984307}
+    - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
+        type: 3}
+      propertyPath: normalSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7f6309ee2d908647bd55c9a9e928c82,
+        type: 3}
     - target: {fileID: 5852897253499270370, guid: e08166d6a0aa3974aa3b62b8b1b86372,
         type: 3}
       propertyPath: upperLeftForAirAttack

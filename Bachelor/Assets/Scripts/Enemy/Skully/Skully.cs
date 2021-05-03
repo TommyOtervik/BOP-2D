@@ -2,15 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 
+/*
+ * Denne klassen bærer preg av tidsklamma. 
+ */
 public class Skully : Enemy, IDamageable
 {
     // Collision enter etterpå
-    private int maxHealth = 30;
+    private int maxHealth = 500;
     private int currentHealth;
     private Collider2D collider;
     private float speed = 10.0f;
@@ -39,14 +43,20 @@ public class Skully : Enemy, IDamageable
 
     private int downAttackBulletAmount = 9;
     private int sideAttackBulletAmount = 5;
-
-    private MovementState movementState;
-    private AttackState attackState;
+    
     [SerializeField] private SkullBossSpawner spawner;
 
     private int airAttackCounter = 0;
+    private bool sleepMode;
+    
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite redSprite;
+    
+    [SerializeField] private SkullyHealthBar healthBar;
     
     // Hindre konstant samme retning? 
+ 
 
 
 
@@ -56,14 +66,15 @@ public class Skully : Enemy, IDamageable
     void Awake()
     {
         attackInProgress = false;
+        sleepMode = false;
+        healthBar.SetSize((float)currentHealth / (float)maxHealth);
     }
 
     void Start()
     {
         collider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth;
-        //transform.position = spawnPoint.position;
-        //positionTarget = upperLeft;
         target = spawnPoint;
 
 
@@ -78,29 +89,30 @@ public class Skully : Enemy, IDamageable
     // Beveg skully mellom 2 punkter
     void MovePointToPoint(Transform current, Transform target)
     {
-        // this.target visst du skal manipulere retning direkte her inne. 
         
 
         if (current.position == target.position)
         {
-            // NYE PUNKTER MKAY 
+             
             if (current.position == spawnPoint.position)
             {
-                // DELAY HER
-                StartCoroutine(WaitForSeconds(5));
-                PickTarget();
+                if (sleepMode)
+                {
+                    return;
+                }
+                
+                PickTargetWaitInSeconds(2);
+                
+                
             }
-
             else if (current.position == upperLeft.position && !attackInProgress)
             {
                 AngleAttackRight();
-                //AngleAttackRight(); // ELLER ANDRE
             }
             else if (current.position == upperRight.position && !attackInProgress)
             {
                 AngleAttackLeft();
-                //AngleAttackLeft(); // ELLER ANDRE? 
-                
+
             } else if (current.position == upperRightForAirAttack.position && !attackInProgress)
             {
                 AirAttack("Left");
@@ -113,24 +125,34 @@ public class Skully : Enemy, IDamageable
 
 
         }
-
-        // Legg inn delay later
+        
         transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
     }
     
-    /*
-    void MovementCheck()
+    void PickTargetWaitInSeconds(int seconds)
     {
-        if (hasTarget)
-        {
-            MovePointToPoint(transform, positionTarget);
-        }
-        
+        StartCoroutine(WaitForSeconds(seconds));
     }
-    */
 
+    IEnumerator WaitForSeconds(int seconds)
+    {
+        sleepMode = true;
+        yield return new WaitForSeconds(seconds);
+        PickTarget();
+        sleepMode = false;
+    }
 
+    void ChangeSpriteToRed()
+    {
+        spriteRenderer.sprite = redSprite;
+    }
 
+    void ChangeSpriteToNormal()
+    {
+        spriteRenderer.sprite = normalSprite;
+    }
+
+    // Velger target basert på 4 tomme objekter i scenen
     void PickTarget()
     {
         {
@@ -208,18 +230,9 @@ public class Skully : Enemy, IDamageable
 
         }
         
-        attackInProgress = false; // foreløpig
+        attackInProgress = false; 
         target = spawnPoint;
-        //target = spawnPoint;
-        /*
-        airAttackWaveCounter++;
-        //attackInProgress = false;
-        if (airAttackWaveCounter > 1)
-        {
-            attackInProgress = false;
-            target = spawnPoint;
-        }
-        */
+        
 
 
 
@@ -228,7 +241,7 @@ public class Skully : Enemy, IDamageable
     
     IEnumerator SpawnBulletsLeftAngle(int amount, float delay)
     {
-
+        ChangeSpriteToRed();
         attackInProgress = true;
         Vector2 startVector;
         float initialX = attackPointLeft.position.x - 7;
@@ -236,7 +249,7 @@ public class Skully : Enemy, IDamageable
 
         float x = initialX;
         float y = initialY;
-        // For hver iterasjon x positiv, y negativ
+        
         int waveCounter = 0;
         int waveLimit = 10;
         
@@ -268,11 +281,13 @@ public class Skully : Enemy, IDamageable
 
         attackInProgress = false;
         target = spawnPoint;
+        ChangeSpriteToNormal();
 
     }
     
     IEnumerator SpawnBulletsRightAngle(int amount, float delay)
     {
+        ChangeSpriteToRed();
         attackInProgress = true;
         Vector2 startVector;
         float initialX = attackPointRight.position.x - 7;
@@ -280,7 +295,7 @@ public class Skully : Enemy, IDamageable
 
         float x = initialX;
         float y = initialY;
-        // For hver iterasjon x positiv, y negativ
+        
         int waveCounter = 0;
         int waveLimit = 10;
         
@@ -310,6 +325,7 @@ public class Skully : Enemy, IDamageable
 
         attackInProgress = false;
         target = spawnPoint;
+        ChangeSpriteToNormal();
 
     }
     
@@ -319,15 +335,7 @@ public class Skully : Enemy, IDamageable
     
     
 
-    void WaitInSeconds(float seconds)
-    {
-        StartCoroutine(WaitForSeconds(seconds));
-    }
-
-    IEnumerator WaitForSeconds(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-    }
+    
 
 
 
@@ -344,7 +352,7 @@ public class Skully : Enemy, IDamageable
     public void TakeDamage(int damageTaken)
     {
         currentHealth -= damageTaken;
-
+        healthBar.SetSize((float)currentHealth / (float)maxHealth);
         if (currentHealth <= 0)
             Death();
     }
