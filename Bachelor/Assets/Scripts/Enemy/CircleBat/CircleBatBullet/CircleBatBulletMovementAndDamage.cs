@@ -12,13 +12,11 @@ public class CircleBatBulletMovementAndDamage : MonoBehaviour
     private float MAXTravelDistance = 30.0f;
     
     
-    // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
     
     private int damageAmount = 1;
     
     
-    // Use this for initialization
 
     public void Init(Vector2 direction)
     {

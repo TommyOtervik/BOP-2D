@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackAndHealth : Enemy, IDamageable
 {
-    [SerializeField] private int maxHealth = 30;
+    [SerializeField] private int maxHealth = 50;
     [SerializeField] private int currentHealth;
     [SerializeField] private int collisionDamageAmount = 10;
     
@@ -48,7 +48,6 @@ public class AttackAndHealth : Enemy, IDamageable
 
     IEnumerator AttackPattern()
     {
-        // Egentlig while fienden er i livet, evt om vi skal ha en trigger range før første angrep?
         while (true)
         {
             if (distanceFromPlayer > lineOfSight)

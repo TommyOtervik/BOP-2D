@@ -19,25 +19,15 @@ public class SkullBossSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            SpawnBulletsFromLeft(5);
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            SpawnBulletsFromRight(5);
-        }
-        */
+        
     }
 
-    void SpawnBulletsFromLeft(int amount)
+    public void SpawnBulletsFromLeft(int amount)
     {
         StartCoroutine(SpawnBullets(amount, bulletSpawnRate, "Left"));
     }
 
-    void SpawnBulletsFromRight(int amount)
+    public void SpawnBulletsFromRight(int amount)
     {
         StartCoroutine(SpawnBullets(amount, bulletSpawnRate, "Right"));
     }
@@ -45,6 +35,7 @@ public class SkullBossSpawner : MonoBehaviour
     IEnumerator SpawnBullets(int amount, float delay, string spawnPoint)
     {
         GameObject tempBullet;
+        
         for (int i = 0; i < amount; i++)
         {
             if (spawnPoint == "Left")
@@ -61,7 +52,7 @@ public class SkullBossSpawner : MonoBehaviour
             yield return new WaitForSeconds(delay);
 
         }
-        // Listener si fra til Skully når det er done? 
+        
     }
     
     

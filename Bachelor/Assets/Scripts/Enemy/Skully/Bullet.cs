@@ -9,13 +9,13 @@ public class Bullet : MonoBehaviour
     private float speed = 10.0f;
     private float distanceTravelled;
     private Vector2 lastPosition;
-    private const float MAXTravelDistance = 40.0f;
+    private float MAXTravelDistance = 40.0f;
     
     
     // Endre dette later, virker snodig å ha player referanse i alt som kan skade player. 
     private const string PLAYER_NAME = "Player";
     
-    private int damageAmount = 1;
+    private int damageAmount = 20;
     
     
     // Use this for initialization

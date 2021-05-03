@@ -16,7 +16,7 @@ public class FlyingEnemyShooter : Enemy, IDamageable
     private int offsetY = 2;
     private const string PLAYER_NAME = "Player";
     private int collisionDamageAmount = 10;
-    private int maxHealth = 30;
+    private int maxHealth = 40;
     private int currentHealth;
     private Collider2D collider;
     private Animator enemyAnim;

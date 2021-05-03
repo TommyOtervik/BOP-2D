@@ -34,8 +34,7 @@ public class JumpEnemyAttacker : Enemy, IDamageable
     private const string PLAYER_NAME = "Player";
 
 
-
-    // TESTING
+    
     [SerializeField] private int maxHealth = 30;
     [SerializeField] private int currentHealth;
     private int minRandomHurt = 1;
@@ -45,22 +44,6 @@ public class JumpEnemyAttacker : Enemy, IDamageable
 
     private Collider2D porkuCollider;
     
-    // LOOT TABLE TESTING, IMPLEMENTER DETTE OVERALT LATER I ABSTRACT ENEMY ELLER LIGNENDE
-    //public LootTable thisLoot;
-
-    /*
-    private void MakeLoot()
-    {
-        if (thisLoot != null)
-        {
-            Pickup current = thisLoot.LootPickup();
-            if (current != null)
-            {
-                Instantiate(current.gameObject, transform.position, Quaternion.identity);
-            }
-        }
-    }
-    */
     
     private void MakeLoot()
     {

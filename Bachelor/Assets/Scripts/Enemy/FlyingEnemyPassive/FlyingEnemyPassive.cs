@@ -10,8 +10,8 @@ public class FlyingEnemyPassive : Enemy, IDamageable
     private Transform player;
     private const int OffsetY = 2;
     private const string PLAYER_NAME = "Player";
-    private int collisionDamageAmount = 0;
-    private int maxHealth = 300;
+    private int collisionDamageAmount = 10;
+    private int maxHealth = 50;
     private int currentHealth;
     private Collider2D collider;
     private Animator enemyAnim;
