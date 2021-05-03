@@ -36,7 +36,8 @@ public class Skully : Enemy, IDamageable
     private int downAttackBulletAmount = 9;
     private int sideAttackBulletAmount = 5;
 
-    private SkullyState state;
+    private MovementState movementState;
+    private AttackState attackState;
     private SkullBossSpawner spawner;
     
     
@@ -46,7 +47,7 @@ public class Skully : Enemy, IDamageable
 // Start is called before the first frame update
     void Awake()
     {
-        hasTarget = false;
+        
     }
 
     void Start()
@@ -54,54 +55,22 @@ public class Skully : Enemy, IDamageable
         collider = GetComponent<BoxCollider2D>();
         spawner = GetComponent<SkullBossSpawner>();
         currentHealth = maxHealth;
-        //transform.position = spawnPoint.position;
-        
+        transform.position = spawnPoint.position;
+        //positionTarget = upperLeft;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Skully er HEIME
-        if (transform == spawnPoint)
-        {
-            PickTarget();
-        }
-
-        if (transform.position == positionTarget.position)
-        {
-            PickAttack();
-        }
-
-        MovementCheck();
-
-        // Sjekk om jeg har target, hvis ikke, velg?
-        // 
-        // attack?
-
-        // 
-
-    }
-
-    void PositionCheck()
-    {
-        if (transform.position == upperLeft.position)
-        {
-            
-        }
-        else if (transform.position == upperRight.position)
-        {
-            
-        }
         
-        else if (transform.position == spawnPoint.position)
-        {
-            
-        }
-
     }
+
+    
 
     void PickTarget()
     {
+        
         if (!hasTarget)
         {
             int attackNumber = UnityEngine.Random.Range(0,2);
@@ -110,17 +79,18 @@ public class Skully : Enemy, IDamageable
                 case 0:
                     // UpperLeft
                     positionTarget = upperLeft;
+                    hasTarget = true;
                     break;
                 case 1:
                     // UpperRight
                     positionTarget = upperRight;
+                    hasTarget = true;
                     break;
                 default:
                     // code block
                     break;
             }    
         }
-
         
     }
     
@@ -224,6 +194,8 @@ public class Skully : Enemy, IDamageable
             y = initialY;
             
             yield return new WaitForSeconds(0.5f);
+
+            
         }
         
     }
@@ -264,9 +236,9 @@ public class Skully : Enemy, IDamageable
             
             yield return new WaitForSeconds(0.5f);
         }
+
         
-        
-        
+
 
     }
     
@@ -279,6 +251,9 @@ public class Skully : Enemy, IDamageable
             transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
         }
         
+
+
+
     }
 
     void MovementCheck()
@@ -287,14 +262,11 @@ public class Skully : Enemy, IDamageable
         {
             MovePointToPoint(transform, positionTarget);
         }
+        
     }
 
     
-
-    void resetAttackVariables()
-    {
-        
-    }
+    
 
     void WaitInSeconds(float seconds)
     {
