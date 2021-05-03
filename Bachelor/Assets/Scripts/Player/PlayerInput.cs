@@ -2,58 +2,56 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Tilhører spilleren.
+ *  Håndterer input
+ *   
+ */
 
 
-// We first ensure this script runs before all other player scripts to prevent laggy
-// inputs
+// Vi sørger først for at dette skriptet kjører før alle andre spillerskript for å forhindre laggy inputs
 [DefaultExecutionOrder(-100)]
 public class PlayerInput : MonoBehaviour
 {
 
-    [HideInInspector] public float horizontal;      //Float that stores horizontal input
-    [HideInInspector] public bool jumpHeld;         //Bool that stores jump held
-    [HideInInspector] public bool jumpPressed;      //Bool that stores jump pressed
-    [HideInInspector] public bool crouchHeld;       //Bool that stores crouch held
-    [HideInInspector] public bool crouchPressed;    //Bool that stores crouch pressed
-    [HideInInspector] public bool firePressed;
-    [HideInInspector] public bool altFirePressed;
-    [HideInInspector] public bool rangedAttack;
+    [HideInInspector] public float horizontal;      // Float som lagrer horisontal input
+    [HideInInspector] public bool jumpHeld;         // Bool som lagrer om man holder inne (Hopp)
+    [HideInInspector] public bool jumpPressed;      // Bool som lagrer rom man trykker    (Hopp)
+    [HideInInspector] public bool firePressed;      // Bool som lagrer rom man trykker
+    [HideInInspector] public bool altFirePressed;   // Bool som lagrer rom man trykker
+    [HideInInspector] public bool rangedAttack;     // Bool som lagrer rom man trykker
     
-    
+    bool readyToClear;								// Bool brukes til å holde synkronisering av inndata
 
-    bool readyToClear;								//Bool used to keep input in sync
-    // Update is called once per frame
     void Update()
     {
-        //Clear out existing input values
+        // Fjern eksisterende inputverdier
         ClearInput();
 
-        //Process keyboard, mouse inputs
+        // Prosesser tastatur og mus innputs
         ProcessInputs();
 
-        //Clamp the horizontal input to be between -1 and 1
+        // Fest den horisontale inputen til å være mellom -1 og 1
         horizontal = Mathf.Clamp(horizontal, -1f, 1f);
     }
 
     void FixedUpdate()
     {
-        //In FixedUpdate() we set a flag that lets inputs to be cleared out during the 
-        //next Update(). This ensures that all code gets to use the current inputs
-        readyToClear = true;
+        //I FixedUpdate() setter vi et flagg som lar inputs tømmes under
+        // neste Update(). Dette sikrer at all kode får bruke de nåværende inputene
+       readyToClear = true;
     }
 
     void ClearInput()
     {
-        //If we're not ready to clear input, exit
+        // Hvis vi ikke er klare til å fjerne inndata, kan du avslutte
         if (!readyToClear)
             return;
 
-        //Reset all inputs
+        // Tilbakestill alle inputs
         horizontal = 0f;
         jumpPressed = false;
         jumpHeld = false;
-        crouchPressed = false;
-        crouchHeld = false;
         firePressed = false;
         altFirePressed = false;
         rangedAttack = false;
@@ -62,15 +60,13 @@ public class PlayerInput : MonoBehaviour
 
     void ProcessInputs()
     {
-        //Accumulate horizontal axis input
+        // Akkumulere horisontal-input
         horizontal += Input.GetAxis("Horizontal");
 
-        //Accumulate button inputs
+        // Akkumulere knapp-inputs
         jumpPressed = jumpPressed || Input.GetButtonDown("Jump");
         jumpHeld = jumpHeld || Input.GetButton("Jump");
 
-        crouchPressed = crouchPressed || Input.GetButtonDown("Crouch");
-        crouchHeld = crouchHeld || Input.GetButton("Crouch");
 
         firePressed = firePressed || Input.GetButtonDown("Fire1");
         altFirePressed = altFirePressed || Input.GetButton("Fire2");

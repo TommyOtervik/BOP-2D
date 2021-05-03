@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
+/*
+ * Lagrins system
+ *  Brukes til å lagre data i binær format. Serializable.
+ *  
+ *   @AOP - 225280
+ */
 public static class SaveSystem
 {
     public static void SavePlayer(Player player)

@@ -5,13 +5,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-
+/*
+ * Spiller skriptet.
+ * Håndterer input, animasjoner og angrep
+ *   ++
+ */
 
 public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 {
     #region General Variables
     private PlayerInput input;  // Gjendende input for spilleren
-    private Animator anim;    // Animator, setter animasjoner basert på funksjoner/variabler
+    private Animator anim;      // Animator, setter animasjoner basert på funksjoner/variabler
 
     // Konstanter for animator
     private const string HURT_STR = "Hurt";
@@ -26,46 +30,46 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
     #region Health System 
     [Header("Health Properties")]
-    [SerializeField] private int maxHealth;
-    [SerializeField] private int currentHealth;
+    [SerializeField] private int maxHealth;      // Max. helse
+    [SerializeField] private int currentHealth;  // Nåværende helse
     #endregion
 
     #region Combat Variables 
     [Header("Attack Properties")]
-    [SerializeField] private Transform attackPoint;
-    [SerializeField] private Transform rangedAttackPoint;
-    [SerializeField] private LayerMask enemyLayers;
+    [SerializeField] private Transform attackPoint;         // Angrepspunkt (Posisjon)
+    [SerializeField] private Transform rangedAttackPoint;   // Distanse-Angrepspunkt
+    [SerializeField] private LayerMask enemyLayers;         // Fiendtlig layer (Sjekkes nå man slår)
+    [SerializeField] private float attackRange = 1f;        // Angreps rekkevidde
 
-    [SerializeField] private float attackRange = 1f;
-    private const int MELEE_ATTACK_DAMAGE = 20;
-    private float attackRate = 2f;
-    private float nextAttackTime = 0f;
-    private bool hit;
+    private const int MELEE_ATTACK_DAMAGE = 20;             // Skade for angrep
+    private float attackRate = 2f;                          // Hvor ofte spilleren kan slå
+    private float nextAttackTime = 0f;                      // Tidtaker for angrep
+    private bool hit;                               
 
     [Header("Ranged Attack Properties")]
-    [SerializeField] GameObject shurikenPrefab;
-    private const int RANGED_ATTACK_DAMAGE = 20;
-    private float rangedAttackRate = 2f;
-    private float nextRangedAttackTime = 0f;
+    [SerializeField] GameObject shurikenPrefab;             // Ninjastjerne objekt (Distanse angrep)
+    private const int RANGED_ATTACK_DAMAGE = 20;            // Skade for ninjastjerne
+    private float rangedAttackRate = 2f;                    // Hvor ofte man kan kaste
+    private float nextRangedAttackTime = 0f;                // Tidtaker for distanse angrep
 
-    private const float CAMERA_SHAKE_INTENSITY = 5f;
+    private const float CAMERA_SHAKE_INTENSITY = 5f;        // Kamera risting når man treffer en fiende 
     private const float CAMERA_SHAKE_DURATION = .1f;
-    private const float ATTACK_WAIT_TIME_FOR_SHAKE = .3f;
     #endregion
 
     #region Events
-    private UnityAction killFloorHitListener;
+    private UnityAction killFloorHitListener;               // Lytter om man treffer et KillFloor
 
     // TEST FOR SAVE (SKAL EGENTLIG I GAMEMANAGER?)
-    private UnityAction tutorialToCastleListener;
-    private UnityAction castleToTutorialListener;
+    private UnityAction tutorialToCastleListener;           // Lytter for sceneskifte
+    private UnityAction castleToTutorialListener;           // Lytter for sceneskifte
+    private UnityAction castleToBossListener;               // Lytter for sceneskifte
 
-    private UnityAction loadPlayerListener;
+    private UnityAction loadPlayerListener;                 // Lytter for lasting fra fil
 
-    public static event Action<int> UpdateHealth;
-    public static event Action<int> SetMaxHealth;
+    public static event Action<int> UpdateHealth;           // Event med param for helse (Skulle gått gjennom UIManager?)
+    public static event Action<int> SetMaxHealth;           // Event med param for helse (Skulle gått gjennom UIManager?)
     #endregion
-    
+
     #region Pickups
 
     private int coinAmount;
@@ -73,24 +77,27 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     
     #endregion
 
-    public PlayerMovement movementScript;
+    public PlayerMovement movementScript;                   // Bevegelses skriptet
 
 
     private void Awake()
     {
         currentHealth = maxHealth;
+        // Lyttere
+        loadPlayerListener = new UnityAction(LoadPlayer);
 
         killFloorHitListener = new UnityAction(Death);
+
         tutorialToCastleListener = new UnityAction(SavePlayer);
         castleToTutorialListener = new UnityAction(SavePlayer);
-        loadPlayerListener = new UnityAction(LoadPlayer);
+        castleToBossListener = new UnityAction(SavePlayer);
+
     }
 
     void Start()
     {
-        
         SetMaxHealth?.Invoke(maxHealth);
-
+        
         movementScript = GetComponent<PlayerMovement>();
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
@@ -133,13 +140,13 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     // Spilleren tar skade
     public void TakeDamage(int damage)
     {
-        // Quick fix..
+        // Hvis spilleren ikke angriper og hen tar skada -> Spill animasjon
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
             anim.SetTrigger(HURT_STR);
 
-        currentHealth -= damage;
+        currentHealth -= damage; // Reduser helse
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0)  
             Death();
     }
 
@@ -169,7 +176,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     // Spilleren dør
     public void Death()
     {
-        anim.SetTrigger(DEATH_STR);
+        anim.SetTrigger(DEATH_STR); // Spill animasjon
 
         // Gjør spilleren "unsynlig" for fiender når hen dør.
         GetComponent<PlayerMovement>().enabled = false;
@@ -177,7 +184,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         GetComponent<BoxCollider2D>().enabled = false;
         this.enabled = false;
 
-        // Fiender lytter til denne
+        // Fiender lytter til denne (Da stopper de å angripe/søke)
         EventManager.TriggerEvent(EnumEvents.PLAYER_DEAD);
 
         StartCoroutine(WaitForRespawn());
@@ -187,37 +194,34 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     IEnumerator WaitForRespawn()
     {
         yield return new WaitForSeconds(3f);
-
-        // transform.position = new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0);
        
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
     }
 
+    // Angreps metode
     public void Attack(int amount)
     {
-        // Attack animation
-        anim.SetTrigger(ATTACK_STR);
+        
+        anim.SetTrigger(ATTACK_STR); // Angreps animasjon
 
-        // Detect enemies in range of attack
+        // Oppdager fiender som er innenfor rekkevidde
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-        if (hitEnemies.Length >= 1)
+        if (hitEnemies.Length >= 1) // Quickfix for Camerashake
             hit = true;
 
-        // Damage them
+        // Gjør skade mot fiendene
         foreach (Collider2D enemy in hitEnemies)
         {
-            //StartCoroutine(WaitForAttackDamage(enemy));
+         
             DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
         }  
     }
-    // FIX
+    // Distanse angrep
     public void RangedAttack(int amount)
     {
-        // Attack animation
-        anim.SetTrigger(RANGED_ATTACK_STR);
         
+        anim.SetTrigger(RANGED_ATTACK_STR); // Animasjon
     }
 
     // Kalles som event i animasjon "Throw"
@@ -235,18 +239,6 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         }
     }
 
-    /*
-    // "Venter" på animasjonen i .3 sekunder. Gjør skade til fiende og rister kameraet.
-    IEnumerator WaitForAttackDamage(Collider2D enemy)
-    {
-        yield return new WaitForSeconds(ATTACK_WAIT_TIME_FOR_SHAKE);
-
-        CinemachineShake.Instance.ShakeCamera(CAMERA_SHAKE_INTENSITY, CAMERA_SHAKE_DURATION);
-        DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
-      
-    }
-    */
-
     public void CameraShake()
     {
         if (hit)
@@ -256,8 +248,6 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         }
     }
     
-    
-  
 
     // Tegner en sirkel som avgrenser hvor spilleren kan angripe
     void OnDrawGizmosSelected()
@@ -275,6 +265,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
        EventManager.StartListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
        EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
        EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
+       EventManager.StartListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
        EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
        DamageBroker.TakeDamageEvent += TakeDamage;
@@ -290,6 +281,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         EventManager.StopListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
         EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
         EventManager.StopListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
+        EventManager.StopListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
         EventManager.StopListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
         DamageBroker.TakeDamageEvent -= TakeDamage;
@@ -304,8 +296,6 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
         return currentHealth;
     }
-
-
 
     // SKAL I GAME MANAGER?
     public void SavePlayer()

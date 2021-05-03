@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+ * Enum for Event systemet
+ *
+ */
 public enum EnumEvents
 {
     KILL_FLOOR_HIT,

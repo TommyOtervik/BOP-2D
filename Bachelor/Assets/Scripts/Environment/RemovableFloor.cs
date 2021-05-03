@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
+/*
+ * Dette skirptet håndterer RemovableFloor.
+ *  Dette er selve gulvet som kan fjernes, og det blir til en snarvei.
+ *   
+ * @AOP - 225280
+ */
+public class RemovableFloor : MonoBehaviour
 {
-    [SerializeField]
-    private string objectName;
-
     private Rigidbody2D floor;
     private BoxCollider2D boxCollider;
 
-    private Vector3 bounds;
+    private Vector3 bounds;   // Bounds for å slette objektet (faller ned, Y pos)
     private Vector3 startPos;
 
     private bool isOpen;
 
 
-    // Start is called before the first frame update
     void Start()
     {
 
@@ -31,18 +33,19 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        // Sjekker om gulvet har falt ned til en viss y pos -> slett det
         if (this.gameObject.transform.position.y < bounds.y)
             Destroy(this.gameObject);
     }
 
+    // "Åpner" gulvet
     public void Open()
     {
         if (!isOpen)
         {
+            // Deaktiverer fysiske egenskaper for å få det til å falle
             floor.constraints = RigidbodyConstraints2D.None;
             floor.bodyType = RigidbodyType2D.Dynamic;
 
@@ -50,18 +53,16 @@ public class RemovableFloor : MonoBehaviour, ICanBeSetInactive
 
             isOpen = true;
 
+            // Registrer dette i GameManager
             GameManager.PlayerOpenedFloor(isOpen);
         }
     }
-
+    
     IEnumerator WaitForDisable()
     {
         yield return new WaitForSeconds(.5f);
         boxCollider.enabled = false;
     }
 
-    public string GetObjectName()
-    {
-        return objectName;
-    }
+   
 }

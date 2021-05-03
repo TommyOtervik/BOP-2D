@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-// Måten man får forekomsten av denn klassen, ligner på Singleton-mønster. Det er 
+// Singleton-mønster. Det er 
 // bare én forekomst av denne klassen i spillscenen.
 // Dette skriptet er festet til et tomt objekt i scenen. Man abonnerer på handligen
 // når skriptet aktiveres (i begynnelsen av spillet).

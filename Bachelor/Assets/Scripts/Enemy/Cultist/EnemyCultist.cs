@@ -66,7 +66,7 @@ public class EnemyCultist : Enemy, IDamageable
         // Lytter om spilleren er død
         playerDeadListener = new UnityAction(StopAttack);
 
-        // Henter komponenter
+        // Henter komponenten Colliders
         Collider2D[] enemyColliders = GetComponentsInChildren<Collider2D>();
         foreach (Collider2D c in enemyColliders)
         {

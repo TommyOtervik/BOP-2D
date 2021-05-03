@@ -17,7 +17,6 @@ public class LevelLoader : MonoBehaviour
 
     private static string levelNameChange;
 
-
     private void Awake()
     {
         tutorialToCastleListener = new UnityAction(LoadLevel);

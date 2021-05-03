@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-
+/*
+ * Tilhører Player.
+ *   Setter det visuelle i UI basert på helsen til spilleren.
+ *   Denne skulle gått gjennom UIManager.
+ *   
+ *   @AOP - 225280
+ */
 public class HealthBar : MonoBehaviour
 {
     [SerializeField]
