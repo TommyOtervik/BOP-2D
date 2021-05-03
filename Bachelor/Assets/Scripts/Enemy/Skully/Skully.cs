@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
 public class Skully : Enemy, IDamageable
 {
     // Collision enter etterpå
-    private int maxHealth = 1000;
+    private int maxHealth = 1;
     private int currentHealth;
     private Collider2D collider;
     private float speed = 10.0f;
@@ -33,8 +33,7 @@ public class Skully : Enemy, IDamageable
     [SerializeField] private GameObject bulletPrefab;
     private float attackRate = 0.4f;
     private Transform target;
-    private bool hasTarget;
-    
+
     private bool attackInProgress = false;
     
     private bool leftToRightSprayFinished = false;
@@ -45,8 +44,7 @@ public class Skully : Enemy, IDamageable
     private int sideAttackBulletAmount = 5;
     
     [SerializeField] private SkullBossSpawner spawner;
-
-    private int airAttackCounter = 0;
+    
     private bool sleepMode;
     
     private SpriteRenderer spriteRenderer;
@@ -55,7 +53,7 @@ public class Skully : Enemy, IDamageable
     
     [SerializeField] private SkullyHealthBar healthBar;
     
-    // Hindre konstant samme retning? 
+    
  
 
 
@@ -329,25 +327,7 @@ public class Skully : Enemy, IDamageable
 
     }
     
-
     
-
-    
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void TakeDamage(int damageTaken)
     {
