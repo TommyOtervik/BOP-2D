@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UIElements;
 
 public class Skully : Enemy, IDamageable
 {
@@ -22,13 +23,16 @@ public class Skully : Enemy, IDamageable
     [SerializeField] private Transform upperLeft;
     [SerializeField] private Transform upperRight;
     [SerializeField] private Transform upperCenter;
+    [SerializeField] private Transform upperLeftForAirAttack;
+    [SerializeField] private Transform upperRightForAirAttack;
 
     [SerializeField] private GameObject bulletPrefab;
     private float attackRate = 0.4f;
-    private Transform positionTarget;
+    private Transform target;
     private bool hasTarget;
     
     private bool attackInProgress = false;
+    
     private bool leftToRightSprayFinished = false;
     private bool rightToLeftSprayFinished = false;
 
@@ -39,15 +43,19 @@ public class Skully : Enemy, IDamageable
     private MovementState movementState;
     private AttackState attackState;
     private SkullBossSpawner spawner;
-    
-    
 
+    private int airAttackWaveCounter = 0;
     
+    // Hindre konstant samme retning? 
+
+
+
+
 
 // Start is called before the first frame update
     void Awake()
     {
-        
+        attackInProgress = false;
     }
 
     void Start()
@@ -55,74 +63,101 @@ public class Skully : Enemy, IDamageable
         collider = GetComponent<BoxCollider2D>();
         spawner = GetComponent<SkullBossSpawner>();
         currentHealth = maxHealth;
-        transform.position = spawnPoint.position;
+        //transform.position = spawnPoint.position;
         //positionTarget = upperLeft;
+        target = spawnPoint;
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!attackInProgress)
-        {
-            AngleAttackLeft();
-            attackInProgress = !attackInProgress;
-        }
+        MovePointToPoint(transform, target);
     }
-
     
+    // Beveg skully mellom 2 punkter
+    void MovePointToPoint(Transform current, Transform target)
+    {
+        // this.target visst du skal manipulere retning direkte her inne. 
+        
+
+        if (current.position == target.position)
+        {
+            // NYE PUNKTER MKAY 
+            if (current.position == spawnPoint.position)
+            {
+                PickTarget();
+            }
+
+            else if (current.position == upperLeft.position && !attackInProgress)
+            {
+                AngleAttackRight();
+                //AngleAttackRight(); // ELLER ANDRE
+            }
+            else if (current.position == upperRight.position && !attackInProgress)
+            {
+                AngleAttackLeft();
+                //AngleAttackLeft(); // ELLER ANDRE? 
+            } else if (current.position == upperRightForAirAttack.position && !attackInProgress)
+            {
+                AirAttack("Left");
+            } else if (current.position == upperLeftForAirAttack.position && !attackInProgress)
+            {
+                AirAttack("Right");
+            }
+
+
+        }
+
+        // Legg inn delay later
+        transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+    }
+    
+    /*
+    void MovementCheck()
+    {
+        if (hasTarget)
+        {
+            MovePointToPoint(transform, positionTarget);
+        }
+        
+    }
+    */
+
+
 
     void PickTarget()
     {
-        
-        if (!hasTarget)
         {
-            int attackNumber = UnityEngine.Random.Range(0,2);
-            switch(attackNumber) 
+            int attackNumber = UnityEngine.Random.Range(0, 4);
+            switch (attackNumber)
             {
                 case 0:
                     // UpperLeft
-                    positionTarget = upperLeft;
-                    hasTarget = true;
+                    target = upperLeft;
                     break;
                 case 1:
                     // UpperRight
-                    positionTarget = upperRight;
-                    hasTarget = true;
+                    target = upperRight;
+                    break;
+                case 2: // UpperLeftAir
+                    target = upperLeftForAirAttack;
+                    break;
+                case 3: // UpperRightAir
+                    target = upperRightForAirAttack;
                     break;
                 default:
                     // code block
                     break;
-            }    
-        }
-        
-    }
-    
-
-    void PickAttack()
-    {
-        
-        int attackNumber = UnityEngine.Random.Range(0,3);
-        switch(attackNumber) 
-        {
-            case 0:
-                // Attack1 
-                break;
-            case 1:
-                // Attack2
-                break;
-            case 2:
-                // Attack3
-                break;
-            default:
-                // code block
-                break;
+            }
         }
     }
     
-    void AirAttack()
+    
+    void AirAttack(string direction)
     {
-        StartCoroutine(SpawnBulletsDown(downAttackBulletAmount, attackRate));
+        StartCoroutine(SpawnBulletsDown(downAttackBulletAmount, attackRate, direction));
     }
 
     void SideAttackLeft()
@@ -145,9 +180,27 @@ public class Skully : Enemy, IDamageable
         StartCoroutine(SpawnBulletsRightAngle(17, attackRate));
     }
 
-    IEnumerator SpawnBulletsDown(int amount, float delay)
+    IEnumerator SpawnBulletsDown(int amount, float delay, string direction)
     {
-        
+        if (direction.Equals("Left"))
+        {
+            target = upperLeftForAirAttack;
+        }
+        else
+        {
+            target = upperRightForAirAttack;
+        }
+        /*// SEtt retning
+        if (airAttackWaveCounter == 0)
+        {
+            target = upperLeft;
+        } else if (airAttackWaveCounter == 1)
+        {
+            target = upperRight;
+        }
+        */
+
+        attackInProgress = true;
         
         GameObject tempBullet;
         for (int i = 0; i < amount; i++)
@@ -159,13 +212,27 @@ public class Skully : Enemy, IDamageable
 
         }
 
-        
-        
+        attackInProgress = false; // foreløpig
+        //target = spawnPoint;
+        /*
+        airAttackWaveCounter++;
+        //attackInProgress = false;
+        if (airAttackWaveCounter > 1)
+        {
+            attackInProgress = false;
+            target = spawnPoint;
+        }
+        */
+
+
+
+
     }
     
     IEnumerator SpawnBulletsLeftAngle(int amount, float delay)
     {
-        
+
+        attackInProgress = true;
         Vector2 startVector;
         float initialX = attackPointLeft.position.x - 7;
         float initialY = attackPointLeft.position.y + 7;
@@ -201,12 +268,15 @@ public class Skully : Enemy, IDamageable
 
             
         }
-        
+
+        attackInProgress = false;
+        target = spawnPoint;
+
     }
     
     IEnumerator SpawnBulletsRightAngle(int amount, float delay)
     {
-        
+        attackInProgress = true;
         Vector2 startVector;
         float initialX = attackPointRight.position.x - 7;
         float initialY = attackPointRight.position.y - 7;
@@ -241,33 +311,13 @@ public class Skully : Enemy, IDamageable
             yield return new WaitForSeconds(0.5f);
         }
 
-        
-
+        attackInProgress = false;
+        target = spawnPoint;
 
     }
     
 
-    // Beveg skully mellom 2 punkter
-    void MovePointToPoint(Transform current, Transform target)
-    {
-        if (current.position != target.position)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-        }
-        
-
-
-
-    }
-
-    void MovementCheck()
-    {
-        if (hasTarget)
-        {
-            MovePointToPoint(transform, positionTarget);
-        }
-        
-    }
+    
 
     
     
