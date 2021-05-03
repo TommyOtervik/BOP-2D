@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     private List<PickupKey> keys;
     private RemovableFloor removableFloor;
 
-
     //private AbominationMiniBoss abom;
 
     // Om abom. er drept
@@ -21,7 +20,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        
         if (current != null && current != this)
         {
             Destroy(gameObject);
@@ -59,15 +57,6 @@ public class GameManager : MonoBehaviour
         if (!current.keys.Contains(key))
             current.keys.Add(key);
     }
-
-    //public static void RegisterAbomination(AbominationMiniBoss abom)
-    //{
-    //    if (current == null)
-    //        return;
-
-    //    current.abom = abom;  
-    //}
-
 
     public static void PlayerOpenedFloor(bool isOpen)
     {

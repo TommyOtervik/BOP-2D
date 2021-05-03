@@ -29,13 +29,6 @@ public class UIManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     // FIXME: IKKE HELT OPTIMALT.. 2 metoder..
     public static void DisplayEButtonOnLever()
     {
@@ -51,6 +44,5 @@ public class UIManager : MonoBehaviour
             return;
 
         current.EKey.SetActive(false);
-
     } 
 }

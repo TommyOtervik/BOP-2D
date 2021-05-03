@@ -4,8 +4,8 @@ using UnityEngine;
 
 
 
-//We first ensure this script runs before all other player scripts to prevent laggy
-//inputs
+// We first ensure this script runs before all other player scripts to prevent laggy
+// inputs
 [DefaultExecutionOrder(-100)]
 public class PlayerInput : MonoBehaviour
 {
@@ -27,14 +27,9 @@ public class PlayerInput : MonoBehaviour
     {
         //Clear out existing input values
         ClearInput();
-        
-        //If the Game Manager says the game is over, exit
-        //if (GameManager.IsGameOver())
-            //return;
 
         //Process keyboard, mouse inputs
         ProcessInputs();
-        
 
         //Clamp the horizontal input to be between -1 and 1
         horizontal = Mathf.Clamp(horizontal, -1f, 1f);

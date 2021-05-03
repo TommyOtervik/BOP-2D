@@ -896,6 +896,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyingEnemyPassive
       objectReference: {fileID: 0}
+    - target: {fileID: 8785184486796923240, guid: 1a18ede6e65e9d048a554e09667fd23c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8785184486796923245, guid: 1a18ede6e65e9d048a554e09667fd23c,
         type: 3}
       propertyPath: m_RootOrder

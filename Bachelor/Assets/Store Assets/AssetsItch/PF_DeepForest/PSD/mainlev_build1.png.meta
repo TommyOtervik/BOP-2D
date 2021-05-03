@@ -7112,6 +7112,9 @@ TextureImporter:
   - first:
       213: 2331514441221665901
     second: mainlev_build1_2369
+  - first:
+      213: -8956007384310063417
+    second: mainlev_build1_2370
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -57248,6 +57251,27 @@ TextureImporter:
       bones: []
       spriteID: d64f5b908043b5020800000000000000
       internalID: 2331514441221665901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainlev_build1_2370
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1568
+        width: 106
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ce5c642cbed5b380800000000000000
+      internalID: -8956007384310063417
       vertices: []
       indices: 
       edges: []

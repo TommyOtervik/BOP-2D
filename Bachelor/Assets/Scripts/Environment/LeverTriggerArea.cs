@@ -14,17 +14,11 @@ public class LeverTriggerArea : MonoBehaviour, ICanBeSetInactive
 
     private bool insideArea;
 
-    
     void Update()
-    {
-        // FIXME: Events? 
+    { 
         if (Input.GetKeyDown(KeyCode.E) && insideArea)
-            removableFloor.Open();
-        
+            removableFloor.Open();  
     }
-
-  
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

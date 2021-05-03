@@ -70,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     Vector2 colliderStandOffset;			//Offset of the standing collider
 
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -179,7 +180,6 @@ public class PlayerMovement : MonoBehaviour
         // Run
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
-            
             // Reset timer
             delayToIdle = DELAY_TO_IDLE_ANIM;
             anim.SetInteger("AnimState", 1);
@@ -197,41 +197,39 @@ public class PlayerMovement : MonoBehaviour
     void MidAirMovement()
     {
 
+        // Hvis man trykker hopp og man er på bakken og hodet ikke er blokkert
         if (input.jumpPressed && !isJumping && (isOnGround || coyoteTime > Time.time) && !isHeadBlocked)
         {
 
             isOnGround = false;
             isJumping = true;
-
+            // Setter animasjonene
             anim.SetTrigger("Jump");
             anim.SetBool("Grounded", isOnGround);
-
+            // Holder styr på hopp tiden
             jumpTime = Time.time + jumpHoldDuration;
-
-            // rigidBody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            // Hopp hastighet
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 4);
 
         }
+        // Hvis man allerede hopper
         else if (isJumping)
         {
-
+            // Sjekk om man holder inne knappen
             if (input.jumpHeld)
                 rigidBody.velocity = new Vector2(rigidBody.velocity.x, jumpForce * jumpHoldForce);
-                // rigidBody.AddForce(new Vector2(0f, jumpHoldForce), ForceMode2D.Impulse);
-
-                // Uniform acceleration, "Vanlig"
-                // rigidBody.velocity = new Vector2(rigidBody.velocity.x, Mathf.Sqrt(-2.0f * Physics2D.gravity.y * jumpHeight)); 
 
             if (jumpTime <= Time.time)
                 isJumping = false;
+
         }
 
-        // Add extra fake gravity to the player
+        // Legger til ekstra "fake" gravitasjon til spilleren
+        // Dette gjør hoppet mindre realistisk, på en god måte
         Vector2 vel = rigidBody.velocity;
         vel.x = rigidBody.velocity.x;
         vel.y -= BONUS_GRAVITY * Time.deltaTime;
         rigidBody.velocity = vel;
-
 
 
         anim.SetFloat("AirSpeedY", rigidBody.velocity.y);

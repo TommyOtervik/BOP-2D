@@ -4,7 +4,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-
     public static void SavePlayer(Player player)
     {
         BinaryFormatter formatter = new BinaryFormatter();
@@ -53,8 +52,6 @@ public static class SaveSystem
 
     public static AbominationData LoadAbomination()
     {
-        
-
         string path = Application.persistentDataPath + "/abom.dat";
 
         if (File.Exists(path))
@@ -64,7 +61,6 @@ public static class SaveSystem
 
             AbominationData data = formatter.Deserialize(stream) as AbominationData;
             
-
             return data;
         }
         else

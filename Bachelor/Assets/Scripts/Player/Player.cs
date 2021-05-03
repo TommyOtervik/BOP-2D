@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     private const int MELEE_ATTACK_DAMAGE = 20;
     private float attackRate = 2f;
     private float nextAttackTime = 0f;
+    private bool hit;
 
     [Header("Ranged Attack Properties")]
     [SerializeField] GameObject shurikenPrefab;
@@ -201,12 +202,15 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         // Detect enemies in range of attack
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
+        if (hitEnemies.Length >= 1)
+            hit = true;
+
         // Damage them
         foreach (Collider2D enemy in hitEnemies)
         {
-            //StartCoroutine(WaitForAttackDamage(enemy)); 
+            //StartCoroutine(WaitForAttackDamage(enemy));
             DamageBroker.EnemyTakesDamage(MELEE_ATTACK_DAMAGE, enemy.gameObject);
-        }
+        }  
     }
     // FIX
     public void RangedAttack(int amount)
@@ -242,8 +246,17 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
       
     }
     */
-    
 
+    public void CameraShake()
+    {
+        if (hit)
+        {
+            CinemachineShake.Instance.ShakeCamera(CAMERA_SHAKE_INTENSITY, CAMERA_SHAKE_DURATION);
+            hit = false;
+        }
+    }
+    
+    
   
 
     // Tegner en sirkel som avgrenser hvor spilleren kan angripe
@@ -252,7 +265,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         if (attackPoint == null)
             return;
 
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+         
+         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     // Event lytter når objektet blir aktiv
@@ -260,7 +274,6 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
        EventManager.StartListening(EnumEvents.KILL_FLOOR_HIT, killFloorHitListener);
        EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
-
        EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
        EventManager.StartListening(EnumEvents.LOAD_PLAYER, loadPlayerListener);
 
