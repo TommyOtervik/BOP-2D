@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
 public class Skully : Enemy, IDamageable
 {
     // Collision enter etterpå
-    private int maxHealth = 500;
+    private int maxHealth = 1000;
     private int currentHealth;
     private Collider2D collider;
     private float speed = 10.0f;
@@ -67,7 +67,6 @@ public class Skully : Enemy, IDamageable
     {
         attackInProgress = false;
         sleepMode = false;
-        healthBar.SetSize((float)currentHealth / (float)maxHealth);
     }
 
     void Start()
@@ -75,6 +74,7 @@ public class Skully : Enemy, IDamageable
         collider = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth;
+        healthBar.SetSize((float)currentHealth / (float)maxHealth);
         target = spawnPoint;
 
 
