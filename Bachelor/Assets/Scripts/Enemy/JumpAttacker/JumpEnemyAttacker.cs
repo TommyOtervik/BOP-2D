@@ -159,7 +159,7 @@ public class JumpEnemyAttacker : Enemy, IDamageable
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        // FIXME: == 12, Equals?
+        
         if (collision.gameObject.layer == 12)
         {
             Physics2D.IgnoreCollision(porkuCollider, collision.collider, true);
