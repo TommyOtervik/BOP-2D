@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SocialPlatforms;
@@ -45,8 +46,10 @@ public class Skully : Enemy, IDamageable
     [SerializeField] private SkullBossSpawner spawner;
 
     private int airAttackCounter = 0;
+    private bool sleepMode;
     
     // Hindre konstant samme retning? 
+ 
 
 
 
@@ -56,6 +59,7 @@ public class Skully : Enemy, IDamageable
     void Awake()
     {
         attackInProgress = false;
+        sleepMode = false;
     }
 
     void Start()
@@ -86,11 +90,16 @@ public class Skully : Enemy, IDamageable
             // NYE PUNKTER MKAY 
             if (current.position == spawnPoint.position)
             {
-                // DELAY HER
-                StartCoroutine(WaitForSeconds(5));
-                PickTarget();
-            }
+                if (sleepMode)
+                {
+                    return;
+                }
+                
+                PickTargetWaitInSeconds(2);
+                
 
+                //PickTarget();
+            }
             else if (current.position == upperLeft.position && !attackInProgress)
             {
                 AngleAttackRight();
@@ -114,20 +123,24 @@ public class Skully : Enemy, IDamageable
 
         }
 
+       
         // Legg inn delay later
         transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
     }
     
-    /*
-    void MovementCheck()
+    void PickTargetWaitInSeconds(int seconds)
     {
-        if (hasTarget)
-        {
-            MovePointToPoint(transform, positionTarget);
-        }
-        
+        StartCoroutine(WaitForSeconds(seconds));
     }
-    */
+
+    IEnumerator WaitForSeconds(int seconds)
+    {
+        sleepMode = true;
+        yield return new WaitForSeconds(seconds);
+        PickTarget();
+        sleepMode = false;
+    }
+    
 
 
 
@@ -319,15 +332,7 @@ public class Skully : Enemy, IDamageable
     
     
 
-    void WaitInSeconds(float seconds)
-    {
-        StartCoroutine(WaitForSeconds(seconds));
-    }
-
-    IEnumerator WaitForSeconds(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-    }
+    
 
 
 
