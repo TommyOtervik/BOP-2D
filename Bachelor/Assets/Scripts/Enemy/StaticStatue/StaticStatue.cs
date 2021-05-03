@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StaticStatue : Enemy, IDamageable
 {
-    public bool drawDebugRaycasts = true;   //Should the environment checks be visualized
+    public bool drawDebugRaycasts = true;   
 
     public LayerMask groundLayer;
 
