@@ -13,7 +13,7 @@ using UnityEngine.UIElements;
  */
 public class Skully : Enemy, IDamageable
 {
-    // Collision enter etterpå
+   
     private int maxHealth = 1000;
     private int currentHealth;
     private Collider2D collider;
