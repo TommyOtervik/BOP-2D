@@ -38,6 +38,7 @@ public class AttackAndHealth : Enemy, IDamageable
     // Update is called once per frame
     void Update()
     {
+        // Hvis spilleren er innenfor fiendens angrepsradius, start Coroutine som setter igang angrepet. 
         distanceFromPlayer = Vector2.Distance(player.position, transform.position);
         if (distanceFromPlayer < lineOfSight && !attackInProgress)
         {
@@ -64,7 +65,7 @@ public class AttackAndHealth : Enemy, IDamageable
         attackInProgress = false;
 
     }
-
+    // Angrep 1, spawner 4 fire prosjektiler i 4 forskjellige retninger. 
     void HorizontalVerticalAttack()
     {
         GameObject tempBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity, null);
@@ -82,7 +83,7 @@ public class AttackAndHealth : Enemy, IDamageable
         
         
     }
-
+    // Angrep2, fungerer helt likt som angrep 1 men her blir objektene rotert 45 grader
     void DiagonalAttack()
     {
         GameObject tempBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity, null);
@@ -100,6 +101,7 @@ public class AttackAndHealth : Enemy, IDamageable
         
     }
     
+    // Kollisjonshåndtering for å skade spilleren om fiendens collider kommer borti spillerens kollider. 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.name.Equals(PLAYER_NAME))
