@@ -63,7 +63,11 @@ public class Skully : Enemy, IDamageable
     // Update is called once per frame
     void Update()
     {
-        
+        if (!attackInProgress)
+        {
+            AngleAttackLeft();
+            attackInProgress = !attackInProgress;
+        }
     }
 
     
