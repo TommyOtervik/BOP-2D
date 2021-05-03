@@ -14,10 +14,10 @@ public class CircleBatBulletMovementAndDamage : MonoBehaviour
     
     private const string PLAYER_NAME = "Player";
     
-    private int damageAmount = 1;
+    private int damageAmount = 10;
     
     
-
+    // Retning bestemmes i annen klasse
     public void Init(Vector2 direction)
     {
         this.direction = direction;
@@ -35,8 +35,8 @@ public class CircleBatBulletMovementAndDamage : MonoBehaviour
         
         distanceTravelled += Vector3.Distance(transform.position, lastPosition);
         lastPosition = transform.position;
-
-        // 
+        
+        // Visst prosjektilet har reist lengre enn maxtraveldistance tillater, ødelegg objektet.  
         if (distanceTravelled > MAXTravelDistance )
         {
             Destroy(gameObject);
