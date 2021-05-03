@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 public class Skully : Enemy, IDamageable
 {
     // Collision enter etterpå
-    private int maxHealth = 30;
+    private int maxHealth = 500;
     private int currentHealth;
     private Collider2D collider;
     private float speed = 10.0f;
@@ -47,6 +47,9 @@ public class Skully : Enemy, IDamageable
 
     private int airAttackCounter = 0;
     private bool sleepMode;
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite redSprite;
     
     // Hindre konstant samme retning? 
  
@@ -65,6 +68,7 @@ public class Skully : Enemy, IDamageable
     void Start()
     {
         collider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth;
         //transform.position = spawnPoint.position;
         //positionTarget = upperLeft;
@@ -140,8 +144,16 @@ public class Skully : Enemy, IDamageable
         PickTarget();
         sleepMode = false;
     }
-    
 
+    void ChangeSpriteToRed()
+    {
+        spriteRenderer.sprite = redSprite;
+    }
+
+    void ChangeSpriteToNormal()
+    {
+        spriteRenderer.sprite = normalSprite;
+    }
 
 
     void PickTarget()
@@ -241,7 +253,7 @@ public class Skully : Enemy, IDamageable
     
     IEnumerator SpawnBulletsLeftAngle(int amount, float delay)
     {
-
+        ChangeSpriteToRed();
         attackInProgress = true;
         Vector2 startVector;
         float initialX = attackPointLeft.position.x - 7;
@@ -281,11 +293,13 @@ public class Skully : Enemy, IDamageable
 
         attackInProgress = false;
         target = spawnPoint;
+        ChangeSpriteToNormal();
 
     }
     
     IEnumerator SpawnBulletsRightAngle(int amount, float delay)
     {
+        ChangeSpriteToRed();
         attackInProgress = true;
         Vector2 startVector;
         float initialX = attackPointRight.position.x - 7;
@@ -323,6 +337,7 @@ public class Skully : Enemy, IDamageable
 
         attackInProgress = false;
         target = spawnPoint;
+        ChangeSpriteToNormal();
 
     }
     
