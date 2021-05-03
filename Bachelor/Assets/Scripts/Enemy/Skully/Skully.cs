@@ -42,9 +42,9 @@ public class Skully : Enemy, IDamageable
 
     private MovementState movementState;
     private AttackState attackState;
-    private SkullBossSpawner spawner;
+    [SerializeField] private SkullBossSpawner spawner;
 
-    private int airAttackWaveCounter = 0;
+    private int airAttackCounter = 0;
     
     // Hindre konstant samme retning? 
 
@@ -61,7 +61,6 @@ public class Skully : Enemy, IDamageable
     void Start()
     {
         collider = GetComponent<BoxCollider2D>();
-        spawner = GetComponent<SkullBossSpawner>();
         currentHealth = maxHealth;
         //transform.position = spawnPoint.position;
         //positionTarget = upperLeft;
@@ -87,6 +86,8 @@ public class Skully : Enemy, IDamageable
             // NYE PUNKTER MKAY 
             if (current.position == spawnPoint.position)
             {
+                // DELAY HER
+                StartCoroutine(WaitForSeconds(5));
                 PickTarget();
             }
 
@@ -99,12 +100,15 @@ public class Skully : Enemy, IDamageable
             {
                 AngleAttackLeft();
                 //AngleAttackLeft(); // ELLER ANDRE? 
+                
             } else if (current.position == upperRightForAirAttack.position && !attackInProgress)
             {
                 AirAttack("Left");
+                SideAttackRight();
             } else if (current.position == upperLeftForAirAttack.position && !attackInProgress)
             {
                 AirAttack("Right");
+                SideAttackLeft();
             }
 
 
@@ -190,15 +194,7 @@ public class Skully : Enemy, IDamageable
         {
             target = upperRightForAirAttack;
         }
-        /*// SEtt retning
-        if (airAttackWaveCounter == 0)
-        {
-            target = upperLeft;
-        } else if (airAttackWaveCounter == 1)
-        {
-            target = upperRight;
-        }
-        */
+        
 
         attackInProgress = true;
         
@@ -211,8 +207,9 @@ public class Skully : Enemy, IDamageable
             yield return new WaitForSeconds(delay);
 
         }
-
+        
         attackInProgress = false; // foreløpig
+        target = spawnPoint;
         //target = spawnPoint;
         /*
         airAttackWaveCounter++;

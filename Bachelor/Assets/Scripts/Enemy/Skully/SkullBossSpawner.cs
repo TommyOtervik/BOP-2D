@@ -35,6 +35,7 @@ public class SkullBossSpawner : MonoBehaviour
     IEnumerator SpawnBullets(int amount, float delay, string spawnPoint)
     {
         GameObject tempBullet;
+        
         for (int i = 0; i < amount; i++)
         {
             if (spawnPoint == "Left")
