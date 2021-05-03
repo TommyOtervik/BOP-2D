@@ -61,7 +61,7 @@ public class JumpEnemyAttacker : Enemy, IDamageable
         enemyAnim = GetComponent<Animator>();
 
         porkuCollider = GetComponent<BoxCollider2D>();
-        //enemyRb.constraints = RigidbodyConstraints2D.FreezeAll;
+        
     }
 
     // Update is called once per frame
@@ -81,7 +81,7 @@ public class JumpEnemyAttacker : Enemy, IDamageable
         
     }
 
-    // FIXME: IKKE BRA. 
+     
     private void Update()
     {
         if (isGrounded && isDead)
