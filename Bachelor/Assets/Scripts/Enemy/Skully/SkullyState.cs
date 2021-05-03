@@ -1,8 +1,0 @@
-﻿public enum SkullyState
-{
-    RETURN_TO_SPAWNPOINT,
-    LEFT_ANGLE_ATTACK,
-    RIGHT_ANGLE_ATTACK,
-    AIR_ATTACK
-
-}
