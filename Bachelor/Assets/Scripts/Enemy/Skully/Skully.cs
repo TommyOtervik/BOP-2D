@@ -35,11 +35,6 @@ public class Skully : Enemy, IDamageable
     private Transform target;
 
     private bool attackInProgress = false;
-    
-    private bool leftToRightSprayFinished = false;
-    private bool rightToLeftSprayFinished = false;
-
-
     private int downAttackBulletAmount = 9;
     private int sideAttackBulletAmount = 5;
     
@@ -83,7 +78,7 @@ public class Skully : Enemy, IDamageable
         MovePointToPoint(transform, target);
     }
     
-    // Beveg skully mellom 2 punkter
+    // Styrer både bevegelse og valg av angrep. 
     void MovePointToPoint(Transform current, Transform target)
     {
         
@@ -178,30 +173,7 @@ public class Skully : Enemy, IDamageable
     }
     
     
-    void AirAttack(string direction)
-    {
-        StartCoroutine(SpawnBulletsDown(downAttackBulletAmount, attackRate, direction));
-    }
-
-    void SideAttackLeft()
-    {
-        spawner.SpawnBulletsFromLeft(sideAttackBulletAmount);
-    }
-
-    void SideAttackRight()
-    {
-        spawner.SpawnBulletsFromRight(sideAttackBulletAmount);
-    }
-
-    void AngleAttackLeft()
-    {
-        StartCoroutine(SpawnBulletsLeftAngle(17, attackRate));
-    }
-
-    void AngleAttackRight()
-    {
-        StartCoroutine(SpawnBulletsRightAngle(17, attackRate));
-    }
+    
     // Air attack
     IEnumerator SpawnBulletsDown(int amount, float delay, string direction)
     {
@@ -327,7 +299,30 @@ public class Skully : Enemy, IDamageable
     }
     
     
-    
+    void AirAttack(string direction)
+    {
+        StartCoroutine(SpawnBulletsDown(downAttackBulletAmount, attackRate, direction));
+    }
+
+    void SideAttackLeft()
+    {
+        spawner.SpawnBulletsFromLeft(sideAttackBulletAmount);
+    }
+
+    void SideAttackRight()
+    {
+        spawner.SpawnBulletsFromRight(sideAttackBulletAmount);
+    }
+
+    void AngleAttackLeft()
+    {
+        StartCoroutine(SpawnBulletsLeftAngle(17, attackRate));
+    }
+
+    void AngleAttackRight()
+    {
+        StartCoroutine(SpawnBulletsRightAngle(17, attackRate));
+    }
 
     public void TakeDamage(int damageTaken)
     {
@@ -358,7 +353,7 @@ public class Skully : Enemy, IDamageable
 
     }
 
-    // Slå av lytter når objektet blir inaktivt (Memory leaks)
+    
     private void OnDisable()
     {
        
