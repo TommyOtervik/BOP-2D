@@ -15,8 +15,12 @@ public class SceneTransition : MonoBehaviour
     {
         if (collision.name.Equals(PLAYER_NAME))
         {
-            LevelLoader.SetLevelName(LEVEL_NAME);
+            // LevelLoader.SetLevelName(LEVEL_NAME);
+            // EventManager.TriggerEvent(EnumEvents.TUTORIAL_TO_CASTLE);
+
             EventManager.TriggerEvent(EnumEvents.TUTORIAL_TO_CASTLE);
+            SceneManager.LoadScene(LEVEL_NAME);
+            
         }
         
     }

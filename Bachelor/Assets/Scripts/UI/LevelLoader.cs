@@ -19,9 +19,9 @@ public class LevelLoader : MonoBehaviour
 
     private void Awake()
     {
-        tutorialToCastleListener = new UnityAction(LoadLevel);
-        castleToTutorialListener = new UnityAction(LoadLevel);
-        castleToBossListener = new UnityAction(LoadLevel);
+        //tutorialToCastleListener = new UnityAction(LoadLevel);
+        //castleToTutorialListener = new UnityAction(LoadLevel);
+        //castleToBossListener = new UnityAction(LoadLevel);
 
         EventManager.TriggerEvent(EnumEvents.LOAD_PLAYER);
     }
@@ -34,7 +34,7 @@ public class LevelLoader : MonoBehaviour
 
     private void LoadLevel()
     {
-        StartCoroutine(LoadLevelE(levelNameChange));
+        // StartCoroutine(LoadLevelE(levelNameChange));
     }
 
     IEnumerator LoadLevelE(string sceneName)
@@ -49,16 +49,16 @@ public class LevelLoader : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
-        EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
-        EventManager.StartListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
+        //EventManager.StartListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+        //EventManager.StartListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
+        //EventManager.StartListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
     }
 
     private void OnDisable()
     {
-        EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
-        EventManager.StopListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
-        EventManager.StopListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
+        //EventManager.StopListening(EnumEvents.TUTORIAL_TO_CASTLE, tutorialToCastleListener);
+        //EventManager.StopListening(EnumEvents.CASTLE_TO_TUTORIAL, castleToTutorialListener);
+        //EventManager.StopListening(EnumEvents.CASTLE_TO_BOSS, castleToBossListener);
     }
 
 }

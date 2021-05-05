@@ -13,8 +13,12 @@ public class SceneTransitionCastleToTutorial : MonoBehaviour
     {
         if (collision.name.Equals(PLAYER_NAME))
         {
-             LevelLoader.SetLevelName("Tutorial_Level");
-             EventManager.TriggerEvent(EnumEvents.CASTLE_TO_TUTORIAL);
+            //LevelLoader.SetLevelName(LEVEL_NAME);
+            //EventManager.TriggerEvent(EnumEvents.CASTLE_TO_TUTORIAL);
+
+            EventManager.TriggerEvent(EnumEvents.CASTLE_TO_TUTORIAL);
+            SceneManager.LoadScene(LEVEL_NAME);
+
         }
     }
 }

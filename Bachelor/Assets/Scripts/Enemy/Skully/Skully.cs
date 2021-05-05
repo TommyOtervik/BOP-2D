@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
 public class Skully : Enemy, IDamageable
 {
     // Collision enter etterpå
-    private int maxHealth = 1000;
+    private int maxHealth = 10;
     private int currentHealth;
     private Collider2D collider;
     private float speed = 10.0f;

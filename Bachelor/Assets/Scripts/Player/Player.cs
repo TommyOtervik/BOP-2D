@@ -82,9 +82,9 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
     private void Awake()
     {
+
         currentHealth = maxHealth;
         // Lyttere
-        loadPlayerListener = new UnityAction(LoadPlayer);
 
         killFloorHitListener = new UnityAction(Death);
 
@@ -92,12 +92,14 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
         castleToTutorialListener = new UnityAction(SavePlayer);
         castleToBossListener = new UnityAction(SavePlayer);
 
+        loadPlayerListener = new UnityAction(LoadPlayer);
     }
 
     void Start()
     {
+        LoadPlayer();
         SetMaxHealth?.Invoke(maxHealth);
-        
+
         movementScript = GetComponent<PlayerMovement>();
         input = GetComponent<PlayerInput>();
         anim = GetComponent<Animator>();
@@ -109,7 +111,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
         AttackManager();
 
-        UpdateHealth?.Invoke(currentHealth);  
+        UpdateHealth?.Invoke(currentHealth); 
     }
 
    
