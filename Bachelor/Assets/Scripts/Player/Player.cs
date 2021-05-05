@@ -96,6 +96,8 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
     void Start()
     {
+        LoadPlayer();
+        //currentHealth = maxHealth;
         SetMaxHealth?.Invoke(maxHealth);
         
         movementScript = GetComponent<PlayerMovement>();
@@ -177,12 +179,12 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     public void Death()
     {
         anim.SetTrigger(DEATH_STR); // Spill animasjon
-
         // Gjør spilleren "unsynlig" for fiender når hen dør.
         GetComponent<PlayerMovement>().enabled = false;
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         GetComponent<BoxCollider2D>().enabled = false;
-        this.enabled = false;
+        // Denne disabla update metoden health bar update, fy fy -
+        // this.enabled = false;
 
         // Fiender lytter til denne (Da stopper de å angripe/søke)
         EventManager.TriggerEvent(EnumEvents.PLAYER_DEAD);
@@ -194,7 +196,10 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     IEnumerator WaitForRespawn()
     {
         yield return new WaitForSeconds(3f);
-       
+
+        PlayerPositionData ppd = SaveSystem.LoadPlayerPositionData();
+        SaveSystem.SavePlayerPosition(new PlayerPositionData(ppd.X, ppd.Y, ppd.Z, false));
+        SavePlayerFromDeath();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -302,7 +307,13 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
     {
         SaveSystem.SavePlayer(this);
 
-        Debug.Log("Saved Player. HP: " + this.currentHealth);
+        //Debug.Log("Saved Player. HP: " + this.currentHealth);
+    }
+
+    public void SavePlayerFromDeath()
+    {
+        currentHealth = maxHealth;
+        SaveSystem.SavePlayer(this);
     }
 
     public void LoadPlayer()
@@ -311,7 +322,7 @@ public class Player : MonoBehaviour, IAttacker<int>, IDamageable
 
         this.currentHealth = data.GetCurrentHealth();
 
-        Debug.Log("Load Player. HP: " + this.currentHealth);
+        //Debug.Log("Load Player. HP: " + this.currentHealth);
     }
 
     public GameObject GetEnemyGameObject()

@@ -75,5 +75,38 @@ public static class SaveSystem
         }
 
     }
+    
+    public static void SavePlayerPosition(PlayerPositionData playerPos)
+    {
+        BinaryFormatter formatter = new BinaryFormatter();
+        string path = Application.persistentDataPath + "/PlayerPosition.fun";
+
+        FileStream stream = new FileStream(path, FileMode.Create);
+        PlayerPositionData data = new PlayerPositionData(playerPos);
+
+        formatter.Serialize(stream, data);
+        stream.Close();
+    }
+
+
+    public static PlayerPositionData LoadPlayerPositionData()
+    {
+        string path = Application.persistentDataPath + "/PlayerPosition.fun";
+        if (File.Exists(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            PlayerPositionData data = formatter.Deserialize(stream) as PlayerPositionData;
+            stream.Close();
+
+            return data;
+        }
+        else
+        {
+            Debug.LogError("Save file not found in " + path);
+            return null;
+        }
+    }
 
 }
