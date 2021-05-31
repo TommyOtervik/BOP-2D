@@ -2491,7 +2491,7 @@ PrefabInstance:
     - target: {fileID: 2062751853379529906, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
       propertyPath: maxHealth
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 2062751853379529906, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
@@ -2501,7 +2501,7 @@ PrefabInstance:
     - target: {fileID: 2062751853379529906, guid: 048cd02a83a3fd74682f716d23e76dff,
         type: 3}
       propertyPath: currentHealth
-      value: 1000
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 048cd02a83a3fd74682f716d23e76dff, type: 3}
@@ -2612,6 +2612,16 @@ PrefabInstance:
       propertyPath: transition
       value: 
       objectReference: {fileID: 1502074763}
+    - target: {fileID: 4506828496683050529, guid: 82076dc06ecbcad4bafd2e943fb3c51f,
+        type: 3}
+      propertyPath: m_Value
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4506828496683050529, guid: 82076dc06ecbcad4bafd2e943fb3c51f,
+        type: 3}
+      propertyPath: m_MaxValue
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4506828496683050530, guid: 82076dc06ecbcad4bafd2e943fb3c51f,
         type: 3}
       propertyPath: m_AnchoredPosition.y
